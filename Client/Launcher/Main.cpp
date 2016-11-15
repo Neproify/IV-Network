@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			szInstallDirectory, sizeof(szInstallDirectory)) ||
 			!SharedUtility::Exists(szInstallDirectory)) {
 
-			if(ShowMessageBox("Failed to retrieve the install directory from "GAME_DEFAULT_EXECUTABLE"'s registry. Specify your game path now?",
+			if(ShowMessageBox("Failed to retrieve the install directory from " GAME_DEFAULT_EXECUTABLE "'s registry. Specify your game path now?",
 				(MB_ICONEXCLAMATION | MB_OKCANCEL)) == IDOK)  {
 				
 				BROWSEINFO browseInfo = { 0 };
@@ -103,7 +103,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 
 			if(!bFoundCustomDirectory) {
-				ShowMessageBox("Failed to retrieve the install directory from registry or browser window. Cannot launch "MOD_NAME".");
+				ShowMessageBox("Failed to retrieve the install directory from registry or browser window. Cannot launch " MOD_NAME ".");
 				return 1;
 			}
 		}
@@ -115,11 +115,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Sleep(500);
 
 	// Get the full path to EFLC.exe
-	CString strApplicationPath("%s\\"GAME_DEFAULT_EXECUTABLE, szInstallDirectory);
+	CString strApplicationPath("%s\\" GAME_DEFAULT_EXECUTABLE, szInstallDirectory);
 
 	// Check if EFLC.exe exists
 	if(!SharedUtility::Exists(strApplicationPath.Get()))
-		return ShowMessageBox("Failed to find "GAME_DEFAULT_EXECUTABLE". Cannot launch "MOD_NAME".");
+		return ShowMessageBox("Failed to find " GAME_DEFAULT_EXECUTABLE ". Cannot launch " MOD_NAME ".");
 
 	// If we have a custom directory save it
 	if(bFoundCustomDirectory)
@@ -130,26 +130,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// Check if the client core exists
 	if(!SharedUtility::Exists(strClientCore.Get()))
-		return ShowMessageBox("Failed to find " CLIENT_CORE_NAME DEBUG_SUFFIX LIBRARY_EXTENSION ". Cannot launch "MOD_NAME".");
+		return ShowMessageBox("Failed to find " CLIENT_CORE_NAME DEBUG_SUFFIX LIBRARY_EXTENSION ". Cannot launch " MOD_NAME ".");
 
 	// Get the full path of the launch helper
 	CString strCore(SharedUtility::GetAbsolutePath(CLIENT_CORE_NAME DEBUG_SUFFIX LIBRARY_EXTENSION));
 
 	// Check if the launch helper exists
 	if (!SharedUtility::Exists(strCore.Get()))
-		return ShowMessageBox("Failed to find " CLIENT_CORE_NAME DEBUG_SUFFIX LIBRARY_EXTENSION". Cannot launch "MOD_NAME".");
+		return ShowMessageBox("Failed to find " CLIENT_CORE_NAME DEBUG_SUFFIX LIBRARY_EXTENSION". Cannot launch " MOD_NAME ".");
 
 	// Get the full path of the launch helper
 	CString strBass(SharedUtility::GetAbsolutePath("bass.dll"));
 
 	// Check if the launch helper exists
 	if (!SharedUtility::Exists(strBass.Get()))
-		return ShowMessageBox("Failed to find bass.dll. Cannot launch "MOD_NAME".");
+		return ShowMessageBox("Failed to find bass.dll. Cannot launch " MOD_NAME ".");
 
 	// Check if GTAEFLC is already running
 	if (SharedUtility::IsProcessRunning(GAME_DEFAULT_EXECUTABLE))
 	{
-		if (ShowMessageBox(GAME_DEFAULT_EXECUTABLE" is already running and needs to be terminated before "MOD_NAME" can be started. Do you want to do that now?",
+		if (ShowMessageBox(GAME_DEFAULT_EXECUTABLE" is already running and needs to be terminated before " MOD_NAME " can be started. Do you want to do that now?",
 			MB_ICONQUESTION | MB_YESNO) == IDYES)
 		{
 			if (!SharedUtility::_TerminateProcess(GAME_DEFAULT_EXECUTABLE))
@@ -159,12 +159,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 				else
 				{
-					return ShowMessageBox(GAME_DEFAULT_EXECUTABLE" could not be terminated. Cannot launch "MOD_NAME".");
+					return ShowMessageBox(GAME_DEFAULT_EXECUTABLE" could not be terminated. Cannot launch " MOD_NAME ".");
 				}
 			}
 		}
 		else
-			return ShowMessageBox(GAME_DEFAULT_EXECUTABLE" is already running. Cannot launch "MOD_NAME".");
+			return ShowMessageBox(GAME_DEFAULT_EXECUTABLE" is already running. Cannot launch " MOD_NAME ".");
 	}
 
 	// TODO ADD WINDOW COMMANDLINE SUPPORT!
@@ -228,7 +228,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else // Something is wrong with our URI 
 		{
-			if(ShowMessageBox("Something is wrong with your server direct-connect URI, do you want to start "MOD_NAME" without direct-connect?", MB_ICONQUESTION | MB_YESNO ) == IDYES)
+			if(ShowMessageBox("Something is wrong with your server direct-connect URI, do you want to start " MOD_NAME " without direct-connect?", MB_ICONQUESTION | MB_YESNO ) == IDYES)
 			{
 				// Set default server direct connect values
 				CVAR_SET_STRING("currentconnect_server","0.0.0.0");
@@ -265,7 +265,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	siStartupInfo.cb = sizeof(siStartupInfo);
 
 	if (!CreateProcess(strApplicationPath.Get(), (char *) strCommandLine.Get(), NULL, NULL, TRUE, CREATE_SUSPENDED, NULL, szInstallDirectory, &siStartupInfo, &piProcessInfo)) {
-		ShowMessageBox("Failed to start "GAME_DEFAULT_EXECUTABLE". Cannot launch "MOD_NAME".");
+		ShowMessageBox("Failed to start " GAME_DEFAULT_EXECUTABLE ". Cannot launch " MOD_NAME ".");
 		return 1;
 	}
 
@@ -281,14 +281,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		TerminateProcess(piProcessInfo.hProcess, 0);
 
 		// Show the error message
-		CString strError("Unknown error. Cannot launch "MOD_NAME".");
+		CString strError("Unknown error. Cannot launch " MOD_NAME ".");
 
 		if(iReturn == 1)
-			strError = "Failed to write library path into remote process. Cannot launch "MOD_NAME".";
+			strError = "Failed to write library path into remote process. Cannot launch " MOD_NAME ".";
 		else if(iReturn == 2)
-			strError = "Failed to create remote thread in remote process. Cannot launch "MOD_NAME".";
+			strError = "Failed to create remote thread in remote process. Cannot launch " MOD_NAME ".";
 		else if(iReturn == 3)
-			strError = "Failed to open the remote process, Cannot launch "MOD_NAME".";
+			strError = "Failed to open the remote process, Cannot launch " MOD_NAME ".";
 
 		ShowMessageBox(strError.Get());
 		return 1;

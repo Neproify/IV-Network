@@ -1842,14 +1842,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Libraries\DXSDK\Include\d3dx9math.inl">
-      <Filter>Resources\Libraries\DirectX</Filter>
-    </None>
-    <None Include="..\..\Libraries\DXSDK\Include\D3DX10math.inl">
-      <Filter>Resources\Libraries\DirectX</Filter>
-    </None>
     <None Include="res\exceptbox.aps">
       <Filter>Resources</Filter>
+    </None>
+    <None Include="..\..\Libraries\DXSDK\Include\D3DX10math.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\..\Libraries\DXSDK\Include\d3dx9math.inl">
+      <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

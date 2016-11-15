@@ -5,8 +5,8 @@
 
 Three quick start options are available:
 
-* [Download the latest release](https://github.com/GTA-Network/IV-Network/archive/master.zip).
-* Clone the repo: `https://github.com/GTA-Network/IV-Network.git`.
+* [Download the latest release](https://github.com/Neproify/IV-Network/archive/master.zip).
+* Clone the repo: `https://github.com/Neproify/IV-Network.git`.
 
 ## Description
 
@@ -24,7 +24,7 @@ We accept only pull request if you want to contribute
 
 ## Compile on Windows
 
-* You should use [Visual Studio 2013] (http://www.microsoft.com/visualstudio/eng/downloads)
+* You should use [Visual Studio 2015] (http://www.microsoft.com/visualstudio/eng/downloads)
 * Open IVN.sln
 * Right click on "Solution 'IVN' (XY projects) in Solution Explorer
 * Build Solution
