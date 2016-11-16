@@ -52,56 +52,6 @@
 #define POSIX 1
 #endif
 
-#if WIN32
-#include <yvals.h>
-#if __cplusplus <= 199711L && _HAS_CPP0X == 1
-//#error "Please use at least Visual Studio 2013. This project was developed using VS2013 and/or GCC 4.8."
-#else
-// Check if all used features are vailable
-#if !defined(_CPPLIB_VER) || _CPPLIB_VER < 610
-//#error "Use at least VS2013."
-#endif
-
-#if !defined(_HAS_DECLTYPE) || _HAS_DECLTYPE < 1
-//#error "Decltype is required. Use at least VS2013."
-#endif
-
-#if !defined(_HAS_INITIALIZER_LISTS) || _HAS_INITIALIZER_LISTS < 1
-//#error "Initialiizer lists is required. Use at least VS2013."
-#endif
-
-//#if !defined(_HAS_REF_QUALIFIER) || _HAS_REF_QUALIFIER < 1
-////#error "Please use at least VS2013."
-//#endif
-
-#if !defined(_HAS_RVALUE_REFERENCES) || _HAS_RVALUE_REFERENCES < 1
-//#error "Rvalue References is required. Use at least VS2013."
-#endif
-
-#if !defined(_HAS_SCOPED_ENUM) || _HAS_SCOPED_ENUM < 1
-//#error "Scoped enum is required. Use at least VS2013."
-#endif
-
-#if !defined(_HAS_TEMPLATE_ALIAS) || _HAS_TEMPLATE_ALIAS < 1
-//#error "Template alias is required. Use at least VS2013."
-#endif
-
-#if !defined(_HAS_VARIADIC_TEMPLATES) || _HAS_VARIADIC_TEMPLATES < 1
-//#error "Variadic templates is required. Use at least VS2013."
-#endif
-
-#endif
-#elif LINUX
-#if __GNUC__ < 4 || (__GNUC__ < 4 && __GNUC_MINOR__ < 7) || (__GNUC__ < 4 && __GNUC_MINOR__ < 7 && __GNUC_PATCHLEVEL__ < 2)
-//#error "Use at least GCC 4.7.2"
-#endif 
-
-#if __cplusplus <= 199711L
-if !defined(__GXX_EXPERIMENTAL_CXX0X__) || __GXX_EXPERIMENTAL_CXX0X__ != 1
-//#error "C++11 is required. Try --std=c++0x"
-#endif
-#endif
-
 #if _DEBUG == 1 && !defined(DEBUG)
 #define DEBUG
 #endif
