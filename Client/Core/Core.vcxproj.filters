@@ -923,6 +923,15 @@
     <ClCompile Include="Game\CWeaponHandler.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libraries\lua\lua.c">
+      <Filter>Source Files\Libraries\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\lua\luac.c">
+      <Filter>Source Files\Libraries\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\lua\lutf8lib.c">
+      <Filter>Source Files\Libraries\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCore.h">
@@ -1839,6 +1848,9 @@
     </ClInclude>
     <ClInclude Include="Game\CWeaponHandler.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libraries\lua\lprefix.h">
+      <Filter>Source Files\Libraries\lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

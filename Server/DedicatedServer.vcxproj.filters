@@ -399,6 +399,15 @@
     <ClCompile Include="CTimerManager.cpp">
       <Filter>Source Files\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="..\Libraries\lua\lua.c">
+      <Filter>Libraries\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libraries\lua\luac.c">
+      <Filter>Libraries\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libraries\lua\lutf8lib.c">
+      <Filter>Libraries\lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CServer.h">
@@ -619,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Scripting\IScriptVM.h">
       <Filter>Header Files\Shared\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libraries\lua\lprefix.h">
+      <Filter>Libraries\lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -145,7 +145,10 @@
     <ClCompile Include="..\..\Libraries\lua\ltable.c" />
     <ClCompile Include="..\..\Libraries\lua\ltablib.c" />
     <ClCompile Include="..\..\Libraries\lua\ltm.c" />
+    <ClCompile Include="..\..\Libraries\lua\lua.c" />
+    <ClCompile Include="..\..\Libraries\lua\luac.c" />
     <ClCompile Include="..\..\Libraries\lua\lundump.c" />
+    <ClCompile Include="..\..\Libraries\lua\lutf8lib.c" />
     <ClCompile Include="..\..\Libraries\lua\lvm.c" />
     <ClCompile Include="..\..\Libraries\lua\lzio.c" />
     <ClCompile Include="..\..\Libraries\md5\md5.cpp" />
@@ -423,6 +426,7 @@
     <ClInclude Include="..\..\Libraries\lua\lobject.h" />
     <ClInclude Include="..\..\Libraries\lua\lopcodes.h" />
     <ClInclude Include="..\..\Libraries\lua\lparser.h" />
+    <ClInclude Include="..\..\Libraries\lua\lprefix.h" />
     <ClInclude Include="..\..\Libraries\lua\lstate.h" />
     <ClInclude Include="..\..\Libraries\lua\lstring.h" />
     <ClInclude Include="..\..\Libraries\lua\ltable.h" />
