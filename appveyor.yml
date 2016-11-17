@@ -1,0 +1,11 @@
+version: 1.0.0 ci-{build}
+os: Visual Studio 2015
+
+configuration:
+  - Release
+
+clone_depth: 1
+
+build:
+  project: IVN.sln
+platform: Win32
