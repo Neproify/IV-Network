@@ -9,3 +9,6 @@ clone_depth: 1
 build:
   project: IVN.sln
 platform: Win32
+
+artifacts:
+  - path: Installer\IVNetwork*.exe

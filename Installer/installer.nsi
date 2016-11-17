@@ -130,7 +130,6 @@ Section "Install" SecDummy
 	File ..\Files\LaunchIVNetwork.exe
 	File ..\Files\IVNetwork.dll
 	File ..\Files\bass.dll
-	File ..\Files\IVNUpdater.exe
 	File ..\Files\MahApps.Metro.dll
 	File ..\Files\System.Windows.Interactivity.dll
 
