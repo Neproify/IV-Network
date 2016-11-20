@@ -129,8 +129,8 @@ bool CVehicleEntity::Create()
 	if (pVehicle)
 	{
 		pVehicle->Function76(0);
-		//pVehicle->m_byteFlags1 |= 4u;
-		//pVehicle->m_dwFlags1 |= 8u; // set fixed wait for collision/
+		pVehicle->m_byteFlags1 |= 4u;
+		pVehicle->m_dwFlags1 |= 8u; // set fixed wait for collision/
 
 		CWorld__AddEntity(pVehicle, false);
 		CVehicleModelInfo__AddReference(m_pModelInfo->GetModelInfo());

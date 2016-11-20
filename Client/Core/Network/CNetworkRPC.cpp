@@ -688,14 +688,26 @@ void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	DWORD color5;
 	pBitStream->Read(color5);
 
-	CVehicleEntity * pVehicle = new CVehicleEntity(vehicleModel, vecPosition, fAngle, color1, color2, color3, color4, color5);
+	CVehicleEntity * pVehicle;
+
+	if (g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId))
+	{
+		pVehicle = g_pCore->GetGame()->GetVehicleManager()->GetAt(vehicleId);
+	}
+	else
+	{
+		pVehicle = new CVehicleEntity(vehicleModel, vecPosition, fAngle, color1, color2, color3, color4, color5);
+		if (pVehicle)
+		{
+			g_pCore->GetGame()->GetVehicleManager()->Add(vehicleId, pVehicle);
+			pVehicle->SetId(vehicleId);
+		}
+	}
+
 	g_pCore->GetGraphics()->GetChat()->Print(CString("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ));
 	CLogFile::Printf("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ);
 	if (pVehicle) 
 	{
-	//	// Add our vehicle
-		g_pCore->GetGame()->GetVehicleManager()->Add(vehicleId, pVehicle);
-		pVehicle->SetId(vehicleId);
 		pVehicle->Create();
 		pVehicle->SetPosition(vecPosition, true);
 	}
