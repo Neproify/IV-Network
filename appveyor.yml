@@ -1,0 +1,19 @@
+version: 1.0.0 ci-{build}
+os: Visual Studio 2015
+
+configuration:
+  - Release
+
+clone_depth: 1
+
+build:
+  project: IVN.sln
+platform: Win32
+
+artifacts:
+  - path: Installer\IVNetwork-1.0.0.DEV.exe
+  - path: Build\Release\IVNetworkDedicatedServer.exe
+
+after_build:
+  - cd Installer
+  - build.bat
