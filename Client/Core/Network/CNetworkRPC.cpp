@@ -688,6 +688,15 @@ void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	DWORD color5;
 	pBitStream->Read(color5);
 
+	bool bEngineState;
+	pBitStream->Read(bEngineState);
+
+	int iDoorLockedState;
+	pBitStream->Read(iDoorLockedState);
+
+	int iDirtLevel;
+	pBitStream->Read(iDirtLevel);
+
 	CVehicleEntity * pVehicle;
 
 	if (g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId))
@@ -710,6 +719,9 @@ void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	{
 		pVehicle->Create();
 		pVehicle->SetPosition(vecPosition, true);
+		pVehicle->SetEngineState(bEngineState);
+		pVehicle->SetDoorLockState(iDoorLockedState);
+		pVehicle->SetDirtLevel(iDirtLevel);
 	}
 }
 

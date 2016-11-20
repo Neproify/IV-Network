@@ -419,6 +419,10 @@ void PlayerRequestSpawn(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 				bitStream.Write(pVehicle->GetColor(4));
 				bitStream.Write(pVehicle->GetColor(5));
 
+				bitStream.Write(pVehicle->GetEngineState());
+				bitStream.Write(pVehicle->GetLockedState());
+				bitStream.Write(pVehicle->GetDirtLevel());
+
 				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_VEHICLE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 			}
 		}
