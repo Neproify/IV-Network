@@ -32,14 +32,30 @@
 #define CObjectEntity_h
 
 #include "CNetworkEntity.h"
+#include "..\EFLC\ScriptEnums.h"
 
 class CObjectEntity : public CNetworkEntity
 {
 private:
-
+	EntityId m_objectId;
+	CVector3 m_vecPosition;
+	CVector3 m_vecRotation;
+	unsigned int m_object;
+	EFLC::CScript::eModel m_model;
+	bool m_bSpawned;
 public:
-	CObjectEntity();
+	CObjectEntity(EFLC::CScript::eModel model, CVector3 vecPosition, CVector3 vecRotation);
 	~CObjectEntity();
+
+	unsigned int GetHandle();
+
+	bool Create();
+	bool Destroy();
+
+	bool IsSpawned();
+
+	void		SetId(EntityId objectId) { m_objectId = objectId; }
+	EntityId	GetId() { return m_objectId; }
 };
 
 #endif // CObjectEntity_h

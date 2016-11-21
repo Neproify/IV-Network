@@ -104,6 +104,8 @@ enum eRPCIdentifier : RPCIdentifier
 	RPC_BLIP_SET_RANGE,
 	RPC_BLIP_SET_VISIBLE,
 	RPC_BLIP_SET_NAME,
+
+	RPC_CREATE_OBJECT
 };
 
 #endif // RPCIdentifier_h

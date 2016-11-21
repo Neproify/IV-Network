@@ -1237,6 +1237,110 @@ void SetBlipName(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	}
 }
 
+/*void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId vehicleId;
+	pBitStream->Read(vehicleId);
+
+	int vehicleModel;
+	pBitStream->Read(vehicleModel);
+
+	CVector3 vecPosition;
+	pBitStream->Read(vecPosition);
+	vecPosition.fZ += 1.0f;
+
+	float fAngle;
+	pBitStream->Read(fAngle);
+
+	DWORD color1;
+	pBitStream->Read(color1);
+
+	DWORD color2;
+	pBitStream->Read(color2);
+
+	DWORD color3;
+	pBitStream->Read(color3);
+
+	DWORD color4;
+	pBitStream->Read(color4);
+
+	DWORD color5;
+	pBitStream->Read(color5);
+
+	bool bEngineState;
+	pBitStream->Read(bEngineState);
+
+	int iDoorLockedState;
+	pBitStream->Read(iDoorLockedState);
+
+	int iDirtLevel;
+	pBitStream->Read(iDirtLevel);
+
+	CVehicleEntity * pVehicle;
+
+	if (g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId))
+	{
+		pVehicle = g_pCore->GetGame()->GetVehicleManager()->GetAt(vehicleId);
+	}
+	else
+	{
+		pVehicle = new CVehicleEntity(vehicleModel, vecPosition, fAngle, color1, color2, color3, color4, color5);
+		if (pVehicle)
+		{
+			g_pCore->GetGame()->GetVehicleManager()->Add(vehicleId, pVehicle);
+			pVehicle->SetId(vehicleId);
+		}
+	}
+
+	g_pCore->GetGraphics()->GetChat()->Print(CString("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ));
+	CLogFile::Printf("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ);
+	if (pVehicle)
+	{
+		pVehicle->Create();
+		pVehicle->SetPosition(vecPosition, true);
+		pVehicle->SetEngineState(bEngineState);
+		pVehicle->SetDoorLockState(iDoorLockedState);
+		pVehicle->SetDirtLevel(iDirtLevel);
+	}
+}*/
+
+void CreateObject(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId objectId;
+	pBitStream->Read(objectId);
+
+	unsigned int uiModel;
+	pBitStream->Read(uiModel);
+
+	CVector3 vecPosition;
+	pBitStream->Read(vecPosition);
+
+	CVector3 vecRotation;
+	pBitStream->Read(vecRotation);
+
+	CObjectEntity * pObject;
+
+	if (g_pCore->GetGame()->GetObjectManager()->DoesExists(objectId))
+	{
+		pObject = g_pCore->GetGame()->GetObjectManager()->GetAt(objectId);
+	}
+	else
+	{
+		pObject = new CObjectEntity((EFLC::CScript::eModel)uiModel, vecPosition, vecRotation);
+
+		if (pObject)
+		{
+			g_pCore->GetGame()->GetObjectManager()->Add(objectId, pObject);
+			pObject->SetId(objectId);
+		}
+	}
+
+	if (pObject)
+	{
+		pObject->Create();
+	}
+}
+
 void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 {
 	// Are we not already registered?
@@ -1301,6 +1405,8 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_RANGE), SetBlipRange);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_VISIBLE), SetBlipVisible);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_NAME), SetBlipName);
+
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_CREATE_OBJECT), CreateObject);
 		
 		// Mark as registered
 		m_bRegistered = true;
@@ -1369,6 +1475,9 @@ void CNetworkRPC::Unregister(RakNet::RPC4 * pRPC)
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_RANGE));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_VISIBLE));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_NAME));
+
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_CREATE_OBJECT));
+
 		// Mark as not registered
 		m_bRegistered = false;
 	}
