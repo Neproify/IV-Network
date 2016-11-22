@@ -54,8 +54,17 @@ public:
 
 	bool IsSpawned();
 
-	void		SetId(EntityId objectId) { m_objectId = objectId; }
-	EntityId	GetId() { return m_objectId; }
+	void SetId(EntityId objectId) { m_objectId = objectId; }
+	EntityId GetId() { return m_objectId; }
+
+	void SetPosition(CVector3 vecPosition);
+	void GetPosition(CVector3 &vecPosition) { vecPosition = m_vecPosition; }
+
+	void SetRotation(CVector3 vecRotation);
+	void GetRotation(CVector3 &vecRotation) { vecRotation = m_vecRotation; }
+
+	void SetModel(EFLC::CScript::eModel model);
+	void GetModel(EFLC::CScript::eModel &model) { model = m_model; }
 };
 
 #endif // CObjectEntity_h

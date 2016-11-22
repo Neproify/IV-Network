@@ -419,7 +419,13 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	}
 
 	{ // ScriptObject
-		static CScriptClass<CScriptObject>* pScriptObject = new CScriptClass<CScriptObject>("CObjectEntity");
+		static CScriptClass<CScriptObject>* pScriptObject = &(new CScriptClass<CScriptObject>("CObjectEntity"))->
+			AddMethod("setPosition", &CScriptObject::SetPosition).
+			AddMethod("getPosition", &CScriptObject::GetPosition).
+			AddMethod("setRotation", &CScriptObject::SetRotation).
+			AddMethod("getRotation", &CScriptObject::GetRotation).
+			AddMethod("setModel", &CScriptObject::SetModel).
+			AddMethod("getModel", &CScriptObject::GetModel);
 		(pScriptObject)->Register(pVM);
 	}
 

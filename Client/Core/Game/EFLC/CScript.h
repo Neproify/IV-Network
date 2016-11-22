@@ -232,7 +232,9 @@ namespace CScript
 	static unsigned int IsObjectPlayingAnim(unsigned int object, const char* animGroup, const char* animName) { return EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_IS_OBJECT_PLAYING_ANIM, object, animGroup, animName); }
 	static void SetObjectCollision(unsigned int obj, bool value) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_COLLISION, obj, value); }
 	static void SetObjectDynamic(unsigned int object, bool dynamic) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_DYNAMIC, object, dynamic); }
+	static void SetObjectCoordinates(unsigned int obj, float pX, float pY, float pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_COORDINATES, obj, pX, pY, pZ); }
 	static void GetObjectCoordinates(unsigned int obj, float *pX, float *pY, float *pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_GET_OBJECT_COORDINATES, obj, pX, pY, pZ); }
+	static void SetObjectRotation(unsigned int obj, float pX, float pY, float pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_ROTATION, obj, pX, pY, pZ); }
 	static unsigned int SlideObject(unsigned int objectIndex, float pX, float pY, float pZ, float rX, float rY, float rZ, float speed) { return EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SLIDE_OBJECT, objectIndex, pX, pY, pZ, rX, rY, rZ, speed); }
 	static void SetObjectAlpha(unsigned int object, float alpha) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_ALPHA, object, alpha); }
 	static bool IsObjectAttached(unsigned int object) { return EFLC::CNativeInvoke::Invoke<bool>(NATIVE_IS_OBJECT_ATTACHED, object); }

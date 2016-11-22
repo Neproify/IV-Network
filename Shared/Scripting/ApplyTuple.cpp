@@ -66,8 +66,7 @@ unsigned int getValue<unsigned int>(IScriptVM* pVM, int idx)
 {
 	unsigned int ui = 0;
 	pVM->SetStackIndex(idx - (pVM->GetVMType() == LUA_VM ? 0 : 1));
-	//pVM->Pop(ui);
-	printf("Warning: unable to pop this type [%s]\n", __FUNCSIG__);
+	pVM->Pop(ui);
 	return ui;
 }
 

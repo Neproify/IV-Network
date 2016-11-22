@@ -72,5 +72,14 @@ public:
 	CObjectEntity * GetEntity() { return (CObjectEntity*)CScriptEntity::GetEntity(); }
 
 	const char * GetScriptClassName() { return "CObjectEntity"; }
+
+	void SetPosition(float fX, float fY, float fZ);
+	CVector3 GetPosition() { CVector3 vecPosition; GetEntity()->GetPosition(vecPosition); return vecPosition; }
+
+	void SetRotation(float fX, float fY, float fZ);
+	CVector3 GetRotation() { CVector3 vecRotation; GetEntity()->GetRotation(vecRotation); return vecRotation; }
+
+	void SetModel(unsigned int uiModel);
+	unsigned int GetModel() { return GetEntity()->GetModel(); }
 };
 #endif // CObjectEntity_h
