@@ -32,14 +32,27 @@
 #define CPickupEntity_h
 
 #include "CNetworkEntity.h"
+#include "..\EFLC\ScriptEnums.h"
 
 class CPickupEntity : public CNetworkEntity
 {
 private:
-
+	CVector3 m_vecPosition;
+	CVector3 m_vecRotation;
+	unsigned int m_pickup;
+	EFLC::CScript::eModel m_model;
+	EFLC::CScript::ePickupType m_pickupType;
+	bool m_bSpawned;
 public:
-	CPickupEntity();
+	CPickupEntity(EFLC::CScript::eModel model, EFLC::CScript::ePickupType pickupType, CVector3 vecPosition, CVector3 vecRotation);
 	~CPickupEntity();
+
+	unsigned int GetHandle();
+
+	bool Create();
+	bool Destroy();
+
+	bool IsSpawned();
 };
 
 #endif // CPickupEntity_h

@@ -448,6 +448,36 @@ void PlayerRequestSpawn(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_OBJECT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 			}
 		}
+
+		CPickupEntity * pPickup;
+
+		for (EntityId i = 0; i < CServer::GetInstance()->GetPickupManager()->GetMax(); ++i)
+		{
+			if (CServer::GetInstance()->GetPickupManager()->DoesExists(i))
+			{
+				bitStream.Reset();
+
+				pPickup = CServer::GetInstance()->GetPickupManager()->GetAt(i);
+
+				bitStream.Write(pPickup->GetId());
+				bitStream.Write(pPickup->GetModel());
+				bitStream.Write(pPickup->GetPickupType());
+
+				pPickup->GetPosition(vecPosition);
+				bitStream.Write(vecPosition);
+
+				pPickup->GetRotation(vecRotation);
+				bitStream.Write(vecRotation);
+
+				pObject->GetPosition(vecPosition);
+				bitStream.Write(vecPosition);
+
+				pObject->GetRotation(vecRotation);
+				bitStream.Write(vecRotation);
+
+				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_PICKUP), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
+			}
+		}
 	}
 }
 

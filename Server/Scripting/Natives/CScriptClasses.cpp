@@ -251,6 +251,47 @@ int CreateObject(int * VM)
 	return 1;
 }
 
+int CreatePickup(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->ResetStackIndex();
+
+	unsigned int uiModel;
+	pVM->Pop(uiModel);
+
+	int iType;
+	pVM->Pop(iType);
+
+	CVector3 vecPosition;
+	pVM->Pop(vecPosition);
+
+	CVector3 vecRotation;
+	pVM->Pop(vecRotation);
+
+	CPickupEntity * pPickup = new CPickupEntity();
+	pPickup->SetId(CServer::GetInstance()->GetPickupManager()->FindFreeSlot());
+	CServer::GetInstance()->GetPickupManager()->Add(pPickup->GetId(), pPickup);
+	pPickup->SetModel(uiModel);
+	pPickup->SetPickupType(iType);
+	pPickup->SetPosition(vecPosition);
+	pPickup->SetRotation(vecRotation);
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(pPickup->GetId());
+	bitStream.Write(pPickup->GetModel());
+	bitStream.Write(pPickup->GetPickupType());
+	bitStream.Write(vecPosition);
+	bitStream.Write(vecRotation);
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_PICKUP), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+
+	CScriptPickup * pScriptPickup = new CScriptPickup();
+	pScriptPickup->SetEntity(pPickup);
+	pPickup->SetScriptPickup(pScriptPickup);
+	pVM->PushInstance("CPickupEntity", pScriptPickup);
+	return 1;
+}
+
 int CreateTimer(int * VM)
 {
 	GET_SCRIPT_VM_SAFE;
@@ -304,6 +345,7 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("createCheckpoint", CreateCheckpoint);
 	pVM->RegisterFunction("createBlip", CreateBlip);
 	pVM->RegisterFunction("createObject", CreateObject);
+	pVM->RegisterFunction("createPickup", CreatePickup);
 	pVM->RegisterFunction("createTimer", CreateTimer);
 
 #if 0
@@ -427,6 +469,11 @@ void CScriptClasses::Register(IScriptVM * pVM)
 			AddMethod("setModel", &CScriptObject::SetModel).
 			AddMethod("getModel", &CScriptObject::GetModel);
 		(pScriptObject)->Register(pVM);
+	}
+
+	{ // ScriptPickup
+		static CScriptClass<CScriptPickup>* pScriptPickup = new CScriptClass<CScriptPickup>("CPickupEntity");
+		(pScriptPickup)->Register(pVM);
 	}
 
 	{ // ScriptTimer

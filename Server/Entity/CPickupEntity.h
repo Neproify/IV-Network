@@ -33,16 +33,49 @@
 
 #include "CNetworkEntity.h"
 
+class CScriptPickup;
+
 class CPickupEntity : public CNetworkEntity
 {
 private:
-
+	CScriptPickup * m_pScriptPickup;
+	int m_iPickupType;
+	unsigned int m_uiModel;
+	CVector3 m_vecPosition;
+	CVector3 m_vecRotation;
 public:
 	CPickupEntity();
 	~CPickupEntity();
 
-	bool Create() {return true;}
-	bool Destroy() {return true;}
+	bool Create() { return true; }
+	bool Destroy() { return true; }
+
+	void SetScriptPickup(CScriptPickup* pScriptPickup) { m_pScriptPickup = pScriptPickup; }
+	CScriptPickup * GetScriptPickup() { return m_pScriptPickup; }
+
+	void SetPosition(CVector3 vecPosition) { m_vecPosition = vecPosition; }
+	void GetPosition(CVector3 &vecPosition) { vecPosition = m_vecPosition; }
+
+	void SetRotation(CVector3 vecRotation) { m_vecRotation = vecRotation; }
+	void GetRotation(CVector3 &vecRotation) { vecRotation = m_vecRotation; }
+
+	void SetModel(unsigned int uiModel) { m_uiModel = uiModel; }
+	unsigned int GetModel() { return m_uiModel; }
+
+	void SetPickupType(int iType) { m_iPickupType = iType; }
+	int GetPickupType() { return m_iPickupType; }
+};
+
+class CScriptPickup : public CScriptEntity
+{
+private:
+public:
+	CScriptPickup() {};
+	~CScriptPickup() {};
+
+	CPickupEntity * GetEntity() { return (CPickupEntity*)CScriptEntity::GetEntity(); }
+
+	const char * GetScriptClassName() { return "CPickupEntity"; }
 };
 
 #endif // CPickupEntity_h

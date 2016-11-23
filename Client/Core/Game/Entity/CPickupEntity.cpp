@@ -29,13 +29,59 @@
 */
 
 #include "CPickupEntity.h"
+#include <Game/EFLC/CScript.h>
 
-CPickupEntity::CPickupEntity()
+CPickupEntity::CPickupEntity(EFLC::CScript::eModel model, EFLC::CScript::ePickupType pickupType, CVector3 vecPosition, CVector3 vecRotation) :
+	CNetworkEntity(),
+	m_model(model),
+	m_pickupType(pickupType),
+	m_vecPosition(vecPosition),
+	m_vecRotation(vecRotation),
+	m_pickup(NULL),
+	m_bSpawned(false)
 {
-
+	CNetworkEntity::SetType(OBJECT_ENTITY);
 }
 
 CPickupEntity::~CPickupEntity()
 {
+	Destroy();
+}
 
+unsigned int CPickupEntity::GetHandle()
+{
+	return m_pickup;
+}
+
+bool CPickupEntity::Create()
+{
+	if (IsSpawned())
+		Destroy();
+
+	EFLC::CScript::CreatePickupRotate(m_model, m_pickupType, 200,
+		m_vecPosition.fX, m_vecPosition.fY, m_vecPosition.fY, m_vecRotation.fX, m_vecRotation.fY, m_vecRotation.fZ,
+		&m_pickup);
+
+	EFLC::CScript::AddPickupToInteriorRoomByKey(m_pickup, (EFLC::CScript::eInteriorRoomKey)0);
+
+	m_bSpawned = true;
+
+	return true;
+}
+
+bool CPickupEntity::Destroy()
+{
+	if (!IsSpawned())
+		return true;
+
+	EFLC::CScript::RemovePickup(m_pickup);
+
+	m_bSpawned = false;
+
+	return true;
+}
+
+bool CPickupEntity::IsSpawned()
+{
+	return m_bSpawned;
 }

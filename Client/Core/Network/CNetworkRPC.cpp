@@ -1322,6 +1322,47 @@ void SetObjectModel(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	}
 }
 
+void CreatePickup(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId pickupId;
+	pBitStream->Read(pickupId);
+
+	unsigned int uiModel;
+	pBitStream->Read(uiModel);
+
+	int iPickupType;
+	pBitStream->Read(iPickupType);
+
+	CVector3 vecPosition;
+	pBitStream->Read(vecPosition);
+
+	CVector3 vecRotation;
+	pBitStream->Read(vecRotation);
+
+	CPickupEntity * pPickup;
+
+	if (g_pCore->GetGame()->GetPickupManager()->DoesExists(pickupId))
+	{
+		pPickup = g_pCore->GetGame()->GetPickupManager()->GetAt(pickupId);
+	}
+	else
+	{
+		pPickup = new CPickupEntity((EFLC::CScript::eModel)uiModel, (EFLC::CScript::ePickupType)iPickupType, vecPosition, vecRotation);
+	
+		if (pPickup)
+		{
+			g_pCore->GetGame()->GetPickupManager()->Add(pickupId, pPickup);
+
+			pPickup->SetId(pickupId);
+		}
+	}
+
+	if (pPickup)
+	{
+		pPickup->Create();
+	}
+}
+
 void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 {
 	// Are we not already registered?
@@ -1391,6 +1432,8 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_POSITION), SetObjectPosition);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_ROTATION), SetObjectRotation);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL), SetObjectModel);
+
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_CREATE_PICKUP), CreatePickup);
 		
 		// Mark as registered
 		m_bRegistered = true;
@@ -1464,6 +1507,8 @@ void CNetworkRPC::Unregister(RakNet::RPC4 * pRPC)
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_POSITION));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_ROTATION));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL));
+
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_CREATE_PICKUP));
 
 		// Mark as not registered
 		m_bRegistered = false;
