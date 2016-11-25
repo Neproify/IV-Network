@@ -29,13 +29,83 @@
 */
 
 #include "CObjectEntity.h"
+#include <Game/EFLC/CScript.h>
 
-CObjectEntity::CObjectEntity()
+CObjectEntity::CObjectEntity(EFLC::CScript::eModel model, CVector3 vecPosition, CVector3 vecRotation) :
+	CNetworkEntity(),
+	m_model(model),
+	m_vecPosition(vecPosition),
+	m_vecRotation(vecRotation),
+	m_object(NULL),
+	m_bSpawned(false)
 {
-
+	CNetworkEntity::SetType(OBJECT_ENTITY);
 }
 
 CObjectEntity::~CObjectEntity()
 {
+	Destroy();
+}
 
+unsigned int CObjectEntity::GetHandle()
+{
+	return m_object;
+}
+
+bool CObjectEntity::Create()
+{
+	if (IsSpawned())
+		Destroy();
+
+	EFLC::CScript::CreateObjectNoOffset(m_model, m_vecPosition.fX, m_vecPosition.fY, m_vecPosition.fZ, &m_object, true);
+
+	m_bSpawned = true;
+
+	return true;
+}
+
+bool CObjectEntity::Destroy()
+{
+	if (!IsSpawned())
+		return true;
+
+	EFLC::CScript::DeleteObject(&m_object);
+
+	return true;
+}
+
+bool CObjectEntity::IsSpawned()
+{
+	return m_bSpawned;
+}
+
+void CObjectEntity::SetPosition(CVector3 vecPosition)
+{
+	m_vecPosition = vecPosition;
+
+	if (!IsSpawned())
+		return;
+
+	EFLC::CScript::SetObjectCoordinates(m_object, m_vecPosition.fX, m_vecPosition.fY, m_vecPosition.fZ);
+}
+
+void CObjectEntity::SetRotation(CVector3 vecRotation)
+{
+	m_vecRotation = vecRotation;
+
+	if (!IsSpawned())
+		return;
+
+	EFLC::CScript::SetObjectRotation(m_object, m_vecRotation.fX, m_vecRotation.fY, m_vecRotation.fZ);
+}
+
+void CObjectEntity::SetModel(EFLC::CScript::eModel model)
+{
+	m_model = model;
+
+	if (!IsSpawned())
+		return;
+
+	Destroy();
+	Create();
 }

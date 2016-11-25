@@ -29,6 +29,7 @@
 */
 
 #include "CObjectEntity.h"
+#include "CServer.h"
 
 CObjectEntity::CObjectEntity()
 {
@@ -38,4 +39,38 @@ CObjectEntity::CObjectEntity()
 CObjectEntity::~CObjectEntity()
 {
 
+}
+
+void CScriptObject::SetPosition(float fX, float fY, float fZ)
+{
+	CVector3 vecPosition = CVector3(fX, fY, fZ);
+
+	GetEntity()->SetPosition(vecPosition);
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(GetEntity()->GetId());
+	bitStream.Write(vecPosition);
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_OBJECT_SET_POSITION), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+}
+
+void CScriptObject::SetRotation(float fX, float fY, float fZ)
+{
+	CVector3 vecRotation = CVector3(fX, fY, fZ);
+
+	GetEntity()->SetRotation(vecRotation);
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(GetEntity()->GetId());
+	bitStream.Write(vecRotation);
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_OBJECT_SET_ROTATION), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+}
+
+void CScriptObject::SetModel(unsigned int uiModel)
+{
+	GetEntity()->SetModel(uiModel);
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(GetEntity()->GetId());
+	bitStream.Write(GetEntity()->GetModel());
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
 }

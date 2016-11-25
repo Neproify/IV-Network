@@ -426,6 +426,28 @@ void PlayerRequestSpawn(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_VEHICLE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 			}
 		}
+
+		CObjectEntity * pObject;
+
+		for (EntityId i = 0; i < CServer::GetInstance()->GetObjectManager()->GetMax(); ++i)
+		{
+			if (CServer::GetInstance()->GetObjectManager()->DoesExists(i))
+			{
+				bitStream.Reset();
+
+				pObject = CServer::GetInstance()->GetObjectManager()->GetAt(i);
+				bitStream.Write(pObject->GetId());
+				bitStream.Write(pObject->GetModel());
+
+				pObject->GetPosition(vecPosition);
+				bitStream.Write(vecPosition);
+
+				pObject->GetRotation(vecRotation);
+				bitStream.Write(vecRotation);
+
+				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_OBJECT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
+			}
+		}
 	}
 }
 

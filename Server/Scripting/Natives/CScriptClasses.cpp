@@ -215,6 +215,42 @@ int CreateBlip(int * VM)
 	return 1;
 }
 
+int CreateObject(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->ResetStackIndex();
+
+	unsigned int uiModel;
+	pVM->Pop(uiModel);
+	
+	CVector3 vecPosition;
+	pVM->Pop(vecPosition);
+
+	CVector3 vecRotation;
+	pVM->Pop(vecRotation);
+
+	CObjectEntity * pObject = new CObjectEntity();
+	pObject->SetId(CServer::GetInstance()->GetObjectManager()->FindFreeSlot());
+	CServer::GetInstance()->GetObjectManager()->Add(pObject->GetId(), pObject);
+	pObject->SetModel(uiModel);
+	pObject->SetPosition(vecPosition);
+	pObject->SetRotation(vecRotation);
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(pObject->GetId());
+	bitStream.Write(pObject->GetModel());
+	bitStream.Write(vecPosition);
+	bitStream.Write(vecRotation);
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_CREATE_OBJECT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+
+	CScriptObject * pScriptObject = new CScriptObject();
+	pScriptObject->SetEntity(pObject);
+	pObject->SetScriptObject(pScriptObject);
+	pVM->PushInstance("CObjectEntity", pScriptObject);
+	return 1;
+}
+
 int CreateTimer(int * VM)
 {
 	GET_SCRIPT_VM_SAFE;
@@ -267,6 +303,7 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("sendMessageToAll", SendPlayerMessageToAll);
 	pVM->RegisterFunction("createCheckpoint", CreateCheckpoint);
 	pVM->RegisterFunction("createBlip", CreateBlip);
+	pVM->RegisterFunction("createObject", CreateObject);
 	pVM->RegisterFunction("createTimer", CreateTimer);
 
 #if 0
@@ -379,6 +416,17 @@ void CScriptClasses::Register(IScriptVM * pVM)
 			AddMethod("setName", &CScriptBlip::SetName).
 			AddMethod("getName", &CScriptBlip::GetName);
 		(pScriptBlip)->Register(pVM);
+	}
+
+	{ // ScriptObject
+		static CScriptClass<CScriptObject>* pScriptObject = &(new CScriptClass<CScriptObject>("CObjectEntity"))->
+			AddMethod("setPosition", &CScriptObject::SetPosition).
+			AddMethod("getPosition", &CScriptObject::GetPosition).
+			AddMethod("setRotation", &CScriptObject::SetRotation).
+			AddMethod("getRotation", &CScriptObject::GetRotation).
+			AddMethod("setModel", &CScriptObject::SetModel).
+			AddMethod("getModel", &CScriptObject::GetModel);
+		(pScriptObject)->Register(pVM);
 	}
 
 	{ // ScriptTimer

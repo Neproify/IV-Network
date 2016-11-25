@@ -232,7 +232,9 @@ namespace CScript
 	static unsigned int IsObjectPlayingAnim(unsigned int object, const char* animGroup, const char* animName) { return EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_IS_OBJECT_PLAYING_ANIM, object, animGroup, animName); }
 	static void SetObjectCollision(unsigned int obj, bool value) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_COLLISION, obj, value); }
 	static void SetObjectDynamic(unsigned int object, bool dynamic) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_DYNAMIC, object, dynamic); }
+	static void SetObjectCoordinates(unsigned int obj, float pX, float pY, float pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_COORDINATES, obj, pX, pY, pZ); }
 	static void GetObjectCoordinates(unsigned int obj, float *pX, float *pY, float *pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_GET_OBJECT_COORDINATES, obj, pX, pY, pZ); }
+	static void SetObjectRotation(unsigned int obj, float pX, float pY, float pZ) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_ROTATION, obj, pX, pY, pZ); }
 	static unsigned int SlideObject(unsigned int objectIndex, float pX, float pY, float pZ, float rX, float rY, float rZ, float speed) { return EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SLIDE_OBJECT, objectIndex, pX, pY, pZ, rX, rY, rZ, speed); }
 	static void SetObjectAlpha(unsigned int object, float alpha) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_ALPHA, object, alpha); }
 	static bool IsObjectAttached(unsigned int object) { return EFLC::CNativeInvoke::Invoke<bool>(NATIVE_IS_OBJECT_ATTACHED, object); }
@@ -242,6 +244,15 @@ namespace CScript
 	static void CreateObjectNoOffset(unsigned int model, float x, float y, float z, unsigned int *pObj, bool unknownTrue) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_CREATE_OBJECT_NO_OFFSET, model, x, y, z, pObj, unknownTrue); }
 	static void SetObjectVisible(unsigned int obj, bool value) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_OBJECT_VISIBLE, obj, value); }
 	static void SetActivateObjectPhysicsAsSoonAsItIsUnfrozen(unsigned int object, unsigned int physics) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_ACTIVATE_OBJECT_PHYSICS_AS_SOON_AS_, object, physics); }
+
+	// Pickups
+
+	// Not sure about third argument.
+	static void CreatePickupRotate(eModel model, ePickupType pickupType, unsigned int ammo, float pX, float pY, float pZ, float rX, float rY, float rZ, unsigned int *pPickup) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_CREATE_PICKUP_ROTATE, model, pickupType, ammo, pX, pY, pZ, rX, rY, rZ, pPickup); }
+	static void RemovePickup(unsigned int pickup) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_REMOVE_PICKUP, pickup); }
+	static void AddPickupToInteriorRoomByName(unsigned int pickup, const char *roomName) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_ADD_PICKUP_TO_INTERIOR_ROOM_BY_NAME, pickup, roomName); }
+	static void AddPickupToInteriorRoomByKey(unsigned int pickup, eInteriorRoomKey roomKey) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_ADD_PICKUP_TO_INTERIOR_ROOM_BY_KEY, pickup, roomKey); }
+
 
 	// Animation
 	static bool IsCharPlayingAnim(unsigned int ped, char *animSet, char *animName) { return EFLC::CNativeInvoke::Invoke<bool>(NATIVE_IS_CHAR_PLAYING_ANIM, ped, animSet, animName); }
@@ -312,7 +323,7 @@ namespace CScript
 
 	static void TaskAimGunAtCoord(unsigned int ped, float tX, float tY, float tZ, unsigned int duration) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_TASK_AIM_GUN_AT_COORD, ped, tX, tY, tZ, duration); }
 	static void TaskShootAtCoord(unsigned int ped, float x, float y, float z, unsigned int p4, unsigned int p5) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_TASK_SHOOT_AT_COORD, ped, x, y, z, p4, p5); }
-	
+
 	// unsigned int
     static void CreateMissionTrain(unsigned int unknown1, float x, float y, float z, bool unknown2, unsigned int *pTrain) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_CREATE_MISSION_TRAIN, unknown1, x, y, z, unknown2, pTrain); }
     static void DeleteMissionTrain(unsigned int *pTrain) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_DELETE_MISSION_TRAIN, pTrain); }

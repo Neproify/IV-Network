@@ -1237,6 +1237,91 @@ void SetBlipName(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	}
 }
 
+void CreateObject(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId objectId;
+	pBitStream->Read(objectId);
+
+	unsigned int uiModel;
+	pBitStream->Read(uiModel);
+
+	CVector3 vecPosition;
+	pBitStream->Read(vecPosition);
+
+	CVector3 vecRotation;
+	pBitStream->Read(vecRotation);
+
+	CObjectEntity * pObject;
+
+	if (g_pCore->GetGame()->GetObjectManager()->DoesExists(objectId))
+	{
+		pObject = g_pCore->GetGame()->GetObjectManager()->GetAt(objectId);
+	}
+	else
+	{
+		pObject = new CObjectEntity((EFLC::CScript::eModel)uiModel, vecPosition, vecRotation);
+
+		if (pObject)
+		{
+			g_pCore->GetGame()->GetObjectManager()->Add(objectId, pObject);
+			pObject->SetId(objectId);
+		}
+	}
+
+	if (pObject)
+	{
+		pObject->Create();
+	}
+}
+
+void SetObjectPosition(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId objectId;
+	pBitStream->Read(objectId);
+
+	CVector3 vecPosition;
+	pBitStream->Read(vecPosition);
+
+	CObjectEntity * pObject = g_pCore->GetGame()->GetObjectManager()->GetAt(objectId);
+
+	if (pObject)
+	{
+		pObject->SetPosition(vecPosition);
+	}
+}
+
+void SetObjectRotation(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId objectId;
+	pBitStream->Read(objectId);
+
+	CVector3 vecRotation;
+	pBitStream->Read(vecRotation);
+
+	CObjectEntity * pObject = g_pCore->GetGame()->GetObjectManager()->GetAt(objectId);
+
+	if (pObject)
+	{
+		pObject->SetRotation(vecRotation);
+	}
+}
+
+void SetObjectModel(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	EntityId objectId;
+	pBitStream->Read(objectId);
+
+	unsigned int uiModel;
+	pBitStream->Read(uiModel);
+
+	CObjectEntity * pObject = g_pCore->GetGame()->GetObjectManager()->GetAt(objectId);
+
+	if (pObject)
+	{
+		pObject->SetModel((EFLC::CScript::eModel)uiModel);
+	}
+}
+
 void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 {
 	// Are we not already registered?
@@ -1301,6 +1386,11 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_RANGE), SetBlipRange);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_VISIBLE), SetBlipVisible);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_NAME), SetBlipName);
+
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_CREATE_OBJECT), CreateObject);
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_POSITION), SetObjectPosition);
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_ROTATION), SetObjectRotation);
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL), SetObjectModel);
 		
 		// Mark as registered
 		m_bRegistered = true;
@@ -1369,6 +1459,12 @@ void CNetworkRPC::Unregister(RakNet::RPC4 * pRPC)
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_RANGE));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_VISIBLE));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_BLIP_SET_NAME));
+
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_CREATE_OBJECT));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_POSITION));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_ROTATION));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL));
+
 		// Mark as not registered
 		m_bRegistered = false;
 	}

@@ -33,16 +33,53 @@
 
 #include "CNetworkEntity.h"
 
+class CScriptObject;
+
 class CObjectEntity : public CNetworkEntity
 {
 private:
-
+	CScriptObject * m_pScriptObject;
+	unsigned int m_uiModel;
+	CVector3 m_vecPosition;
+	CVector3 m_vecRotation;
 public:
 	CObjectEntity();
 	~CObjectEntity();
 
 	bool Create() {return true;}
 	bool Destroy() {return true;}
+
+	void SetScriptObject(CScriptObject* pScriptObject) { m_pScriptObject = pScriptObject; }
+	CScriptObject * GetScriptObject() { return m_pScriptObject; }
+
+	void SetPosition(CVector3 vecPosition) { m_vecPosition = vecPosition; }
+	void GetPosition(CVector3 &vecPosition) { vecPosition = m_vecPosition; }
+
+	void SetRotation(CVector3 vecRotation) { m_vecRotation = vecRotation; }
+	void GetRotation(CVector3 &vecRotation) { vecRotation = m_vecRotation; }
+
+	void SetModel(unsigned int uiModel) { m_uiModel = uiModel; }
+	unsigned int GetModel() { return m_uiModel; }
 };
 
+class CScriptObject : public CScriptEntity
+{
+private:
+public:
+	CScriptObject() {};
+	~CScriptObject() {};
+
+	CObjectEntity * GetEntity() { return (CObjectEntity*)CScriptEntity::GetEntity(); }
+
+	const char * GetScriptClassName() { return "CObjectEntity"; }
+
+	void SetPosition(float fX, float fY, float fZ);
+	CVector3 GetPosition() { CVector3 vecPosition; GetEntity()->GetPosition(vecPosition); return vecPosition; }
+
+	void SetRotation(float fX, float fY, float fZ);
+	CVector3 GetRotation() { CVector3 vecRotation; GetEntity()->GetRotation(vecRotation); return vecRotation; }
+
+	void SetModel(unsigned int uiModel);
+	unsigned int GetModel() { return GetEntity()->GetModel(); }
+};
 #endif // CObjectEntity_h
