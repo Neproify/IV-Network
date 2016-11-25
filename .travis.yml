@@ -3,10 +3,11 @@ language: cpp
 matrix:
   include:
     - compiler: gcc
-    addons:
-      sources:
-        - ubuntu-toolchain-r-test
-      packages:
-        - g++-5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
 
 script: make
