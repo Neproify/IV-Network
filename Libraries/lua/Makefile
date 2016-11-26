@@ -6,7 +6,7 @@
 # Your platform. See PLATS for possible values.
 PLAT= linux
 
-CC= gcc -std=gnu99 -nostartfiles
+CC= gcc-5 -std=gnu99 -nostartfiles
 CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
