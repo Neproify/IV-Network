@@ -1,4 +1,4 @@
-CC=g++-5
+CC=g++
 CFLAGS=-m32 -std=gnu++11 -c -D_SERVER -D_LINUX -fpermissive -w -I../Shared -I../Libraries -I../Libraries/RakNet -I../Libraries/Squirrel -I.
 SOURCES=$(wildcard *.cpp)
 SOURCES+=$(wildcard Scripting/Natives/*.cpp)
