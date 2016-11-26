@@ -2,4 +2,14 @@ language: cpp
 
 dist: trusty
 
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - libc6-dev-i386
+
 script: make
