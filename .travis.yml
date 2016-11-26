@@ -13,5 +13,6 @@ matrix:
             - libc6-dev-i386
             - g++-multilib
             - gcc-multilib
+            - readline-devel
 
 script: make
