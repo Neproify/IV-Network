@@ -9,5 +9,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
+            - gcc-5
 
 script: make
