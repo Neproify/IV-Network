@@ -4,5 +4,5 @@ SET REVISION=%%F
 )
 
 cd nsis
-makensis.exe /DVERSION=1.0.0.DEV /DREVISION=%REVISION% ../installer.nsi
+makensis.exe /DVERSION=1.0.0.DEV /DREVISION=%REVISION% ../installer-server.nsi
 cd ..

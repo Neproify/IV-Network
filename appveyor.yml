@@ -4,7 +4,7 @@ os: Visual Studio 2015
 configuration:
   - Release
 
-clone_depth: 1
+shallow_clone: false
 
 build:
   project: IVN.sln
@@ -12,8 +12,9 @@ platform: Win32
 
 artifacts:
   - path: Installer\IVNetwork-*.exe
-  - path: Build\Release\IVNetworkDedicatedServer.exe
+  - path: Build\Release\IVNetworkServer-*.exe
 
 after_build:
   - cd Installer
-  - build.bat
+  - build-client.bat
+  - build-server.bat
