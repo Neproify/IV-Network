@@ -18,3 +18,7 @@ after_build:
   - cd Installer
   - build-client.bat
   - build-server.bat
+
+environment:
+  UPLOAD_SECRET:
+    secure: nnKz9GIcJpS5897d0JeOo0AwfKAOHDzgHCZJdXs1I8gDpKEkQp6LnwDQdJDQnTih
