@@ -11,7 +11,7 @@ build:
 platform: Win32
 
 artifacts:
-  - path: Installer\IVNetwork-1.0.0.DEV.exe
+  - path: Installer\IVNetwork-*.exe
   - path: Build\Release\IVNetworkDedicatedServer.exe
 
 after_build:
