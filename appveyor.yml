@@ -18,6 +18,7 @@ after_build:
   - cd Installer
   - build-client.bat
   - build-server.bat
+  - if "%APPVEYOR_PULL_REQUEST_TITLE%" == "" if "%APPVEYOR_REPO_TAG%" == "false" nightly_upload.bat
 
 environment:
   UPLOAD_SECRET:
