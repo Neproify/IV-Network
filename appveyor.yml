@@ -12,7 +12,7 @@ platform: Win32
 
 artifacts:
   - path: Installer\IVNetwork-*.exe
-  - path: Build\Release\IVNetworkServer-*.exe
+  - path: Installer\IVNetworkServer-*.exe
 
 after_build:
   - cd Installer
