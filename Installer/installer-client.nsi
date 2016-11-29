@@ -10,7 +10,6 @@
 ;======================================================
 ; Configuration
 !define NAME 'IVNetwork'
-!define VERSION '1.0.0.DEV'
 
 ;======================================================
 ; Modern Interface Configuration
@@ -22,7 +21,7 @@
 ;======================================================
 ; Installer Information
 Name "${NAME} ${VERSION}"
-OutFile "${NAME}-${VERSION}.exe"
+OutFile "${NAME}-${VERSION}-r${REVISION}.exe"
 SetCompressor /SOLID lzma
 CRCCheck force
 BrandingText /TRIMCENTER "${NAME} ${VERSION} Setup"

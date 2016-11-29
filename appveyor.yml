@@ -4,16 +4,22 @@ os: Visual Studio 2015
 configuration:
   - Release
 
-clone_depth: 1
+shallow_clone: false
 
 build:
   project: IVN.sln
 platform: Win32
 
 artifacts:
-  - path: Installer\IVNetwork-1.0.0.DEV.exe
-  - path: Build\Release\IVNetworkDedicatedServer.exe
+  - path: Installer\IVNetwork-*.exe
+  - path: Installer\IVNetworkServer-*.exe
 
 after_build:
   - cd Installer
-  - build.bat
+  - build-client.bat
+  - build-server.bat
+  - if "%APPVEYOR_PULL_REQUEST_TITLE%" == "" if "%APPVEYOR_REPO_TAG%" == "false" nightly_upload.bat
+
+environment:
+  UPLOAD_SECRET:
+    secure: nnKz9GIcJpS5897d0JeOo0AwfKAOHDzgHCZJdXs1I8gDpKEkQp6LnwDQdJDQnTih
