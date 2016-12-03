@@ -129,7 +129,9 @@ bool CServer::Startup()
 	if(CVAR_GET_STRING("hostaddress").IsNotEmpty())
 		CLogFile::Printf(" Host Address: %s", CVAR_GET_STRING("hostaddress").Get());
 
-	CLogFile::Printf(" Stream distance: %i", CVAR_GET_INTEGER("streamdistance"));		
+	CLogFile::Printf(" Stream distance: %i", CVAR_GET_INTEGER("streamdistance"));
+    SetSyncRate(CVAR_GET_INTEGER("syncrate"));
+    CLogFile::Printf(" SyncRate: %u", GetSyncRate());
 		
 	CLogFile::Printf(" Max Players: %d", CVAR_GET_INTEGER("maxplayers"));
 
