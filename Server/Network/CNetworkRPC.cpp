@@ -60,9 +60,16 @@ void InitialData(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	pBitStream->Read(dwVersion);
 
 	// Is the network version invalid?
-	if (dwVersion != (DWORD)/*NETWORK_VERSION*/0x0)
+	if (dwVersion != (DWORD)NETWORK_VERSION)
 	{
-		// TODO
+        RakNet::BitStream pKickBitStream;
+        pKickBitStream.Write((RakNet::MessageID)PACKET_NETWORK_VERSION_INVALID);
+        pKickBitStream.Write((DWORD)NETWORK_VERSION);
+        CServer::GetInstance()->GetNetworkModule()->GetRakPeer()->Send(&pKickBitStream, HIGH_PRIORITY, RELIABLE, (char)0, pPacket->systemAddress, false);
+
+        CServer::GetInstance()->GetNetworkModule()->GetRakPeer()->CloseConnection(pPacket->guid, true);
+        CLogFile::Printf("[network] Invalid network version(IP: %s, client network version: %lu)", pPacket->systemAddress.ToString(true, ':'), dwVersion);
+        return;
 	}
 
 	RakNet::BitStream bitStream;

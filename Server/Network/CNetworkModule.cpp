@@ -100,7 +100,6 @@ bool CNetworkModule::Startup(void)
 
 	// Attempt to startup raknet
 	bool bReturn = (m_pRakPeer->Startup(CVAR_GET_INTEGER("maxplayers"), &socketDescriptor, 1, 0) == RakNet::RAKNET_STARTED);
-
 	// Did it start?
 	if(bReturn)
 	{

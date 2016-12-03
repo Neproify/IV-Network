@@ -27,6 +27,8 @@ enum ePacketIdentfier : PacketId
 	PACKET_PASSWORD_INVALID,	// The password we supplied to the server was invalid
 		
 	PACKET_RPC,					// Remote procedure call
+
+    PACKET_NETWORK_VERSION_INVALID, // The network version of client doesn't match server's version
 	
 	PACKET_COUNT				// Number of packet identifiers (types)
 };

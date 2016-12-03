@@ -296,6 +296,12 @@ void CNetworkManager::UpdateNetwork()
 				m_uiLastConnectionTry = GetTickCount();
 				break;
 			}
+
+            case PACKET_NETWORK_VERSION_INVALID:
+            {
+                DWORD dwVersion = pPacket->data[1];
+                g_pCore->GetGraphics()->GetChat()->Print(CString("#16C5F2Invalid network version(server: %lu, client: %lu).", dwVersion, (DWORD)NETWORK_VERSION));
+            }
 		}
 
 		// Deallocate the memory used by the packet
