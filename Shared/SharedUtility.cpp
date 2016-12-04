@@ -452,9 +452,9 @@ namespace SharedUtility
 #ifdef _WIN32
 		return timeGetTime();
 #else
-		timespec ts;
-		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
-		return (DWORD)(ts.tv_sec * 1000 + round(ts.tv_nsec / 1.0e6));
+        timeval ts;
+        gettimeofday(&ts, 0);
+        return (DWORD)(ts.tv_sec * 1000 + (ts.tv_usec / 1000));
 #endif
 	}
 
