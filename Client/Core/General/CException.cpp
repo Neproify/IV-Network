@@ -183,11 +183,8 @@ BOOL CALLBACK ExceptionProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			DumpMain(FALSE);
 			SetDlgItemText(hDlg,IDC_EDIT1,szErrorString);
-
-			/* Now we are going to write a minidump and the dumped info to a file/dir */
-			//WirteCrashInfo(stErrorString); 
-
-			SetForegroundWindow(GetDlgItem(hDlg,IDD_DIALOG1));
+            
+            SetForegroundWindow(GetDlgItem(hDlg,IDD_DIALOG1));
 			SetFocus(GetDlgItem(hDlg,IDC_BUTTON1));
 			break;
 		
@@ -229,6 +226,39 @@ BOOL CALLBACK ExceptionProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 LONG WINAPI apiExceptionHandler(_EXCEPTION_POINTERS * apiExceptionInf)
 {
 	pContextRecord = apiExceptionInf->ContextRecord;
+
+    // Get the current time and date
+    time_t t = time(NULL);
+    const struct tm * tm = localtime(&t);
+
+    CString strPath(SharedUtility::GetAbsolutePath("multiplayer\\crashinfo"));
+
+    if (!SharedUtility::Exists(strPath))
+        SharedUtility::CreateDirectoryA(strPath);
+
+    strPath.AppendF("\\%04d.%02d.%02d-%02d.%02d.%02d", (tm->tm_year + 1900), (tm->tm_mon + 1), tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+
+    CString strMiniDumpPath("%s.dmp", strPath.Get());
+
+    HANDLE hFile = CreateFileA(strMiniDumpPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if (hFile)
+    {
+        // Create the minidump exception information
+        MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
+        exceptionInfo.ThreadId = GetCurrentThreadId();
+        exceptionInfo.ExceptionPointers = apiExceptionInf;
+        exceptionInfo.ClientPointers = FALSE;
+
+        // Write the minidump to the minidump file
+        if (!MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &exceptionInfo, NULL, NULL))
+            CLogFile::Printf("Failed to write the minidump file.");
+
+        // Close the minidump file
+        CloseHandle(hFile);
+    }
+    else
+        CLogFile::Printf("Failed to open the minidump file.");
 
 	ShowWindow(*(HWND*) (g_pCore->GetBase() + 0x16A9A54), SW_MINIMIZE);
 	HINSTANCE hInst = (HINSTANCE)g_hModule;
