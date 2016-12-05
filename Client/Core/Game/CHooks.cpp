@@ -249,7 +249,9 @@ void _declspec(naked) PhysicsHook()
 	}
 
 	sub_44A690 = g_pCore->GetBase() + 0x44A690;
-	if (*(DWORD *) (physics + 4) == 0) {
+
+    // This code was crashing, look at this later
+	/*if (*(DWORD *) (physics + 4) == 0) {
 		CLogFile::Printf("Fail 0x%p", physics);
 
 		if (pVehicle->GetfragInst()) {
@@ -287,12 +289,12 @@ void _declspec(naked) PhysicsHook()
 		_asm	popad;
 		_asm	retn;
 	}
-	else {
+	else {*/
 		_asm	popfd;
 		_asm	popad;
 		_asm	call sub_44A690;
 		_asm	retn;
-	}
+	//}
 
 	_asm	popfd;
 	_asm	popad;
