@@ -1,4 +1,4 @@
-//========= IV: Network - https://github.com/GTA-Network/IV-Network ============
+//========= IV: Network - https://github.com/Neproify/IV-Network ============
 //
 // File: CResourceScriptFile.cpp
 // Project: Shared
