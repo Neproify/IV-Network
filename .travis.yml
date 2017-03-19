@@ -16,11 +16,6 @@ matrix:
 
 script: make
 
-env:
-  global:
-    secure: T1KcVt/Xk3yvA2adknDRTa3lb2audw26RkZLeiCuZV1WIEG4Fqyza1Sfcb44bbD74IU5LKK1QgRRyPe+rq2YJi4Djx/sw8LYr/Jt4MkDiFPtBTWCVGMbhV7RaXl3Ux5KQWnHpIApAa1TNUwHFPu75VzXQHOVyltrnOJHJp+/pZALKGYyxkp3cIxxRjRuN7nORO6lbYn91bUtd1RVNLtj8wARfYDOFtfgRxA3EQWzy1evZGSy5WEWeUUxPH0osrHrnSGtrsPWx7F4Sz8ClsN1bGPwL4zFF4qe8LlgPD/iTDC9WwviubBH0Ium/jWlsW5Vu31D2ydf3Fn/a0lAV5xZyQxgzXof4e0YG0Kpa44CqdoWVHAqbwvIUB7q5HSXK3zr2NBJfkDfsTAfp/B4XK3Y/SQoOjjH/7QN4u/qAyTXysD/rgN50W6GSuQHlsdbI70UP8kX3oWD5IeGbbU55y3jO+PMKwb/Juc81gtYdn5b8IWsQczNcRYSgm2PBsod2z1jheynso5XzYKlEfaFW37OZYLJyj2+vr5AgGfhjVeVMWeIrAnKlOjcsbhpN3OgpdBGXNCQGfCWiaSYhwp0A3IUHZ7VwP+sfMWwpLurc8+mneQfUSEcJFPkZHFOWAeJSuKQQLb0OZ195B8ATxjW9M7BriJpj+K+MBq/4k7dZ+2XnBM=
-
 after_success:
   - cd Installer
   - ./build-server.sh
-  - ./nightly_upload.sh

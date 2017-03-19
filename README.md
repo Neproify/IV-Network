@@ -5,7 +5,7 @@
 
 Two quick start options are available:
 
-* [Download the latest nightly release](http://nightly.ivnetwork.tk/).
+* Download the latest nightly release on our build server.
 * Clone the repo: `https://github.com/Neproify/IV-Network.git`.
 
 ## Description
