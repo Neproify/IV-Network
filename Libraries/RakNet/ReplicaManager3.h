@@ -1,9 +1,17 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
 /// \file
 /// \brief Contains the third iteration of the ReplicaManager class.
 ///
-/// This file is part of RakNet Copyright 2003 Jenkins Software LLC
-///
-/// Usage of RakNet is subject to the appropriate license agreement.
+
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_ReplicaManager3==1
@@ -328,6 +336,9 @@ protected:
 	RakNet::Time lastAutoSerializeOccurance;
 	bool autoCreateConnections, autoDestroyConnections;
 	Replica3 *currentlyDeallocatingReplica;
+	// Set on the first call to ReferenceInternal(), and should never be changed after that
+	// Used to lookup in Replica3LSRComp. I don't want to rely on GetNetworkID() in case it changes at runtime
+	uint32_t nextReferenceIndex;
 
 	// For O(1) lookup
 	RM3World *worldsArray[255];
@@ -1077,6 +1088,7 @@ public:
 	LastSerializationResultBS lastSentSerialization;
 	bool forceSendUntilNextUpdate;
 	LastSerializationResult *lsr;
+	uint32_t referenceIndex;
 };
 
 /// \brief Use Replica3 through composition instead of inheritance by containing an instance of this templated class

@@ -1,10 +1,16 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
 
 /// \file
 /// \brief Contains the NAT-punchthrough plugin for the client.
 ///
-/// This file is part of RakNet Copyright 2003 Jenkins Software LLC
-///
-/// Usage of RakNet is subject to the appropriate license agreement.
 
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_NatPunchthroughClient==1
@@ -53,6 +59,7 @@ struct RAK_DLL_EXPORT PunchthroughConfiguration
 		MAXIMUM_NUMBER_OF_INTERNAL_IDS_TO_CHECK=5; /// set to 0 to not do lan connects
 		MAX_PREDICTIVE_PORT_RANGE=2;
 		EXTERNAL_IP_WAIT_BETWEEN_PORTS=200;
+		EXTERNAL_IP_WAIT_AFTER_FIRST_TTL=100;
 		EXTERNAL_IP_WAIT_AFTER_ALL_ATTEMPTS=EXTERNAL_IP_WAIT_BETWEEN_PORTS;
 		retryOnFailure=false;
 	}
@@ -70,6 +77,9 @@ struct RAK_DLL_EXPORT PunchthroughConfiguration
 
 	/// How many external ports to try past the last known starting port
 	int MAX_PREDICTIVE_PORT_RANGE;
+
+	/// After sending TTL, how long to wait until first punch attempt
+	int EXTERNAL_IP_WAIT_AFTER_FIRST_TTL;
 
 	/// After giving up on one external  port, how long to wait before trying the next port
 	int EXTERNAL_IP_WAIT_BETWEEN_PORTS;
@@ -185,8 +195,41 @@ public:
 	virtual void OnRakPeerShutdown(void);
 	void Clear(void);
 
+	struct SendPing
+	{
+		RakNet::Time nextActionTime;
+		SystemAddress targetAddress;
+		SystemAddress facilitator;
+		SystemAddress internalIds[MAXIMUM_NUMBER_OF_INTERNAL_IDS];
+		RakNetGUID targetGuid;
+		bool weAreSender;
+		int attemptCount;
+		int retryCount;
+		int punchingFixedPortAttempts; // only used for TestMode::PUNCHING_FIXED_PORT
+		uint16_t sessionId;
+		bool sentTTL;
+		// Give priority to internal IP addresses because if we are on a LAN, we don't want to try to connect through the internet
+		enum TestMode
+		{
+			TESTING_INTERNAL_IPS,
+			WAITING_FOR_INTERNAL_IPS_RESPONSE,
+			//SEND_WITH_TTL,
+			TESTING_EXTERNAL_IPS_FACILITATOR_PORT_TO_FACILITATOR_PORT,
+			TESTING_EXTERNAL_IPS_1024_TO_FACILITATOR_PORT,
+			TESTING_EXTERNAL_IPS_FACILITATOR_PORT_TO_1024,
+			TESTING_EXTERNAL_IPS_1024_TO_1024,
+			WAITING_AFTER_ALL_ATTEMPTS,
+
+			// The trendnet remaps the remote port to 1024.
+			// If you continue punching on a different port for the same IP it bans you and the communication becomes unidirectioal
+			PUNCHING_FIXED_PORT,
+
+			// try port 1024-1028
+		} testMode;
+	} sp;
+
 protected:
-	unsigned short nextExternalPort;
+	unsigned short mostRecentExternalPort;
 	//void OnNatGroupPunchthroughRequest(Packet *packet);
 	void OnFailureNotification(Packet *packet);
 	//void OnNatGroupPunchthroughReply(Packet *packet);
@@ -203,38 +246,6 @@ protected:
 	void PushFailure(void);
 	bool RemoveFromFailureQueue(void);
 	void PushSuccess(void);
-
-	struct SendPing
-	{
-		RakNet::Time nextActionTime;
-		SystemAddress targetAddress;
-		SystemAddress facilitator;
-		SystemAddress internalIds[MAXIMUM_NUMBER_OF_INTERNAL_IDS];
-		RakNetGUID targetGuid;
-		bool weAreSender;
-		int attemptCount;
-		int retryCount;
-		int punchingFixedPortAttempts; // only used for TestMode::PUNCHING_FIXED_PORT
-		uint16_t sessionId;
-		// Give priority to internal IP addresses because if we are on a LAN, we don't want to try to connect through the internet
-		enum TestMode
-		{
-			TESTING_INTERNAL_IPS,
-			WAITING_FOR_INTERNAL_IPS_RESPONSE,
-			SEND_WITH_TTL,
-			TESTING_EXTERNAL_IPS_FACILITATOR_PORT_TO_FACILITATOR_PORT,
-			TESTING_EXTERNAL_IPS_1024_TO_FACILITATOR_PORT,
-			TESTING_EXTERNAL_IPS_FACILITATOR_PORT_TO_1024,
-			TESTING_EXTERNAL_IPS_1024_TO_1024,
-			WAITING_AFTER_ALL_ATTEMPTS,
-
-			// The trendnet remaps the remote port to 1024.
-			// If you continue punching on a different port for the same IP it bans you and the communication becomes unidirectioal
-			PUNCHING_FIXED_PORT,
-
-			// try port 1024-1028
-		} testMode;
-	} sp;
 
 	PunchthroughConfiguration pc;
 	NatPunchthroughDebugInterface *natPunchthroughDebugInterface;

@@ -1,3 +1,13 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
 #include "NativeFeatureIncludes.h"
 #if _RAKNET_SUPPORT_NatPunchthroughServer==1
 
@@ -233,7 +243,7 @@ PluginReceiveResult NatPunchthroughServer::OnReceive(Packet *packet)
 			{
 				DataStructures::List<RakNetSocket2* > sockets;
 				rakPeerInterface->GetSockets(sockets);
-				for (unsigned int i = 0; i < sockets.Size() && i < MAXIMUM_NUMBER_OF_INTERNAL_IDS; i++)
+				for (int i=0; i < sockets.Size() && i < MAXIMUM_NUMBER_OF_INTERNAL_IDS; i++)
 				{
 					boundAddresses[i]=sockets[i]->GetBoundAddress();
 					boundAddressCount++;
@@ -383,7 +393,6 @@ void NatPunchthroughServer::OnNATPunchthroughRequest(Packet *packet)
 	ca->sender=users[i];
 	ca->sessionId=sessionId++;
 	i = users.GetIndexFromKey(recipientGuid, &objectExists);
-	ca->recipient=users[i];
 	if (objectExists==false || ca->sender == ca->recipient)
 	{
 // 		printf("DEBUG %i\n", __LINE__);
@@ -396,6 +405,7 @@ void NatPunchthroughServer::OnNATPunchthroughRequest(Packet *packet)
 		RakNet::OP_DELETE(ca,_FILE_AND_LINE_);
 		return;
 	}
+	ca->recipient=users[i];
 	if (ca->recipient->HasConnectionAttemptToUser(ca->sender))
 	{
 		outgoingBs.Write((MessageID)ID_NAT_ALREADY_IN_PROGRESS);

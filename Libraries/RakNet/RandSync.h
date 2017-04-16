@@ -1,9 +1,16 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
 /// \file
 /// \brief \b [Internal] Random number generator
 ///
-/// This file is part of RakNet Copyright 2003 Jenkins Software LLC
-///
-/// Usage of RakNet is subject to the appropriate license agreement.
 
 
 
@@ -23,7 +30,7 @@ class RAK_DLL_EXPORT RakNetRandomSync
 {
 public:
 	RakNetRandomSync();
-	~RakNetRandomSync();
+	virtual ~RakNetRandomSync();
 	void SeedMT( uint32_t _seed );
 	void SeedMT( uint32_t _seed, uint32_t skipValues );
 	float FrandomMT( void );

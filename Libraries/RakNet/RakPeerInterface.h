@@ -1,9 +1,17 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
 /// \file
 /// \brief An interface for RakPeer.  Simply contains all user functions as pure virtuals.
 ///
-/// This file is part of RakNet Copyright 2003 Jenkins Software LLC
-///
-/// Usage of RakNet is subject to the appropriate license agreement.
+
 
 
 #ifndef __RAK_PEER_INTERFACE_H
@@ -343,6 +351,12 @@ public:
 	/// It would be true by default to prevent timestamp drift, since in the event of a clock spike, the timestamp deltas would no longer be accurate
 	/// \param[in] doPing True to start occasional pings.  False to stop them.
 	virtual void SetOccasionalPing( bool doPing )=0;
+
+	/// Return the clock difference between your system and the specified system
+	/// Subtract GetClockDifferential() from a time returned by the remote system to get that time relative to your own system
+	/// Returns 0 if the system is unknown
+	/// \param[in] systemIdentifier Which system we are referring to
+	virtual RakNet::Time GetClockDifferential( const AddressOrGUID systemIdentifier )=0;
 
 	// --------------------------------------------------------------------------------------------Static Data Functions - Functions dealing with API defined synchronized memory--------------------------------------------------------------------------------------------
 	/// Sets the data to send along with a LAN server discovery or offline ping reply.

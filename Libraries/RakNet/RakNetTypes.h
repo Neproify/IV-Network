@@ -1,13 +1,24 @@
+/*
+ *  Copyright (c) 2014, Oculus VR, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant 
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
 /// \file
 /// \brief Types used by RakNet, most of which involve user code.
 ///
-/// This file is part of RakNet Copyright 2003 Jenkins Software LLC
-///
-/// Usage of RakNet is subject to the appropriate license agreement.
 
 
 #ifndef __NETWORK_TYPES_H
 #define __NETWORK_TYPES_H
+
+
+
+
 
 #include "RakNetDefines.h"
 #include "NativeTypes.h"
@@ -16,6 +27,9 @@
 #include "WindowsIncludes.h"
 #include "XBox360Includes.h"
 #include "SocketIncludes.h"
+
+
+
 
 
 namespace RakNet {
@@ -281,6 +295,8 @@ struct RAK_DLL_EXPORT SystemAddress
 
 	/// \internal sockaddr_in6 requires extra data beyond just the IP and port. Copy that extra data from an existing SystemAddress that already has it
 	void FixForIPVersion(const SystemAddress &boundAddressToSocket);
+
+	bool IsLANAddress(void);
 
 	SystemAddress& operator = ( const SystemAddress& input );
 	bool operator==( const SystemAddress& right ) const;
