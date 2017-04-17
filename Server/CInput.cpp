@@ -83,24 +83,24 @@ void CInput::ProcessInput(CString strInput)
 		CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_PLAYER_MESSAGE_TO_ALL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
 	}
 	else if (strCommand == "uptime") {
-		std::cout << "Uptime: " << SharedUtility::GetTimePassedFromTime(CServer::GetInstance()->GetStartupTime()) << std::endl;
+		CLogFile::Printf("Uptime: %s.\n", SharedUtility::GetTimePassedFromTime(CServer::GetInstance()->GetStartupTime()));
 	}
 	else if (strCommand == "resources") {
-		std::cout << "Running resources:" << std::endl;
+		CLogFile::Print("Running resources:\n");
 		for (auto resource : CServer::GetInstance()->GetResourceManager()->GetResources())
 		{
-			std::cout << resource->GetName() << std::endl;
+			CLogFile::Printf("%s\n", resource->GetName());
 		}
 	}
 	else if (strCommand == "players") {
-		std::cout << "Connected players:" << std::endl;
+		CLogFile::Print("Connected players:\n");
 		CPlayerEntity * player = nullptr;
 		for (EntityId i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); i++)
 		{
 			if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
 			{
 				player = CServer::GetInstance()->GetPlayerManager()->GetAt(i);
-				std::cout << player->GetName() << "(ID: " << player->GetId() << ")" << std::endl;
+				CLogFile::Printf("%s(ID: %us)\n", player->GetName(), player->GetId());
 			}
 		}
 	}
