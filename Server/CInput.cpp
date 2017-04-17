@@ -83,13 +83,13 @@ void CInput::ProcessInput(CString strInput)
 		CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_PLAYER_MESSAGE_TO_ALL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
 	}
 	else if (strCommand == "uptime") {
-		CLogFile::Printf("Uptime: %s.\n", SharedUtility::GetTimePassedFromTime(CServer::GetInstance()->GetStartupTime()));
+		CLogFile::Printf("Uptime: %s.\n", SharedUtility::GetTimePassedFromTime(CServer::GetInstance()->GetStartupTime()).C_String());
 	}
 	else if (strCommand == "resources") {
 		CLogFile::Print("Running resources:\n");
 		for (auto resource : CServer::GetInstance()->GetResourceManager()->GetResources())
 		{
-			CLogFile::Printf("%s\n", resource->GetName());
+			CLogFile::Printf("%s\n", resource->GetName().C_String());
 		}
 	}
 	else if (strCommand == "players") {
@@ -100,7 +100,7 @@ void CInput::ProcessInput(CString strInput)
 			if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
 			{
 				player = CServer::GetInstance()->GetPlayerManager()->GetAt(i);
-				CLogFile::Printf("%s(ID: %us)\n", player->GetName(), player->GetId());
+				CLogFile::Printf("%s(ID: %us)\n", player->GetName().C_String(), player->GetId());
 			}
 		}
 	}
