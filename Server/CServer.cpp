@@ -253,6 +253,8 @@ bool CServer::Startup()
 
 	m_pNetworkModule->Startup();
 
+	m_ulStartupTime = SharedUtility::GetTime();
+
 	return true;
 }
 unsigned long m_ulLastProcess = 0;

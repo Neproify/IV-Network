@@ -67,17 +67,48 @@ void CInput::ProcessInput(CString strInput)
 		printf("uptime\n");
 		printf("resources\n");
 		printf("players\n");
-		printf("loadresource <name>\n");
-		printf("reloadresource <name>\n");
-		printf("unloadresource <name>\n");
+		printf("TODO:loadresource <name>\n");
+		printf("TODO:reloadresource <name>\n");
+		printf("TODO:unloadresource <name>\n");
+		printf("setsyncrate <rate>\n");
+		printf("setmaxfps <limit>\n");
 		printf("exit\n");
 		return;
 	}
-	else if (strCommand == "setSyncRate") {
+	else if (strCommand == "say") {
+		RakNet::BitStream bitStream;
+		bitStream.Write(RakNet::RakString(strParameters.C_String()));
+		bitStream.Write(0xFFFFFF);
+		bitStream.Write(true);
+		CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_PLAYER_MESSAGE_TO_ALL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+	}
+	else if (strCommand == "uptime") {
+		std::cout << "Uptime: " << SharedUtility::GetTimePassedFromTime(CServer::GetInstance()->GetStartupTime()) << std::endl;
+	}
+	else if (strCommand == "resources") {
+		std::cout << "Running resources:" << std::endl;
+		for (auto resource : CServer::GetInstance()->GetResourceManager()->GetResources())
+		{
+			std::cout << resource->GetName() << std::endl;
+		}
+	}
+	else if (strCommand == "players") {
+		std::cout << "Connected players:" << std::endl;
+		CPlayerEntity * player = nullptr;
+		for (EntityId i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); i++)
+		{
+			if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
+			{
+				player = CServer::GetInstance()->GetPlayerManager()->GetAt(i);
+				std::cout << player->GetName() << "(ID: " << player->GetId() << ")" << std::endl;
+			}
+		}
+	}
+	else if (strCommand == "setsyncrate") {
 		int rate = atoi(strParameters.Get());
 		CServer::GetInstance()->SetSyncRate(rate);
 	}
-	else if (strCommand == "setMaxFPS") {
+	else if (strCommand == "setmaxfps") {
 		int fps = atoi(strParameters.Get());
 		CServer::GetInstance()->SetMaximumFPS(fps);
 	}
