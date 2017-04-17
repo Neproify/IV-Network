@@ -215,7 +215,7 @@ void CCore::OnDeviceRender(IDirect3DDevice9 * pDevice)
 {
 	assert(m_pGraphics);
 
-#ifdef _DEBUG
+#if 0
 	char szNetworkStats[10000];
 	memset(szNetworkStats, 0, sizeof(szNetworkStats));
 	RakNet::StatisticsToString(m_pNetworkManager->GetRakPeer()->GetStatistics(RakNet::UNASSIGNED_SYSTEM_ADDRESS), szNetworkStats, 2);
