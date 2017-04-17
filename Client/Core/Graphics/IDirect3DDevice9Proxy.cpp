@@ -135,16 +135,17 @@ HRESULT __stdcall IDirect3DDevice9Proxy::Reset(D3DPRESENT_PARAMETERS* pPresentat
 	{
 		g_pCore->GetGraphics()->OnLostDevice(m_pDevice);
 	}
-#ifdef _DEBUG
-	// Windowed mode
-	pPresentationParameters->Windowed = 1;
-	pPresentationParameters->Flags = 0;
-	pPresentationParameters->FullScreen_RefreshRateInHz = 0;
-	pPresentationParameters->PresentationInterval = 0;
-	LONG_PTR style = GetWindowLongPtr(pPresentationParameters->hDeviceWindow, GWL_STYLE);
-	SetWindowLongPtr(pPresentationParameters->hDeviceWindow, GWL_STYLE, style | WS_POPUPWINDOW | WS_CAPTION | WS_THICKFRAME);
-	SetWindowPos(pPresentationParameters->hDeviceWindow, HWND_NOTOPMOST, 0, 0, pPresentationParameters->BackBufferWidth, pPresentationParameters->BackBufferHeight, SWP_SHOWWINDOW);
-#endif
+
+	if (CVAR_GET_BOOL("windowed") == true)
+	{
+		pPresentationParameters->Windowed = 1;
+		pPresentationParameters->Flags = 0;
+		pPresentationParameters->FullScreen_RefreshRateInHz = 0;
+		pPresentationParameters->PresentationInterval = 0;
+		LONG_PTR style = GetWindowLongPtr(pPresentationParameters->hDeviceWindow, GWL_STYLE);
+		SetWindowLongPtr(pPresentationParameters->hDeviceWindow, GWL_STYLE, style | WS_POPUPWINDOW | WS_CAPTION | WS_THICKFRAME);
+		SetWindowPos(pPresentationParameters->hDeviceWindow, HWND_NOTOPMOST, 0, 0, pPresentationParameters->BackBufferWidth, pPresentationParameters->BackBufferHeight, SWP_SHOWWINDOW);
+	}
 
 	HRESULT hr = m_pDevice->Reset(pPresentationParameters);
 
