@@ -105,7 +105,8 @@ void CInput::ProcessInput(CString strInput)
 		}
 	}
 	else if (strCommand == "loadresource") {
-		CServer::GetInstance()->GetResourceManager()->Load(SharedUtility::GetAbsolutePath(CServer::GetInstance()->GetResourceManager()->GetResourceDirectory()), strParameters);
+		CResource * resource = CServer::GetInstance()->GetResourceManager()->Load(SharedUtility::GetAbsolutePath(CServer::GetInstance()->GetResourceManager()->GetResourceDirectory()), strParameters);
+		CServer::GetInstance()->GetResourceManager()->StartResource(resource);
 	}
 	else if (strCommand == "reloadresource") {
 		CServer::GetInstance()->GetResourceManager()->Reload(CServer::GetInstance()->GetResourceManager()->GetResource(strParameters));

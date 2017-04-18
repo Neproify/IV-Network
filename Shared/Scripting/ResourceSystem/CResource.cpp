@@ -251,6 +251,10 @@ bool CResource::Stop(bool bStopManually)
 		DestroyVM();
 	}
 
+	CLogFile::Printf("TODO: Cleanup resource files(%s).", __FUNCTION__);
+
+	m_bActive = false;
+
 	CLogFile::Printf("Stopped resource %s", GetName().C_String());
 	return true;
 }
