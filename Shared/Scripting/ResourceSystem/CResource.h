@@ -35,6 +35,7 @@
 #include "CIncludedResource.h"
 #include "../IScriptVM.h"
 #include "CResourceFile.h"
+#include <CLogFile.h>
 
 class IScriptVM;
 class CIncludedResource;
@@ -82,7 +83,7 @@ public:
 
 	CString		GetName() { return m_strResourceName; }
 	CString		GetResourceDirectoryPath() { return m_strResourceDirectoryPath;  }
-	bool		HasChanged() { return false; }
+	bool		HasChanged() { CLogFile::Printf("[TODO] IMPLEMENT %s", __FUNCTION__); return false; }
 
 	IScriptVM*	GetVM() { return m_pVM; };
 	bool		CreateVM();

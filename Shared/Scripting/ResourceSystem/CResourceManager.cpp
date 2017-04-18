@@ -137,6 +137,7 @@ CResource* CResourceManager::Load(CString strAbsPath, CString strResourceName)
 				pResource->Stop();
 				RemoveResource(pResource);
 				delete pResource;
+				CLogFile::Printf("Resource changed - reloading... (%s)", strResourceName.C_String());
 				break;
 			}
 			else
@@ -159,4 +160,24 @@ CResource* CResourceManager::Load(CString strAbsPath, CString strResourceName)
 
 
 	return 0;
+}
+
+void CResourceManager::Unload(CResource* pResource)
+{
+	pResource->Stop();
+	RemoveResource(pResource);
+	CLogFile::Printf("Unloaded resource %s", pResource->GetName().C_String());
+	delete pResource;
+	return;
+}
+
+CResource * CResourceManager::GetResource(CString strResourceName)
+{
+	for (auto resource : m_resources)
+	{
+		if (resource->GetName() == strResourceName)
+			return resource;
+	}
+
+	return nullptr;
 }

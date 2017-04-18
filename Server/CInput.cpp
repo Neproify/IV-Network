@@ -67,9 +67,9 @@ void CInput::ProcessInput(CString strInput)
 		printf("uptime\n");
 		printf("resources\n");
 		printf("players\n");
-		printf("TODO:loadresource <name>\n");
-		printf("TODO:reloadresource <name>\n");
-		printf("TODO:unloadresource <name>\n");
+		printf("loadresource <name>\n");
+		printf("reloadresource <name>\n");
+		printf("unloadresource <name>\n");
 		printf("setsyncrate <rate>\n");
 		printf("setmaxfps <limit>\n");
 		printf("exit\n");
@@ -103,6 +103,15 @@ void CInput::ProcessInput(CString strInput)
 				CLogFile::Printf("%s(ID: %us)\n", player->GetName().C_String(), player->GetId());
 			}
 		}
+	}
+	else if (strCommand == "loadresource") {
+		CServer::GetInstance()->GetResourceManager()->Load(SharedUtility::GetAbsolutePath(CServer::GetInstance()->GetResourceManager()->GetResourceDirectory()), strParameters);
+	}
+	else if (strCommand == "reloadresource") {
+		CServer::GetInstance()->GetResourceManager()->Reload(CServer::GetInstance()->GetResourceManager()->GetResource(strParameters));
+	}
+	else if (strCommand == "unloadresource") {
+		CServer::GetInstance()->GetResourceManager()->Unload(CServer::GetInstance()->GetResourceManager()->GetResource(strParameters));
 	}
 	else if (strCommand == "setsyncrate") {
 		int rate = atoi(strParameters.Get());

@@ -245,7 +245,13 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 
 bool CResource::Stop(bool bStopManually)
 {
-	CLogFile::Printf("[TODO] Implement %s", __FUNCTION__);
+	if (IsLoaded())
+	{
+		CEvents::GetInstance()->RemoveEventsCreatedByResource(this);
+		DestroyVM();
+	}
+
+	CLogFile::Printf("Stopped resource %s", GetName().C_String());
 	return true;
 }
 

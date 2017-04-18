@@ -96,6 +96,12 @@ bool CEvents::Remove(CString strName, CEventHandler* pEventHandler)
 	return false;
 }
 
+bool CEvents::RemoveEventsCreatedByResource(CResource* pResource)
+{
+	CLogFile::Printf("[TODO] IMPLEMENT %s", __FUNCTION__);
+	return true;
+}
+
 bool CEvents::IsEventRegistered(CString strEventName)
 {
 	if (m_Events.find(strEventName) == m_Events.end())
