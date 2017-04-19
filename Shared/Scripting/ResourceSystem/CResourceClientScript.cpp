@@ -8,6 +8,8 @@
 //==============================================================================
 
 #include "CResourceClientScript.h"
+#include "CResource.h"
+#include <Scripting/CEvents.h>
 
 
 CResourceClientScript::CResourceClientScript(CResource * resource, const char * szShortName, const char * szResourceFileName)
@@ -24,7 +26,14 @@ CResourceClientScript::~CResourceClientScript()
 
 bool CResourceClientScript::Start()
 {
-
+	if (m_resource->GetVM()->LoadScript(m_strShortName))
+	{
+		// Call the scripting event
+		CScriptArguments args;
+		args.push(m_strShortName.Get());
+		CEvents::GetInstance()->Call("scriptLoaded", &args, CEventHandler::eEventType::NATIVE_EVENT, m_resource->GetVM());
+		return true;
+	}
 	return true;
 }
 

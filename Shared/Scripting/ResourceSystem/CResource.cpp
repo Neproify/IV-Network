@@ -60,14 +60,14 @@ bool CResource::Load()
 	m_strResourceDirectoryPath = m_strAbsPath + "/" + m_strResourceName;
 
 	CString strMetaFile = m_strResourceDirectoryPath + "/" + "meta.xml";
-	if(!SharedUtility::Exists(strMetaFile.Get()))
+	if (!SharedUtility::Exists(strMetaFile.Get()))
 	{
 		CLogFile::Printf("%s failed to load %s: No such file or directory", __FUNCTION__, strMetaFile.Get());
 		return false;
 	}
 
 	CXML *pMetaXML = new CXML();
-	if(!pMetaXML->load(strMetaFile))
+	if (!pMetaXML->load(strMetaFile))
 	{
 		CLogFile::Printf("%s failed to load meta.xml", __FUNCTION__);
 		return false;
@@ -78,33 +78,33 @@ bool CResource::Load()
 		// Not really important coming soon
 		// Well its important to specify the script type so you can use any file ending
 		CString strScriptType = pMetaXML->getAttribute("scriptType");
-		if(strScriptType == "Lua")
+		if (strScriptType == "Lua")
 			m_resourceScriptType = eResourceScriptType::LUA_RESOURCE;
-		else if(strScriptType == "Squirrel")
+		else if (strScriptType == "Squirrel")
 			m_resourceScriptType = eResourceScriptType::SQUIRREL_RESOURCE;
-		else 
+		else
 			m_resourceScriptType = eResourceScriptType::UNKNOWN;
 	}
 
 	// Reset to root
 	pMetaXML->nodeToRoot();
 
-	if(pMetaXML->findNode("include"))
+	if (pMetaXML->findNode("include"))
 	{
-		while(true)
+		while (true)
 		{
 			if (pMetaXML->nodeName() && !strcmp(pMetaXML->nodeName(), "include"))
 			{
 				CLogFile::Printf("\t[WIP] Implement includes");
 
 				CString strIncludedResource = pMetaXML->getAttribute("resource");
-				if(!strIncludedResource.IsEmpty())
+				if (!strIncludedResource.IsEmpty())
 					m_includedResources.push_back(new CIncludedResource()); // TODO PARAMS
 				else
 					CLogFile::Printf("[WARNING] Emtpy 'resource' attribute from 'include' node of 'meta.xml' for resource %s", m_strResourceName.Get());
 			}
 			// Attempt to load the next include node (if any)
-			if(!pMetaXML->nextNode())
+			if (!pMetaXML->nextNode())
 				break;
 		}
 	}
@@ -113,57 +113,68 @@ bool CResource::Load()
 	pMetaXML->nodeToRoot();
 
 	// Get the first script node
-	if(pMetaXML->findNode("script"))
+	if (pMetaXML->findNode("script"))
 	{
-		while(true)
+		while (true)
 		{
-			if(pMetaXML->nodeName() && !strcmp(pMetaXML->nodeName(), "script"))
+			if (pMetaXML->nodeName() && !strcmp(pMetaXML->nodeName(), "script"))
 			{
 				CScript script;
 				// Get the script name
 				CString strScript = pMetaXML->getAttribute("src");
 
-				if(!strScript.IsEmpty())
+				if (!strScript.IsEmpty())
 				{
 					if (m_resourceScriptType == eResourceScriptType::UNKNOWN)
 					{
 						// Try to detect the resource script type
 						if (strScript.EndsWith(".lua")) {
 							m_resourceScriptType = eResourceScriptType::LUA_RESOURCE;
-						} else if(strScript.EndsWith(".nut") || strScript.EndsWith(".sq")) {
+						}
+						else if (strScript.EndsWith(".nut") || strScript.EndsWith(".sq")) {
 							m_resourceScriptType = eResourceScriptType::SQUIRREL_RESOURCE;
-						} else {
+						}
+						else {
 							CLogFile::Printf("Unknown script type! Please specify the script type you use!");
 							return false;
 						}
 					}
 
 					CString scriptType = pMetaXML->getAttribute("type");
-					if(scriptType == "client") {
+					if (scriptType == "client") {
 						m_resourceFiles.push_back(new CResourceClientScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
-					} else if(scriptType == "server") {
-						m_resourceFiles.push_back(new CResourceServerScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
-					} else if(scriptType == "shared") {
-						m_resourceFiles.push_back(new CResourceServerScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
-						m_resourceFiles.push_back(new CResourceClientScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
-					} else {
+					}
+#ifdef _SERVER
+					else if (scriptType == "server") {
 						m_resourceFiles.push_back(new CResourceServerScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
 					}
+#endif
+					else if (scriptType == "shared") {
+#ifdef _SERVER
+						m_resourceFiles.push_back(new CResourceServerScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
+#endif
+						m_resourceFiles.push_back(new CResourceClientScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
+					}
+#ifdef _SERVER
+					else {
+						m_resourceFiles.push_back(new CResourceServerScript(this, strScript.Get(), (GetResourceDirectoryPath() + "/" + strScript).Get()));
+					}
+#endif
 				}
 			}
 			// Attempt to load the next script node (if any)
-			if(!pMetaXML->nextNode())
+			if (!pMetaXML->nextNode())
 				break;
 		}
 	}
 
-		// Reset to root
+	// Reset to root
 	pMetaXML->nodeToRoot();
 
 	// Get the first script node
-	if(pMetaXML->findNode("file"))
+	if (pMetaXML->findNode("file"))
 	{
-		while(true)
+		while (true)
 		{
 			if (pMetaXML->nodeName() && !strcmp(pMetaXML->nodeName(), "file"))
 			{
@@ -171,7 +182,7 @@ bool CResource::Load()
 
 				CLogFile::Printf("\t[TODO] Implement client file manager which handles resource client files and then the loading stuff");
 			}
-			if(!pMetaXML->nextNode())
+			if (!pMetaXML->nextNode())
 				break;
 		}
 	}
@@ -187,14 +198,14 @@ bool CResource::Load()
 
 bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, bool bStartIncludedResources)
 {
-	if(IsLoaded())
+	if (IsLoaded())
 	{
-		
+
 		CreateVM();
 
-		for(auto pResourceFile : m_resourceFiles)
+		for (auto pResourceFile : m_resourceFiles)
 		{
-			if(!pResourceFile->Start())
+			if (!pResourceFile->Start())
 			{
 				// Stop all the resource items without any warnings
 				//StopAllResourceFiles();
@@ -207,28 +218,28 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 
 		}
 
-		if(bStartIncludedResources)
+		if (bStartIncludedResources)
 		{
-			for(auto pIncludedResource : m_includedResources)
+			for (auto pIncludedResource : m_includedResources)
 			{
 				auto pResource = pIncludedResource->GetResource();
-				if(pResource)
+				if (pResource)
 				{
-					if(pResource->HasChanged())
-                    {
-                        // Reload it if it's not already started
-                        if(!pResource->IsActive())
-                        {
+					if (pResource->HasChanged())
+					{
+						// Reload it if it's not already started
+						if (!pResource->IsActive())
+						{
 							pResource->Reload();
-                        }
-                        else
-                        {
-                            CLogFile::Printf("WARNING: Included resource %s has changed but unable to reload due to resource already being in use\n", pResource->GetName ().Get());
-                        }
-                    }
+						}
+						else
+						{
+							CLogFile::Printf("WARNING: Included resource %s has changed but unable to reload due to resource already being in use\n", pResource->GetName().Get());
+						}
+					}
 
-                    // Make us dependant of it
-                    pResource->AddDependent(this);
+					// Make us dependant of it
+					pResource->AddDependent(this);
 				}
 			}
 		}
@@ -279,17 +290,19 @@ void CResource::Reload()
 
 bool CResource::CreateVM()
 {
-	if(m_bLoaded && !m_pVM)
+	if (m_bLoaded && !m_pVM)
 	{
-		if(GetResourceScriptType() == LUA_RESOURCE)	{
-			m_pVM =  new CLuaVM(this);
-		} else if(GetResourceScriptType() == SQUIRREL_RESOURCE) {
+		if (GetResourceScriptType() == LUA_RESOURCE) {
+			m_pVM = new CLuaVM(this);
+		}
+		else if (GetResourceScriptType() == SQUIRREL_RESOURCE) {
 			m_pVM = new CSquirrelVM(this);
-		} else {
+		}
+		else {
 			CLogFile::Printf("Failed to create VM => Invalid resource script type");
 			return false;
 		}
-		
+
 		// Register Server/Client natives
 		if (m_fnCreateVM)
 			m_fnCreateVM(m_pVM);
@@ -297,7 +310,7 @@ bool CResource::CreateVM()
 		// Default shared natives
 		CEventNatives::Register(m_pVM);
 		CSystemNatives::Register(m_pVM);
-		CMathNatives::Register(m_pVM); 
+		CMathNatives::Register(m_pVM);
 
 		return true;
 	}
@@ -316,6 +329,6 @@ void CResource::DestroyVM()
 
 void CResource::AddDependent(CResource* pResource)
 {
-	if(std::find(m_dependents.begin(), m_dependents.end(), pResource) != m_dependents.end())
+	if (std::find(m_dependents.begin(), m_dependents.end(), pResource) != m_dependents.end())
 		m_dependents.push_back(pResource);
 }

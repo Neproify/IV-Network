@@ -943,7 +943,7 @@ void DownloadStart(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	const auto pDelta = g_pCore->GetNetworkManager()->GetDirectoryDeltaTransfer();
 	CString strPath = CString("client_resources/%s", SharedUtility::ConvertStringToPath(g_pCore->GetNetworkManager()->GetServerAddress().ToString(true, ':')).Get());
 	pDelta->DownloadFromSubdirectory("client_files", SharedUtility::GetAbsolutePath(strPath.Get()).Get(), false, g_pCore->GetNetworkManager()->GetServerAddress(), &transferCallback, HIGH_PRIORITY, 0, NULL);
-	g_pCore->GetResourceManager()->SetResourceDirectory(strPath);
+	g_pCore->GetResourceManager()->SetResourceDirectory(strPath + "/resources");
 }
 
 void CreateCheckpoint(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
