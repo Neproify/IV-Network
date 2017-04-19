@@ -16,16 +16,17 @@ CEvents* CEvents::s_pInstance = 0;
 bool CEvents::Add(CString strName, CEventHandler* pEventHandler)
 {
 	auto itEvent = m_Events.find(strName);
-	if(itEvent == m_Events.end())
+	if (itEvent == m_Events.end())
 	{
 		// new - create the event
 		auto ret = m_Events.insert(std::pair<CString, std::list<CEventHandler*>>(strName, std::list<CEventHandler*>()));
 		itEvent = ret.first;
 
-	} else {
-		for(auto pEvent : itEvent->second)
+	}
+	else {
+		for (auto pEvent : itEvent->second)
 		{
-			if(pEventHandler->equals(pEvent))
+			if (pEventHandler->equals(pEvent))
 				return false;
 		}
 	}
@@ -37,19 +38,19 @@ bool CEvents::Add(CString strName, CEventHandler* pEventHandler)
 CScriptArguments CEvents::Call(CString strName, CScriptArguments* pArguments, CEventHandler::eEventType EventType, IScriptVM * pVM)
 {
 	CScriptArguments returnArguments;
-	auto itEvent = m_Events.find(strName);	
-	if(itEvent != m_Events.end())
+	auto itEvent = m_Events.find(strName);
+	if (itEvent != m_Events.end())
 	{
 		CScriptArgument ret;
-		for(auto pEvent : itEvent->second)
+		for (auto pEvent : itEvent->second)
 		{
-			if(EventType == CEventHandler::eEventType::GLOBAL_EVENT
+			if (EventType == CEventHandler::eEventType::GLOBAL_EVENT
 				&& pEvent->GetType() == CEventHandler::GLOBAL_EVENT)
-			{		
+			{
 				pEvent->Call(pArguments, &ret);
 				returnArguments.push(ret);
 			}
-			else if(EventType == CEventHandler::eEventType::RESOURCE_EVENT
+			else if (EventType == CEventHandler::eEventType::RESOURCE_EVENT
 				&& pEvent->GetType() == CEventHandler::RESOURCE_EVENT
 				&& pEvent->GetVM() == pVM)
 			{
@@ -78,14 +79,14 @@ CScriptArguments CEvents::Call(CString strName, CScriptArguments* pArguments, CE
 bool CEvents::Remove(CString strName, CEventHandler* pEventHandler)
 {
 	auto itEvent = m_Events.find(strName);
-	if(itEvent != m_Events.end())
+	if (itEvent != m_Events.end())
 	{
-		for(auto pEvent = itEvent->second.begin(); pEvent != itEvent->second.end(); pEvent++)
+		for (auto pEvent = itEvent->second.begin(); pEvent != itEvent->second.end(); pEvent++)
 		{
-			if(pEventHandler->equals(*pEvent))
+			if (pEventHandler->equals(*pEvent))
 			{
 				itEvent->second.erase(pEvent);
-				if(itEvent->second.size() == 0)
+				if (itEvent->second.size() == 0)
 				{
 					m_Events.erase(itEvent);
 					return true;
@@ -98,7 +99,21 @@ bool CEvents::Remove(CString strName, CEventHandler* pEventHandler)
 
 bool CEvents::RemoveEventsCreatedByResource(CResource* pResource)
 {
-	CLogFile::Printf("[TODO] IMPLEMENT %s", __FUNCTION__);
+	IScriptVM * resourceVM = pResource->GetVM();
+	CString name;
+	for (auto pEvent : m_Events)
+	{
+		printf("remove");
+		name = pEvent.first;
+		for (auto pEventHandler : pEvent.second)
+		{
+			if (pEventHandler->GetVM() == resourceVM)
+			{
+				Remove(name, pEventHandler);
+			}
+		}
+
+	}
 	return true;
 }
 

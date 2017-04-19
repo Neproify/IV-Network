@@ -248,10 +248,13 @@ bool CResource::Stop(bool bStopManually)
 	if (IsLoaded())
 	{
 		CEvents::GetInstance()->RemoveEventsCreatedByResource(this);
+		for (auto pResourceFile : m_resourceFiles)
+		{
+			delete pResourceFile;
+		}
+		m_resourceFiles.clear();
 		DestroyVM();
 	}
-
-	CLogFile::Printf("TODO: Cleanup resource files(%s).", __FUNCTION__);
 
 	m_bActive = false;
 
@@ -304,7 +307,11 @@ bool CResource::CreateVM()
 
 void CResource::DestroyVM()
 {
-	CLogFile::Printf("[TODO] Implement %s", __FUNCTION__);
+	if (!m_pVM)
+		return;
+
+	m_pVM = nullptr;
+	return;
 }
 
 void CResource::AddDependent(CResource* pResource)
