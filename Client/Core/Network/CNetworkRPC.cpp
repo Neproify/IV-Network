@@ -40,8 +40,6 @@
 extern CCore * g_pCore;
 bool   CNetworkRPC::m_bRegistered = false;
 
-std::vector<CString> vecClientResources;
-
 void InitialData(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
 	// Read the player id
@@ -71,32 +69,10 @@ void InitialData(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	// Add the local player to the playermanager
 	if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId))
 	{
-		if(g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsLocalPlayer())
-			g_pCore->GetGame()->GetPlayerManager()->Set(playerId, nullptr); 
+		if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsLocalPlayer())
+			g_pCore->GetGame()->GetPlayerManager()->Set(playerId, nullptr);
 	}
 	g_pCore->GetGame()->GetPlayerManager()->Add(playerId, g_pCore->GetGame()->GetLocalPlayer());
-
-	CResourceManager * m_pResourceManager = g_pCore->GetResourceManager();
-	for (auto strResource : vecClientResources)
-	{
-		if (!strResource.IsEmpty())
-		{
-			CLogFile::Printf("Loading resource (%s)", strResource.C_String());
-			g_pCore->GetGraphics()->GetChat()->Print(CString("Loading server's data..."));
-			if (CResource* pResource = m_pResourceManager->Load(SharedUtility::GetAbsolutePath(m_pResourceManager->GetResourceDirectory()), strResource))
-			{
-				if (!m_pResourceManager->StartResource(pResource))
-				{
-					CLogFile::Printf("Warning: Failed to load resource %s.", strResource.Get());
-				}
-
-			}
-			else 
-			{
-				CLogFile::Printf("Warning: Failed to load resource %s.", strResource.Get());
-			}
-		}
-	}
 
 	// Set the localplayer colour
 	g_pCore->GetGame()->GetLocalPlayer()->SetColor(uiColour);
@@ -121,8 +97,8 @@ void PlayerJoin(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	// Read the playerid
 	EntityId playerId;
 	pBitStream->Read(playerId);
-	
-	if(playerId == g_pCore->GetGame()->GetLocalPlayer()->GetId()) return;
+
+	if (playerId == g_pCore->GetGame()->GetLocalPlayer()->GetId()) return;
 
 	// Read the player name
 	RakNet::RakString _strName;
@@ -214,7 +190,7 @@ void RecieveSyncPackage(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 		//		pVehicle->SetPosition(vecPosition, false);
 		//	}
 		//}
-		
+
 #endif
 
 
@@ -254,15 +230,15 @@ void RecieveSyncPackage(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 			case RPC_PACKAGE_TYPE_PLAYER_WEAPON:
 			case RPC_PACKAGE_TYPE_PLAYER_VEHICLE:
 			case RPC_PACKAGE_TYPE_PLAYER_PASSENGER:
-				{
-					pPlayer->Deserialize(pBitStream);
-					break;
-				}
+			{
+				pPlayer->Deserialize(pBitStream);
+				break;
+			}
 			default:
-				{
-					CLogFile::Print("Unkown package type, process...");
-					break;
-				}
+			{
+				CLogFile::Print("Unkown package type, process...");
+				break;
+			}
 			}
 		}
 	}
@@ -458,11 +434,11 @@ void SetPlayerClothes(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 		int iPart;
 
 		pBitStream->Read(iPart);
-		
+
 		int iClothes;
 
 		pBitStream->Read(iClothes);
-			
+
 		pPlayer->SetClothes(iPart, iClothes);
 	}
 }
@@ -608,15 +584,15 @@ void SendPlayerMessage(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 void SendPlayerMessageToAll(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
-		RakNet::RakString sMessage;
-		DWORD dwColor;
-		bool bAllowFormatting;
+	RakNet::RakString sMessage;
+	DWORD dwColor;
+	bool bAllowFormatting;
 
-		pBitStream->Read(sMessage);
-		pBitStream->Read(dwColor);
-		pBitStream->Read(bAllowFormatting);
+	pBitStream->Read(sMessage);
+	pBitStream->Read(dwColor);
+	pBitStream->Read(bAllowFormatting);
 
-		g_pCore->GetGraphics()->GetChat()->Print(CString("#%x%s", dwColor, sMessage.C_String()));
+	g_pCore->GetGraphics()->GetChat()->Print(CString("#%x%s", dwColor, sMessage.C_String()));
 }
 
 void SpawnPlayer(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
@@ -635,16 +611,16 @@ void SpawnPlayer(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 void SetPlayerHudElementVisible(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
-	int componentid;	
+	int componentid;
 	pBitStream->Read(componentid);
-	
+
 	bool visible;
 	pBitStream->Read(visible);
-	
-	switch(componentid) {
-		case 0: return CGameFunction::SetHudVisible(visible);
-		case 1: return CGameFunction::SetRadarVisible(visible);
-		case 2: return CGameFunction::SetAreaNamesEnabled(visible);
+
+	switch (componentid) {
+	case 0: return CGameFunction::SetHudVisible(visible);
+	case 1: return CGameFunction::SetRadarVisible(visible);
+	case 2: return CGameFunction::SetAreaNamesEnabled(visible);
 	}
 }
 
@@ -669,7 +645,7 @@ void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	CVector3 vecPosition;
 	pBitStream->Read(vecPosition);
 	vecPosition.fZ += 1.0f;
-	
+
 	float fAngle;
 	pBitStream->Read(fAngle);
 
@@ -715,7 +691,7 @@ void CreateVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 	g_pCore->GetGraphics()->GetChat()->Print(CString("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ));
 	CLogFile::Printf("%f, %f, %f", vecPosition.fX, vecPosition.fY, vecPosition.fZ);
-	if (pVehicle) 
+	if (pVehicle)
 	{
 		pVehicle->Create();
 		pVehicle->SetPosition(vecPosition, true);
@@ -745,7 +721,7 @@ void EnterVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	byte byteSeat;
 	pBitStream->Read(byteSeat);
 
-	if(g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsInVehicle())
+	if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsInVehicle())
 		g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->RemoveFromVehicle();
 
 
@@ -932,18 +908,56 @@ TransferCB transferCallback;
 
 void DownloadStart(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
-	vecClientResources.clear();
-
-	RakNet::RakString strResource;
-	while (pBitStream->Read(strResource))
-	{
-		vecClientResources.push_back(strResource.C_String());
-	}
-
 	const auto pDelta = g_pCore->GetNetworkManager()->GetDirectoryDeltaTransfer();
 	CString strPath = CString("client_resources/%s", SharedUtility::ConvertStringToPath(g_pCore->GetNetworkManager()->GetServerAddress().ToString(true, ':')).Get());
 	pDelta->DownloadFromSubdirectory("client_files", SharedUtility::GetAbsolutePath(strPath.Get()).Get(), false, g_pCore->GetNetworkManager()->GetServerAddress(), &transferCallback, HIGH_PRIORITY, 0, NULL);
 	g_pCore->GetResourceManager()->SetResourceDirectory(strPath + "/resources");
+}
+
+void LoadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	CLogFile::Printf("%s", __FUNCTION__);
+	CString strResourceName;
+	pBitStream->Read(strResourceName);
+
+	CResourceManager * m_pResourceManager = g_pCore->GetResourceManager();
+	CLogFile::Printf("Loading resource (%s)", strResourceName.C_String());
+	if (CResource* pResource = m_pResourceManager->Load(SharedUtility::GetAbsolutePath(m_pResourceManager->GetResourceDirectory()), strResourceName))
+	{
+		if (!m_pResourceManager->StartResource(pResource))
+		{
+			CLogFile::Printf("Warning: Failed to load resource %s.", strResourceName.Get());
+		}
+
+	}
+	else
+	{
+		CLogFile::Printf("Warning: Failed to load resource %s.", strResourceName.Get());
+	}
+}
+
+void ReloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	CString strResourceName;
+	pBitStream->Read(strResourceName);
+	CResource * pResource = g_pCore->GetResourceManager()->GetResource(strResourceName);
+
+	if (!pResource)
+		return;
+
+	pResource->Reload();
+}
+
+void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	CString strResourceName;
+	pBitStream->Read(strResourceName);
+	CResource * pResource = g_pCore->GetResourceManager()->GetResource(strResourceName);
+
+	if (!pResource)
+		return;
+
+	pResource->Unload();
 }
 
 void CreateCheckpoint(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
@@ -1348,7 +1362,7 @@ void CreatePickup(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	else
 	{
 		pPickup = new CPickupEntity((EFLC::CScript::eModel)uiModel, (EFLC::CScript::ePickupType)iPickupType, vecPosition, vecRotation);
-	
+
 		if (pPickup)
 		{
 			g_pCore->GetGame()->GetPickupManager()->Add(pickupId, pPickup);
@@ -1371,6 +1385,11 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		// Register the RPCs
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_INITIAL_DATA), InitialData);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_DOWNLOAD_START), DownloadStart);
+
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_LOAD_RESOURCE), LoadResource);
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_RELOAD_RESOURCE), ReloadResource);
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), UnloadResource);
+
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_NEW_PLAYER), PlayerJoin);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_PLAYER_CHAT), PlayerChat);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_DELETE_PLAYER), PlayerLeave);
@@ -1434,7 +1453,7 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_OBJECT_SET_MODEL), SetObjectModel);
 
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_CREATE_PICKUP), CreatePickup);
-		
+
 		// Mark as registered
 		m_bRegistered = true;
 	}

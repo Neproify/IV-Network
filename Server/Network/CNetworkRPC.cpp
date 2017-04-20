@@ -73,10 +73,6 @@ void InitialData(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	}
 
 	RakNet::BitStream bitStream;
-	for (auto pResource : CServer::GetInstance()->GetResourceManager()->GetResources())
-	{
-		bitStream.Write(RakNet::RakString(pResource->GetName().C_String()));
-	}
 	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_DOWNLOAD_START), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 }
 
@@ -141,6 +137,16 @@ void DownloadFinished(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	// Send it back to the player
 	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_INITIAL_DATA), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 
+	for (auto resource : CServer::GetInstance()->GetResourceManager()->GetResources())
+	{
+		if (resource->IsActive())
+		{
+			bitStream.Reset();
+			bitStream.Write(resource->GetName());
+			CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_LOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
+		}
+	}
+	
 	for (EntityId i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); ++i)
 	{
 		if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i) && i != playerId)

@@ -26,6 +26,7 @@ CResourceClientScript::~CResourceClientScript()
 
 bool CResourceClientScript::Start()
 {
+#ifdef _CLIENT
 	if (m_resource->GetVM()->LoadScript(m_strShortName))
 	{
 		// Call the scripting event
@@ -34,6 +35,7 @@ bool CResourceClientScript::Start()
 		CEvents::GetInstance()->Call("scriptLoaded", &args, CEventHandler::eEventType::NATIVE_EVENT, m_resource->GetVM());
 		return true;
 	}
+#endif
 	return true;
 }
 

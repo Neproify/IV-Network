@@ -23,6 +23,8 @@
 #ifdef _CLIENT
 #else
 #include "../../Server/Scripting/Natives/Natives_Server.h"
+#include <Network/NetCommon.h>
+#include <CServer.h>
 #endif
 
 CResource::CResource()
@@ -244,10 +246,27 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 			}
 		}
 
+		m_bActive = true;
+
 		// Call the scripting event
 		CScriptArguments args;
 		args.push(m_strResourceName);
 		CEvents::GetInstance()->Call("resourceStarted", &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
+#ifdef _SERVER
+
+		// Start resource on client-side.
+		RakNet::BitStream bitStream;
+		for (int i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); i++)
+		{
+			if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
+			{
+				bitStream.Reset();
+				bitStream.Write(GetName());
+				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_LOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
+			}
+		}
+#endif
+
 		return true;
 	}
 
@@ -278,6 +297,21 @@ bool CResource::Unload()
 	Stop(true);
 
 	m_bLoaded = false;
+
+#ifdef _SERVER
+
+	// Stop resource on client-side.
+	RakNet::BitStream bitStream;
+	for (int i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); i++)
+	{
+		if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
+		{
+			bitStream.Reset();
+			bitStream.Write(GetName());
+			CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
+		}
+	}
+#endif
 
 	return false;
 }
