@@ -128,8 +128,17 @@ int CEventNatives::TriggerEvent(int * VM)
 
 	CString strName;
 	pVM->Pop(strName);
+
+	CScriptArguments args;
+	for (int i = 3; i <= pVM->GetArgumentCount(); i++)
+	{
+		CScriptArgument arg;
+		arg.pushFromStack(pVM, i);
+		args.push(arg);
+	}
+
 	pVM->ResetStackIndex();
-	CEvents::GetInstance()->Call(strName, 0, CEventHandler::RESOURCE_EVENT, pVM);
+	CEvents::GetInstance()->Call(strName, &args, CEventHandler::RESOURCE_EVENT, pVM);
 
 	return 0;
 }
