@@ -19,7 +19,6 @@
 void CServerNatives::Register(IScriptVM* pVM)
 {
 	pVM->RegisterFunction("getConfig", GetConfig);
-	pVM->RegisterFunction("getTickCount", GetTickCount);
 	pVM->RegisterFunction("sendConsoleInput", SendConsoleInput);
 }
 
@@ -86,17 +85,6 @@ int CServerNatives::Shutdown(int * VM)
 
 	extern bool g_bClose;
 	g_bClose = true;
-
-	pVM->ResetStackIndex();
-
-	return 1;
-}
-
-int CServerNatives::GetTickCount(int * VM)
-{
-	GET_SCRIPT_VM_SAFE;
-
-	pVM->Push((int)SharedUtility::GetTime());
 
 	pVM->ResetStackIndex();
 

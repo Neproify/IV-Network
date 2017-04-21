@@ -21,6 +21,7 @@ void CSystemNatives::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("log", Print);
 	pVM->RegisterFunction("logf", Logf);
 	pVM->RegisterFunction("date", Date);
+	pVM->RegisterFunction("getTickCount", GetTickCount);
 }
 
 int CSystemNatives::Print(int * VM)
@@ -100,6 +101,17 @@ int CSystemNatives::Date(int * VM)
 	dateTable.push(date->tm_year + 1900);
 
 	pVM->PushTable(dateTable);
+
+	return 1;
+}
+
+int CSystemNatives::GetTickCount(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->Push((int)SharedUtility::GetTime());
+
+	pVM->ResetStackIndex();
 
 	return 1;
 }
