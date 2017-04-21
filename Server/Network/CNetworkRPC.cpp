@@ -78,6 +78,20 @@ void InitialData(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 void DownloadFinished(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
+	// Get the player id
+	EntityId playerId = (EntityId)pPacket->guid.systemIndex;
+
+	// Get a pointer to the player
+	CPlayerEntity * pPlayer = CServer::GetInstance()->GetPlayerManager()->GetAt(playerId);
+
+	// Looks like it isn't first download so we don't need to initialize it one more time
+	if (pPlayer)
+	{
+		return;
+	}
+
+	playerId = NULL;
+	pPlayer = nullptr;
 
 	// Read the player name
 	RakNet::RakString _strName;
@@ -97,13 +111,13 @@ void DownloadFinished(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 	// Add the player to the manager
 	// TODO: add to player manager
-	CPlayerEntity * pPlayer = new CPlayerEntity();
+	pPlayer = new CPlayerEntity();
 
 	pPlayer->SetName(strName);
 
 	// Do we need the id; maybe internal for easier sync but definetly not public to the scripting engine
 	pPlayer->SetId(CServer::GetInstance()->GetPlayerManager()->Add(pPlayer));
-	EntityId playerId = pPlayer->GetId();
+	playerId = pPlayer->GetId();
 	srand(time(NULL));
 	pPlayer->SetColor(CColor(rand() % 256, rand() % 256, rand() % 256).dwHexColor); //generate random color
 

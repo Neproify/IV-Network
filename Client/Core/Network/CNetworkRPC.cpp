@@ -940,12 +940,8 @@ void ReloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
 	CString strResourceName;
 	pBitStream->Read(strResourceName);
-	CResource * pResource = g_pCore->GetResourceManager()->GetResource(strResourceName);
-
-	if (!pResource)
-		return;
-
-	pResource->Reload();
+	CResourceManager * m_pResourceManager = g_pCore->GetResourceManager();
+	m_pResourceManager->ReloadResourceAfterDownload(strResourceName);
 }
 
 void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)

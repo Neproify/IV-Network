@@ -181,3 +181,26 @@ CResource * CResourceManager::GetResource(CString strResourceName)
 
 	return nullptr;
 }
+
+void CResourceManager::ReloadResourceAfterDownload(CString strResourceName)
+{
+	m_resourcesToReload.push_back(strResourceName);
+}
+
+void CResourceManager::ReloadResourcesAfterDownload()
+{
+	for (auto strResourceName : m_resourcesToReload)
+	{
+		CResource * pResource = GetResource(strResourceName);
+		if (!pResource)
+		{
+			pResource = Load(SharedUtility::GetAbsolutePath(GetResourceDirectory()), strResourceName);
+			if (!pResource)
+				continue;
+		}
+		pResource->Reload();
+		StartResource(pResource);
+	}
+
+	m_resourcesToReload.clear();
+}

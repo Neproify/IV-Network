@@ -103,7 +103,6 @@ bool CEvents::RemoveEventsCreatedByResource(CResource* pResource)
 	CString name;
 	for (auto pEvent : m_Events)
 	{
-		printf("remove");
 		name = pEvent.first;
 		for (auto pEventHandler : pEvent.second)
 		{

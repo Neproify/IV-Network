@@ -33,6 +33,7 @@
 
 #include "CResource.h"
 #include "../CLuaVM.h"
+#include "SharedUtility.h"
 
 class CResourceManager {
 
@@ -40,6 +41,8 @@ private:
 	CString					m_strResourceDirectory;
 	std::list<CResource*>	m_resources;
 	static CResourceManager*s_pInstance;
+
+	std::list<CString> m_resourcesToReload;
 
 	typedef void(*CreateVM_t)(IScriptVM*);
 	CreateVM_t						m_fnCreateVM = nullptr;
@@ -70,6 +73,9 @@ public:
 
 	CResource				*GetResource(CString strResourceName);
 	std::list<CResource*>	GetResources() { return m_resources; }
+
+	void ReloadResourceAfterDownload(CString strResourceName);
+	void ReloadResourcesAfterDownload();
 
 	CResource *Get(int * pVM);
 };

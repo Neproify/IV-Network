@@ -41,5 +41,6 @@ bool TransferCB::OnDownloadComplete(DownloadCompleteStruct *dcs)
 	pBitStream.Write(RakNet::RakString(SharedUtility::GetSerialHash().Get()));
 
 	g_pCore->GetNetworkManager()->Call(GET_RPC_CODEX(RPC_DOWNLOAD_FINISH), &pBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, true);
+	g_pCore->GetResourceManager()->ReloadResourcesAfterDownload();
 	return false;
 }

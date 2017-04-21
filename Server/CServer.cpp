@@ -193,6 +193,11 @@ bool CServer::Startup()
 	int iResourcesLoaded = 0;
 	int iFailedResources = 0;
 
+#define CLIENT_FILE_DIRECTORY "client_files"
+
+	SharedUtility::CreateDirectory(CLIENT_FILE_DIRECTORY);
+	SharedUtility::CreateDirectory(CLIENT_FILE_DIRECTORY "/resources");
+
 	for(auto strResource : resources)
 	{
 		if(!strResource.IsEmpty())
@@ -213,24 +218,6 @@ bool CServer::Startup()
 			} else {
 				CLogFile::Printf("Warning: Failed to load resource %s.", strResource.Get());
 				iFailedResources++;
-			}
-		}
-	}
-#define CLIENT_FILE_DIRECTORY "client_files"
-	
-	SharedUtility::CreateDirectory(CLIENT_FILE_DIRECTORY);
-	SharedUtility::CreateDirectory(CLIENT_FILE_DIRECTORY "/resources");
-	for (auto pResource : m_pResourceManager->GetResources())
-	{
-		for (auto pFile : *pResource->GetResourceFiles())
-		{
-			if (pFile->GetType() == CResourceFile::eResourceType::RESOURCE_FILE_TYPE_CLIENT_SCRIPT)
-			{
-				SharedUtility::CreateDirectory(SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/", pResource->GetName().C_String()).C_String());
-				SharedUtility::CopyFile(pFile->GetFileName(), SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/%s", pResource->GetName().C_String(), pFile->GetName()));
-
-				// TODO: construct meta.xml for clients
-				SharedUtility::CopyFile(SharedUtility::GetAbsolutePath("/resources/%s/meta.xml", pResource->GetName().C_String()), SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/meta.xml", pResource->GetName().C_String()));
 			}
 		}
 	}

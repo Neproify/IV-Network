@@ -253,6 +253,21 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 		args.push(m_strResourceName);
 		CEvents::GetInstance()->Call("resourceStarted", &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
 #ifdef _SERVER
+#define CLIENT_FILE_DIRECTORY "client_files"
+		for (auto pFile : *GetResourceFiles())
+		{
+			if (pFile->GetType() == CResourceFile::eResourceType::RESOURCE_FILE_TYPE_CLIENT_SCRIPT)
+			{
+				SharedUtility::CreateDirectory(SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/", GetName().C_String()).C_String());
+				SharedUtility::CopyFile(pFile->GetFileName(), SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/%s", GetName().C_String(), pFile->GetName()));
+
+				// TODO: construct meta.xml for clients
+				SharedUtility::CopyFile(SharedUtility::GetAbsolutePath("/resources/%s/meta.xml", GetName().C_String()), SharedUtility::GetAbsolutePath(CLIENT_FILE_DIRECTORY "/resources/%s/meta.xml", GetName().C_String()));
+			}
+		}
+
+		CServer::GetInstance()->GetNetworkModule()->GetDirectoryDeltaTransfer()->ClearUploads();
+		CServer::GetInstance()->GetNetworkModule()->GetDirectoryDeltaTransfer()->AddUploadsFromSubdirectory(CLIENT_FILE_DIRECTORY);
 
 		// Start resource on client-side.
 		RakNet::BitStream bitStream;
@@ -261,8 +276,10 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 			if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
 			{
 				bitStream.Reset();
+				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_DOWNLOAD_START), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
+				bitStream.Reset();
 				bitStream.Write(GetName());
-				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_LOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
+				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_RELOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
 			}
 		}
 #endif
