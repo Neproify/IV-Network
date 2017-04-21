@@ -34,6 +34,7 @@
 #include "CDirect3D9Hook.h"
 #include "CDirectInput8Hook.h"
 #include    <Game/EFLC/CScript.h>
+#include "Scripting\CEvents.h"
 
 extern CCore *g_pCore;
 
@@ -440,4 +441,7 @@ void CGraphics::Render()
 		m_pTags->Draw();
 
 	DrawText(5.0f, 5.0f, D3DCOLOR_ARGB((unsigned char)255, 255, 255, 255), 1.0f, DT_NOCLIP, true, CString("FPS: %d", m_pFPSCounter->GetFPS()).Get());
+
+	CScriptArguments args;
+	CEvents::GetInstance()->Call("onClientRender", &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
 }
