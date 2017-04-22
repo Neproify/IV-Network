@@ -33,6 +33,7 @@
 
 #include <Common.h>
 #include <list>
+#include "Network\NetCommon.h"
 
 class CScriptArgument;
 class IScriptVM;
@@ -60,6 +61,9 @@ public:
 	void push(CScriptArguments* pArray, bool isArray);
 	void push(CScriptEntity* pEntity);
 	void pushVector3(const CVector3 &vec3);
+
+	void Serialize(RakNet::BitStream *pBitStream);
+	void Deserialize(RakNet::BitStream *pBitStream);
 
 	CScriptArgument pop();
 	bool popVector3(CVector3 &vec3);

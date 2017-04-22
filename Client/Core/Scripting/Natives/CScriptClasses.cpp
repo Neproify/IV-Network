@@ -56,8 +56,17 @@ int TriggerServerEvent(int * VM)
 
 	pVM->Pop(eventName);
 
+	CScriptArguments args;
+	for (int i = 3; i <= pVM->GetArgumentCount(); i++)
+	{
+		CScriptArgument arg;
+		arg.pushFromStack(pVM, i);
+		args.push(arg);
+	}
+
 	RakNet::BitStream bitStream;
 	bitStream.Write(eventName);
+	args.Serialize(&bitStream);
 	g_pCore->GetNetworkManager()->Call(GET_RPC_CODEX(RPC_PLAYER_TRIGGER_EVENT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, true);
 	return 1;
 }

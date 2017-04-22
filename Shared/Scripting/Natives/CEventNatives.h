@@ -11,6 +11,7 @@
 #define CEventNatives_h
 
 #include <Scripting/IScriptVM.h>
+#include "Network\NetCommon.h"
 
 class CEventNatives {
 

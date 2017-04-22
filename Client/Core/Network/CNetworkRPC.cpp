@@ -956,6 +956,17 @@ void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	pResource->Unload();
 }
 
+void TriggerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
+{
+	CString strEventName;
+	pBitStream->Read(strEventName);
+
+	CScriptArguments args;
+	args.Deserialize(pBitStream);
+
+	CEvents::GetInstance()->Call(strEventName, &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
+}
+
 void CreateCheckpoint(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
 	EntityId checkpointId;
@@ -1386,6 +1397,8 @@ void CNetworkRPC::Register(RakNet::RPC4 * pRPC)
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_RELOAD_RESOURCE), ReloadResource);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), UnloadResource);
 
+		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_TRIGGER_CLIENT_EVENT), TriggerEvent);
+
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_NEW_PLAYER), PlayerJoin);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_PLAYER_CHAT), PlayerChat);
 		pRPC->RegisterFunction(GET_RPC_CODEX(RPC_DELETE_PLAYER), PlayerLeave);
@@ -1462,6 +1475,13 @@ void CNetworkRPC::Unregister(RakNet::RPC4 * pRPC)
 	{
 		// Unregister the RPCs
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_INITIAL_DATA));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_DOWNLOAD_START));
+
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_LOAD_RESOURCE));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_RELOAD_RESOURCE));
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE));
+
+		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_TRIGGER_CLIENT_EVENT));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_NEW_PLAYER));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_PLAYER_CHAT));
 		pRPC->UnregisterFunction(GET_RPC_CODEX(RPC_DELETE_PLAYER));

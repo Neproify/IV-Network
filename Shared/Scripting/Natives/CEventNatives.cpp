@@ -28,11 +28,9 @@ void CEventNatives::Register(IScriptVM * pVM)
 {
 	pVM->RegisterFunction("addEvent", AddEvent);	
 	pVM->RegisterFunction("addGlobalEvent", AddGlobalEvent);
-	pVM->RegisterFunction("addRemoteEvent", AddRemoteEvent);
 
 	pVM->RegisterFunction("triggerEvent", TriggerEvent);
 	pVM->RegisterFunction("triggerGlobalEvent", TriggerGlobalEvent);
-	pVM->RegisterFunction("triggerRemoteEvent", TriggerRemoteEvent);
 	
 	pVM->RegisterFunction("addCommandHandler", AddCommandHandler);
 }
@@ -115,13 +113,6 @@ int CEventNatives::AddGlobalEvent(int * VM)
 	return 0;
 }
 
-int CEventNatives::AddRemoteEvent(int * VM)
-{
-	GET_VM_UNKNOWN;
-	NOT_IMPLEMENTED("addRemoteEvent");
-	return 0;
-}
-
 int CEventNatives::TriggerEvent(int * VM)
 {
 	GET_VM_UNKNOWN;
@@ -152,12 +143,5 @@ int CEventNatives::TriggerGlobalEvent(int * VM)
 	pVM->ResetStackIndex();
 	CEvents::GetInstance()->Call(strName, 0, CEventHandler::GLOBAL_EVENT, 0);
 
-	return 0;
-}
-
-int CEventNatives::TriggerRemoteEvent(int * VM)
-{
-	GET_VM_UNKNOWN;
-	NOT_IMPLEMENTED("triggerRemoteEvent");
 	return 0;
 }

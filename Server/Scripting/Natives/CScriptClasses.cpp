@@ -69,7 +69,8 @@ int SendPlayerMessageToAll(int * VM)
 	bitStream.Write(RakNet::RakString(sMessage.C_String()));
 	bitStream.Write((DWORD)iColor);
 	bitStream.Write(bAllowFormatting);
-	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_PLAYER_MESSAGE_TO_ALL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_PLAYER_MESSAGE_TO_ALL), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, false);
 
 	pVM->Push(true);
 
@@ -318,6 +319,30 @@ int CreateTimer(int * VM)
 	return 1;
 }
 
+int TriggerClientEvent(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->ResetStackIndex();
+
+	CString strEventName;
+	pVM->Pop(strEventName);
+
+	CScriptArguments args;
+	for (int i = 3; i <= pVM->GetArgumentCount(); i++)
+	{
+		CScriptArgument arg;
+		arg.pushFromStack(pVM, i);
+		args.push(arg);
+	}
+
+	RakNet::BitStream bitStream;
+	bitStream.Write(strEventName);
+	args.Serialize(&bitStream);
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_TRIGGER_CLIENT_EVENT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
+	return 1;
+}
+
 class CScriptSQLite
 {
 public:
@@ -347,6 +372,7 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("createObject", CreateObject);
 	pVM->RegisterFunction("createPickup", CreatePickup);
 	pVM->RegisterFunction("createTimer", CreateTimer);
+	pVM->RegisterFunction("triggerClientEvent", TriggerClientEvent);
 
 #if 0
 	(new CScriptClass<CScriptSQLite>("CSQLite"))->
@@ -402,8 +428,7 @@ void CScriptClasses::Register(IScriptVM * pVM)
 			AddMethod("isOnFoot", &CScriptPlayer::IsOnFoot).
 			AddMethod("spawn", &CScriptPlayer::Spawn).
 			AddMethod("getVehicle", &CScriptPlayer::GetVehicle).
-			AddMethod("getVehicleSeat", &CScriptPlayer::GetVehicleSeat).
-			AddMethod("triggerPlayerEvent", &CScriptPlayer::TriggerPlayerEvent);
+			AddMethod("getVehicleSeat", &CScriptPlayer::GetVehicleSeat);
 		(pScriptPlayer)->Register(pVM);
 	}
 

@@ -548,20 +548,10 @@ void TriggerServerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 	RakNet::RakString eventName;
 	pBitStream->Read(eventName);
 
-	// Get the player instance
-	CPlayerEntity * pPlayer = CServer::GetInstance()->GetPlayerManager()->GetAt(playerId);
+	CScriptArguments args;
+	args.Deserialize(pBitStream);
 
-	// Is the player instance valid?
-	if (pPlayer)
-	{
-		//RakNet::BitStream bitStream;
-		//bitStream.Write(playerId);
-		//CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_ENTER_VEHICLE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
-		CScriptArguments args;
-		args.push(pPlayer->GetScriptPlayer());
-		CEvents::GetInstance()->Call(eventName.C_String(), &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
-
-	}
+	CEvents::GetInstance()->Call(eventName.C_String(), &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
 }
 
 void VehicleEnter(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)

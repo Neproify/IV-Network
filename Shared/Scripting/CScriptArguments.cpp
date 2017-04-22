@@ -87,3 +87,111 @@ void CScriptArguments::pushVector3(const CVector3 &vec3)
 	m_Arguments.push_back(new CScriptArgument(vec3.fY));
 	m_Arguments.push_back(new CScriptArgument(vec3.fZ));
 }
+
+void CScriptArguments::Serialize(RakNet::BitStream *pBitStream)
+{
+	for (auto arg : m_Arguments)
+	{
+		switch (arg->GetType())
+		{
+		case CScriptArgument::ArgumentType::ST_BOOL:
+		{
+			pBitStream->Write(CScriptArgument::ArgumentType::ST_BOOL);
+			pBitStream->Write(arg->GetBool());
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_FLOAT:
+		{
+			pBitStream->Write(CScriptArgument::ArgumentType::ST_FLOAT);
+			pBitStream->Write(arg->GetFloat());
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_INTEGER:
+		{
+			pBitStream->Write(CScriptArgument::ArgumentType::ST_INTEGER);
+			pBitStream->Write(arg->GetInteger());
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_STRING:
+		{
+			pBitStream->Write(CScriptArgument::ArgumentType::ST_STRING);
+			pBitStream->Write(CString(arg->GetString()));
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_ARRAY:
+		{
+			// TODO
+			CLogFile::Printf("Unsupported type: ARRAY on CScriptArguments::Serialize");
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_TABLE:
+		{
+			// TODO
+			CLogFile::Printf("Unsupported type: TABLE on CScriptArguments::Serialize");
+			break;
+		}
+		default:
+		{
+			CLogFile::Printf("Invalid CScriptArgument on Serialize.");
+			break;
+		}
+		}
+	}
+}
+
+void CScriptArguments::Deserialize(RakNet::BitStream *pBitStream)
+{
+	while (pBitStream->GetNumberOfUnreadBits() > 0)
+	{
+		int argType;
+		pBitStream->Read(argType);
+		switch (argType)
+		{
+		case CScriptArgument::ArgumentType::ST_BOOL:
+		{
+			bool data;
+			pBitStream->Read(data);
+			push(data);
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_FLOAT:
+		{
+			float data;
+			pBitStream->Read(data);
+			push(data);
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_INTEGER:
+		{
+			int data;
+			pBitStream->Read(data);
+			push(data);
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_STRING:
+		{
+			CString data;
+			pBitStream->Read(data);
+			push(data);
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_ARRAY:
+		{
+			// TODO
+			CLogFile::Printf("Unsupported type: ARRAY on CScriptArguments::Deserialize");
+			break;
+		}
+		case CScriptArgument::ArgumentType::ST_TABLE:
+		{
+			// TODO
+			CLogFile::Printf("Unsupported type: TABLE on CScriptArguments::Deserialize");
+			break;
+		}
+		default:
+		{
+			CLogFile::Printf("Invalid type of CScriptArgument on Deserialize.");
+			break;
+		}
+		}
+	}
+}
