@@ -33,7 +33,7 @@
 
 #include <Common.h>
 #include <list>
-#include "Network\NetCommon.h"
+#include <Network/NetCommon.h>
 
 class CScriptArgument;
 class IScriptVM;
