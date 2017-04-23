@@ -105,14 +105,24 @@ void CInput::ProcessInput(CString strInput)
 		}
 	}
 	else if (strCommand == "loadresource") {
-		CResource * resource = CServer::GetInstance()->GetResourceManager()->Load(SharedUtility::GetAbsolutePath(CServer::GetInstance()->GetResourceManager()->GetResourceDirectory()), strParameters);
-		CServer::GetInstance()->GetResourceManager()->StartResource(resource);
+		CResource * pResource = CServer::GetInstance()->GetResourceManager()->Load(SharedUtility::GetAbsolutePath(CServer::GetInstance()->GetResourceManager()->GetResourceDirectory()), strParameters);
+		CServer::GetInstance()->GetResourceManager()->StartResource(pResource);
 	}
 	else if (strCommand == "reloadresource") {
-		CServer::GetInstance()->GetResourceManager()->Reload(CServer::GetInstance()->GetResourceManager()->GetResource(strParameters));
+		CResource * pResource = CServer::GetInstance()->GetResourceManager()->GetResource(strParameters);
+
+		if (!pResource)
+			return;
+
+		CServer::GetInstance()->GetResourceManager()->Reload(pResource);
 	}
 	else if (strCommand == "unloadresource") {
-		CServer::GetInstance()->GetResourceManager()->Unload(CServer::GetInstance()->GetResourceManager()->GetResource(strParameters));
+		CResource * pResource = CServer::GetInstance()->GetResourceManager()->GetResource(strParameters);
+
+		if (!pResource)
+			return;
+
+		CServer::GetInstance()->GetResourceManager()->Unload(pResource);
 	}
 	else if (strCommand == "setsyncrate") {
 		int rate = atoi(strParameters.Get());
