@@ -54,8 +54,58 @@ int dxDrawText(int * VM)
 	return 1;
 }
 
+int dxDrawBox(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->ResetStackIndex();
+
+	float fLeft;
+	pVM->Pop(fLeft, 0);
+	float fTop;
+	pVM->Pop(fTop, 0);
+	float fWidth;
+	pVM->Pop(fWidth, 50);
+	float fHeight;
+	pVM->Pop(fHeight, 50);
+	unsigned long ulBoxColor;
+	pVM->Pop(ulBoxColor, 0xFFFFFFFF);
+
+	g_pCore->GetGraphics()->DrawBox(fLeft, fTop, fWidth, fHeight, ulBoxColor);
+
+	pVM->Push(true);
+	return 1;
+}
+
+int dxDrawLine(int * VM)
+{
+	GET_SCRIPT_VM_SAFE;
+
+	pVM->ResetStackIndex();
+
+	float fLeft;
+	pVM->Pop(fLeft, 0);
+	float fTop;
+	pVM->Pop(fTop, 0);
+	float fRight;
+	pVM->Pop(fRight, 50);
+	float fBottom;
+	pVM->Pop(fBottom, 50);
+	float fWidth;
+	pVM->Pop(fWidth, 1);
+	unsigned long ulColor;
+	pVM->Pop(ulColor, 0xFFFFFFFF);
+
+	g_pCore->GetGraphics()->DrawLine(fLeft, fTop, fRight, fBottom, fWidth, ulColor);
+
+	pVM->Push(true);
+	return 1;
+}
+
 void CGraphicNatives::Register(IScriptVM * pVM)
 {
 	pVM->RegisterFunction("getScreenSize", getScreenSize);
 	pVM->RegisterFunction("dxDrawText", dxDrawText);
+	pVM->RegisterFunction("dxDrawBox", dxDrawBox);
+	pVM->RegisterFunction("dxDrawLine", dxDrawLine);
 }
