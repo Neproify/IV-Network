@@ -314,6 +314,9 @@ void CServer::Process()
 	m_pTimerManager->Pulse();
 
 
+	CScriptArguments args;
+	CEvents::GetInstance()->Call("onServerUpdate", &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
+
 	// Get the current time
 	
 

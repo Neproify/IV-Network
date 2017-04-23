@@ -46,6 +46,7 @@ void OnCreateVM(IScriptVM * pVM)
 {
 	// Register dat natives
 	CScriptClasses::Register(pVM);
+	CGraphicNatives::Register(pVM);
 }
 
 bool CCore::Initialize()

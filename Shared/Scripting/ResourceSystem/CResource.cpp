@@ -305,6 +305,13 @@ bool CResource::Stop(bool bStopManually)
 
 	m_bActive = false;
 
+#ifdef _SERVER
+	// Stop resource on client-side.
+	RakNet::BitStream bitStream;
+	bitStream.Write(GetName());
+	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, false);
+#endif
+
 	CLogFile::Printf("Stopped resource %s", GetName().C_String());
 	return true;
 }
@@ -314,21 +321,6 @@ bool CResource::Unload()
 	Stop(true);
 
 	m_bLoaded = false;
-
-#ifdef _SERVER
-
-	// Stop resource on client-side.
-	RakNet::BitStream bitStream;
-	for (int i = 0; i < CServer::GetInstance()->GetPlayerManager()->GetMax(); i++)
-	{
-		if (CServer::GetInstance()->GetPlayerManager()->DoesExists(i))
-		{
-			bitStream.Reset();
-			bitStream.Write(GetName());
-			CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
-		}
-	}
-#endif
 
 	return false;
 }

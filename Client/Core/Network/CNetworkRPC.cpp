@@ -948,12 +948,13 @@ void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
 	CString strResourceName;
 	pBitStream->Read(strResourceName);
+
 	CResource * pResource = g_pCore->GetResourceManager()->GetResource(strResourceName);
 
 	if (!pResource)
 		return;
 
-	pResource->Unload();
+	g_pCore->GetResourceManager()->Unload(pResource);
 }
 
 void TriggerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)

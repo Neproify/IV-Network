@@ -28,11 +28,17 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef NativesClient_h
-#define NativesClient_h
+#ifndef CGraphicNatives_h
+#define CGraphicNatives_h
 
-#include "CGraphicNatives.h"
+#include <Scripting/IScriptVM.h>
 
-#include "CScriptClasses.h"
+class CGraphicNatives {
 
-#endif // NativesClient_h
+private:
+
+public:
+	static void Register(IScriptVM* pVM);
+};
+
+#endif // CGraphicNatives_h

@@ -348,6 +348,7 @@
     <ClCompile Include="Network\CNetworkManager.cpp" />
     <ClCompile Include="Network\CNetworkRPC.cpp" />
     <ClCompile Include="Scripting\CClientCommands.cpp" />
+    <ClCompile Include="Scripting\Natives\CGraphicNatives.cpp" />
     <ClCompile Include="Scripting\Natives\CScriptClasses.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -654,6 +655,7 @@
     <ClInclude Include="Network\CNetworkRPC.h" />
     <ClInclude Include="Scripting\CClientCommands.h" />
     <ClInclude Include="Network\CLocalPlayer.h" />
+    <ClInclude Include="Scripting\Natives\CGraphicNatives.h" />
     <ClInclude Include="Scripting\Natives\CScriptClasses.h" />
     <ClInclude Include="Scripting\Natives\CScriptNatives.h" />
     <ClInclude Include="Scripting\Natives\Natives_Client.h" />

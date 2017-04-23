@@ -932,6 +932,9 @@
     <ClCompile Include="..\..\Libraries\lua\lutf8lib.c">
       <Filter>Source Files\Libraries\lua</Filter>
     </ClCompile>
+    <ClCompile Include="Scripting\Natives\CGraphicNatives.cpp">
+      <Filter>Source Files\Scripting\Natives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCore.h">
@@ -1851,6 +1854,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Libraries\lua\lprefix.h">
       <Filter>Source Files\Libraries\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\Natives\CGraphicNatives.h">
+      <Filter>Header Files\Scripting\Natives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
