@@ -35,7 +35,7 @@ bool CEvents::Add(CString strName, CEventHandler* pEventHandler)
 	return true;
 }
 
-CScriptArguments CEvents::Call(CString strName, CScriptArguments* pArguments, CEventHandler::eEventType EventType, IScriptVM * pVM)
+CScriptArguments CEvents::Call(CString strName, CScriptArguments* pArguments, CEventHandler::eEventType EventType, IScriptVM * pVM, bool bIsTriggeredFromRemote)
 {
 	CScriptArguments returnArguments;
 	auto itEvent = m_Events.find(strName);
@@ -44,6 +44,9 @@ CScriptArguments CEvents::Call(CString strName, CScriptArguments* pArguments, CE
 		CScriptArgument ret;
 		for (auto pEvent : itEvent->second)
 		{
+			if (!pEvent->CanBeTriggeredFromRemote() && bIsTriggeredFromRemote)
+				continue;
+
 			if (EventType == CEventHandler::eEventType::GLOBAL_EVENT
 				&& pEvent->GetType() == CEventHandler::GLOBAL_EVENT)
 			{

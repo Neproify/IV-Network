@@ -551,7 +551,7 @@ void TriggerServerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket
 	CScriptArguments args;
 	args.Deserialize(pBitStream);
 
-	CEvents::GetInstance()->Call(eventName.C_String(), &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
+	CEvents::GetInstance()->Call(eventName.C_String(), &args, CEventHandler::eEventType::NATIVE_EVENT, 0, true);
 }
 
 void VehicleEnter(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)

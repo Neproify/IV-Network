@@ -39,8 +39,10 @@ int CEventNatives::AddEvent(int * VM)
 {
 	GET_VM_UNKNOWN;
 	CString strName;
+	bool bCanBeTriggeredFromRemote;
 	pVM->ResetStackIndex();
 	pVM->Pop(strName);
+	pVM->Pop(bCanBeTriggeredFromRemote, false);
 	int ref = -1;
 	SQObjectPtr pFunction;
 	if(pVM->GetVMType() == LUA_VM)
@@ -54,7 +56,7 @@ int CEventNatives::AddEvent(int * VM)
 		pFunction = stack_get((SQVM*)VM, 3);
 	}
 	pVM->ResetStackIndex();
-	CEventHandler * pEvent = new CEventHandler(pVM, ref, pFunction, CEventHandler::RESOURCE_EVENT);
+	CEventHandler * pEvent = new CEventHandler(pVM, ref, pFunction, CEventHandler::RESOURCE_EVENT, bCanBeTriggeredFromRemote);
 	CEvents::GetInstance()->Add(strName, pEvent);
 
 	return 0;

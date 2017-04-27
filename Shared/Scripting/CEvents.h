@@ -61,7 +61,7 @@ public:
 
 	void Clear();
 
-	CScriptArguments Call(CString strName, CScriptArguments* pArguments, CEventHandler::eEventType EventType, IScriptVM * pVM);
+	CScriptArguments Call(CString strName, CScriptArguments* pArguments, CEventHandler::eEventType EventType, IScriptVM * pVM, bool bIsTriggeredFromRemote = false);
 };
 
 #endif // CEvents_h

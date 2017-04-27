@@ -965,7 +965,7 @@ void TriggerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	CScriptArguments args;
 	args.Deserialize(pBitStream);
 
-	CEvents::GetInstance()->Call(strEventName, &args, CEventHandler::eEventType::NATIVE_EVENT, 0);
+	CEvents::GetInstance()->Call(strEventName, &args, CEventHandler::eEventType::NATIVE_EVENT, 0, true);
 }
 
 void CreateCheckpoint(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
