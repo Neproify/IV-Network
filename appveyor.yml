@@ -13,6 +13,9 @@ platform: Win32
 artifacts:
   - path: Installer\IVNetwork-*.exe
   - path: Installer\IVNetworkServer-*.exe
+  - path: Build\Release\*.pdb
+    name: PDB files
+    type: zip
 
 after_build:
   - cd Installer
