@@ -13,7 +13,7 @@ platform: Win32
 artifacts:
   - path: Installer\IVNetwork-*.exe
   - path: Installer\IVNetworkServer-*.exe
-  - path: Build\Release\*.pdb
+  - path: debugfiles.zip
     name: PDB files
     type: zip
 
@@ -21,3 +21,4 @@ after_build:
   - cd Installer
   - build-client.bat
   - build-server.bat
+  - 7z a debugfiles.zip %APPVEYOR_BUILD_FOLDER%\Build\Release\*.pdb
