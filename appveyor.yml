@@ -13,7 +13,7 @@ platform: Win32
 artifacts:
   - path: Installer\IVNetwork-*.exe
   - path: Installer\IVNetworkServer-*.exe
-  - path: debugfiles.zip
+  - path: Installer\debugfiles.zip
     name: PDB files
     type: zip
 
