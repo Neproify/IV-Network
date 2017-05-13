@@ -156,7 +156,8 @@ void DownloadFinished(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 		if (resource->IsActive())
 		{
 			bitStream.Reset();
-			bitStream.Write(resource->GetName());
+			RakString resourceName = RakString(resource->GetName().C_String());
+			bitStream.Write(resourceName);
 			CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_LOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, playerId, false);
 		}
 	}

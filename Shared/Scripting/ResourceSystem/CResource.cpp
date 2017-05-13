@@ -278,7 +278,7 @@ bool CResource::Start(std::list<CResource*> * dependents, bool bStartManually, b
 				bitStream.Reset();
 				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_DOWNLOAD_START), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
 				bitStream.Reset();
-				bitStream.Write(GetName());
+				bitStream.Write(RakString(GetName().C_String()));
 				CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_RELOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, i, false);
 			}
 		}
@@ -308,7 +308,7 @@ bool CResource::Stop(bool bStopManually)
 #ifdef _SERVER
 	// Stop resource on client-side.
 	RakNet::BitStream bitStream;
-	bitStream.Write(GetName());
+	bitStream.Write(RakString(GetName().C_String()));
 	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_UNLOAD_RESOURCE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, false);
 #endif
 

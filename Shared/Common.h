@@ -129,7 +129,7 @@ typedef unsigned short EntityId;
 #endif
 
 #define INVALID_ENTITY_ID ((EntityId)0xFFFF)
-#define NETWORK_VERSION 0x3
+#define NETWORK_VERSION 0x4
 
 // Mod version string
 #define MOD_VERSION_STRING "1.0.0 DEV EFLC"

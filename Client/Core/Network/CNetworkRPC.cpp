@@ -917,8 +917,10 @@ void DownloadStart(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 void LoadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
 	CLogFile::Printf("%s", __FUNCTION__);
+	RakString _strResourceName;
 	CString strResourceName;
-	pBitStream->Read(strResourceName);
+	pBitStream->Read(_strResourceName);
+	strResourceName = CString(_strResourceName.C_String());
 
 	CResourceManager * m_pResourceManager = g_pCore->GetResourceManager();
 	CLogFile::Printf("Loading resource (%s)", strResourceName.C_String());
@@ -938,16 +940,21 @@ void LoadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 void ReloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
+	RakString _strResourceName;
 	CString strResourceName;
-	pBitStream->Read(strResourceName);
+	pBitStream->Read(_strResourceName);
+	strResourceName = CString(_strResourceName.C_String());
+
 	CResourceManager * m_pResourceManager = g_pCore->GetResourceManager();
 	m_pResourceManager->ReloadResourceAfterDownload(strResourceName);
 }
 
 void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
+	RakString _strResourceName;
 	CString strResourceName;
-	pBitStream->Read(strResourceName);
+	pBitStream->Read(_strResourceName);
+	strResourceName = CString(_strResourceName.C_String());
 
 	CResource * pResource = g_pCore->GetResourceManager()->GetResource(strResourceName);
 
@@ -959,8 +966,9 @@ void UnloadResource(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 
 void TriggerEvent(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 {
-	CString strEventName;
-	pBitStream->Read(strEventName);
+	RakString _strEventName;
+	pBitStream->Read(_strEventName);
+	CString strEventName = CString(_strEventName.C_String());
 
 	CScriptArguments args;
 	args.Deserialize(pBitStream);

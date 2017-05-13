@@ -337,7 +337,7 @@ int TriggerClientEvent(int * VM)
 	}
 
 	RakNet::BitStream bitStream;
-	bitStream.Write(strEventName);
+	bitStream.Write(RakString(strEventName));
 	args.Serialize(&bitStream);
 	CServer::GetInstance()->GetNetworkModule()->Call(GET_RPC_CODEX(RPC_TRIGGER_CLIENT_EVENT), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, -1, true);
 	return 1;

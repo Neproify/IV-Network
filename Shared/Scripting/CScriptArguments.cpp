@@ -115,7 +115,7 @@ void CScriptArguments::Serialize(RakNet::BitStream *pBitStream)
 		case CScriptArgument::ArgumentType::ST_STRING:
 		{
 			pBitStream->Write(CScriptArgument::ArgumentType::ST_STRING);
-			pBitStream->Write(CString(arg->GetString()));
+			pBitStream->Write(RakString(arg->GetString()));
 			break;
 		}
 		case CScriptArgument::ArgumentType::ST_ARRAY:
@@ -170,8 +170,9 @@ void CScriptArguments::Deserialize(RakNet::BitStream *pBitStream)
 		}
 		case CScriptArgument::ArgumentType::ST_STRING:
 		{
-			CString data;
-			pBitStream->Read(data);
+			RakString _data;
+			pBitStream->Read(_data);
+			CString data = CString(_data.C_String());
 			push(data);
 			break;
 		}
