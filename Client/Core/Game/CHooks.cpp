@@ -244,30 +244,33 @@ void _declspec(naked) PhysicsHook()
 	_asm	pushfd; //EFLAGS!
 
 	if (*(int*) pVehicle == g_pCore->GetBase() + 0xD9ED74) { // IsBike
-		//_asm { int 3 }
-		//CLogFile::Printf("%p", physics);
+		_asm { int 3 }
+		CLogFile::Printf("%p", physics);
 	}
 
 	sub_44A690 = g_pCore->GetBase() + 0x44A690;
 
-    // This code was crashing, look at this later
-	/*if (*(DWORD *) (physics + 4) == 0) {
+	if (*(DWORD *) (physics + 4) == 0) {
 		CLogFile::Printf("Fail 0x%p", physics);
+		CLogFile::Printf("Vehicle: %p", pVehicle);
 
 		if (pVehicle->GetfragInst()) {
 			if (*(DWORD*) (pVehicle->GetfragInst() + 0x64))
-				CLogFile::Printf("0x%p", *(DWORD*) ((*(DWORD*) (pVehicle->GetfragInst() + 0x64)) + 0x160));
+				CLogFile::Print("Was crashing, deleted");
+				//CLogFile::Printf("0x%p", *(DWORD*) ((*(DWORD*) (pVehicle->GetfragInst() + 0x64)) + 0x160));
 			else {
 				int v2 = (*(int(__thiscall **)(DWORD))(*(DWORD *) pVehicle + 0xA0))((DWORD) pVehicle);
 				CLogFile::Printf("0x%p", (*(int(__thiscall **)(DWORD))(*(DWORD *) v2 + 0xE0))(v2));
 			}
 		}
 
-		EFLC::CScript::RequestModel(pVehicle->m_wModelIndex);
-		while (!EFLC::CScript::HasModelLoaded(pVehicle->m_wModelIndex))
-			EFLC::CScript::LoadAllObjectsNow(false);
+		EFLC::CModelInfo * pModelInfo = g_pCore->GetGame()->GetModelInfo(pVehicle->m_wModelIndex);
+		if (!pModelInfo->IsLoaded())
+		{
+			pModelInfo->Load();
+		}
 
-		CLogFile::Printf("Model: %i", pVehicle->m_wModelIndex);
+		EFLC::CScript::LoadAllObjectsNow(false);
 
 		CLogFile::Printf("PhysicsBefore=>");
 		CLogFile::Printf("[0x38] 0x%p || [0xE14] 0x%p || [0x100] 0x%p", pVehicle->m_pPhysics, pVehicle->m_pVehiclePhysics, *(DWORD*) (pVehicle + 0x40));
@@ -279,7 +282,8 @@ void _declspec(naked) PhysicsHook()
 
 		if (pVehicle->GetfragInst()) {
 			if (*(DWORD*) (pVehicle->GetfragInst() + 0x64))
-				CLogFile::Printf("0x%p", *(DWORD*) ((*(DWORD*) (pVehicle->GetfragInst() + 0x64)) + 0x160));
+				CLogFile::Print("Was crashing, deleted 2");
+				//CLogFile::Printf("0x%p", *(DWORD*) ((*(DWORD*) (pVehicle->GetfragInst() + 0x64)) + 0x160));
 			else {
 				int v2 = (*(int(__thiscall **)(DWORD))(*(DWORD *) pVehicle + 0xA0))((DWORD) pVehicle);
 				CLogFile::Printf("0x%p", (*(int(__thiscall **)(DWORD))(*(DWORD *) v2 + 0xE0))(v2));
@@ -289,16 +293,67 @@ void _declspec(naked) PhysicsHook()
 		_asm	popad;
 		_asm	retn;
 	}
-	else {*/
+	else {
 		_asm	popfd;
 		_asm	popad;
 		_asm	call sub_44A690;
 		_asm	retn;
-	//}
+	}
 
 	_asm	popfd;
 	_asm	popad;
 	_asm	retn;
+}
+
+DWORD sub_B65709 = 0;
+DWORD sub_B65711 = 0;
+
+EFLC::IDynamicEntity * pEntity = 0;
+
+void _declspec(naked) PhysicsHook2()
+{
+	_asm	mov     edx, [esi];
+	_asm	movzx   ebx, word ptr[ecx + 0Eh];
+	_asm	mov pEntity, edx;
+	_asm	mov     eax, [edx + 0E0h];
+	_asm	mov     ecx, esi;
+	_asm	call    eax;
+	_asm	test    eax, eax;
+	_asm	jz      keks;
+	_asm	mov physics, eax;
+	_asm	pushad;
+	_asm	pushfd; //EFLAGS!
+
+	sub_B65709 = g_pCore->GetBase() + 0xB65709;
+	sub_B65711 = g_pCore->GetBase() + 0xB65711;
+
+	/*if (*(int*)pVehicle == g_pCore->GetBase() + 0xD9ED74) { // IsBike
+		_asm { int 3 }
+		CLogFile::Printf("%p", physics);
+	}*/
+
+	// This code was crashing, look at this later
+	if (*(DWORD *)(physics + 4) == 0) {
+		CLogFile::Printf("Fail 0x%p", physics);
+		CLogFile::Printf("Entity: %p", pEntity);
+
+		CLogFile::Printf("Model: %i", pEntity->m_wModelIndex);
+		CLogFile::Printf("Hash: 0x%p", pEntity->m_wModelIndex);
+
+		_asm	popfd;
+		_asm	popad;
+		_asm	jmp sub_B65711;
+	}
+
+	_asm	popfd;
+	_asm	popad;
+	_asm	mov		edx, [eax + 4];
+	_asm	movsx	ecx, bx;
+	_asm	imul	ecx, 0E0h;
+	//_asm	add		ecx, [edx];
+	_asm	jmp		sub_B65709;
+	_asm	keks:;
+	_asm	jmp sub_B65711;
 }
 
 
@@ -559,6 +614,7 @@ void CHooks::Intialize()
 	CPatcher::InstallNopPatch(COffsets::CALL_StartLoadingTune, 5);
 
 	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x9D180B, (DWORD) PhysicsHook);
+	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0xB656E9, (DWORD) PhysicsHook2);
 #endif
 
 	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x834093, (DWORD)runStartupScript);

@@ -160,6 +160,7 @@ namespace CScript
 	static void UnpointCam(unsigned int camera) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_UNPOINT_CAM, camera); }
 	static void GenerateRandomFloatInRange(float min, float max, float *pValue) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_GENERATE_RANDOM_FLOAT_IN_RANGE, min, max, pValue); }
 	static void SetCamFov(unsigned int camera, float fov) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_SET_CAM_FOV, camera, fov); }
+	static void GetCarObjectIsAttachedTo(unsigned int object) { EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_GET_CAR_OBJECT_IS_ATTACHED_TO, object); }
 
 	// Blip
 	static unsigned int AddBlipForChar(unsigned int ped, unsigned int *pBlip) { return EFLC::CNativeInvoke::Invoke<unsigned int>(NATIVE_ADD_BLIP_FOR_CHAR, ped, pBlip); }

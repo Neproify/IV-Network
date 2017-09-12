@@ -125,7 +125,36 @@ bool CVehicleEntity::Create()
 
 	m_pModelInfo->AddReference(true);
 
-	EFLC::IVehicle * pVehicle = pIVehicleFactory->Create(m_pModelInfo->GetIndex(), 1, 0, 0);
+	DWORD dwModelHash = m_pModelInfo->GetHash();
+
+	unsigned int uiVehicleHandle;
+
+	EFLC::CScript::CreateCar(dwModelHash, 0.0f, 0.0f, 0.0f, &uiVehicleHandle, true);
+
+	EFLC::IVehicle * pVehicle = g_pCore->GetGame()->GetPools()->GetVehiclePool()->AtHandle(uiVehicleHandle);
+
+	m_pVehicle = new EFLC::CVehicle(pVehicle);
+
+	//set the vehicle's color
+	SetColors(m_dwColor[0], m_dwColor[1], m_dwColor[2], m_dwColor[3], m_dwColor[4]);
+
+	//fix: no more random components
+	for (int i = 0; i < 9; ++i)
+		SetComponentState(i, false);
+
+	// Mark as spawned
+	m_bSpawned = true;
+
+	// Reset the vehicle
+	Reset();
+
+	SetPosition(m_vecSpawnPosition);
+
+	CLogFile::Printf("Created vehicle! (Id: %d, Handle: %X)", m_vehicleId, g_pCore->GetGame()->GetPools()->GetVehiclePool()->HandleOf(pVehicle));
+
+	return true;
+
+	/*EFLC::IVehicle * pVehicle = pIVehicleFactory->Create(m_pModelInfo->GetIndex(), 1, 0, 0);
 	if (pVehicle)
 	{
 		pVehicle->Function76(0);
@@ -174,7 +203,8 @@ bool CVehicleEntity::Create()
 	{
 		CLogFile::Printf("Created vehicle failed!");
 		return false;
-	}
+	}*/
+
 }
 
 bool CVehicleEntity::Destroy()
