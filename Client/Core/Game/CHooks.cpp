@@ -615,6 +615,8 @@ void CHooks::Intialize()
 
 	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x9D180B, (DWORD) PhysicsHook);
 	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0xB656E9, (DWORD) PhysicsHook2);
+	sub_B65709 = g_pCore->GetBase() + 0xB65709;
+	sub_B65711 = g_pCore->GetBase() + 0xB65711;
 #endif
 
 	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x834093, (DWORD)runStartupScript);
