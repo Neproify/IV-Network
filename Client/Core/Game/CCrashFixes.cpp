@@ -81,6 +81,19 @@ void _declspec(naked) __stdcall CRASH_625F15_HOOK()
 	_asm	jmp keks_patch;
 }
 
+DWORD sub_40AC26 = 0;
+
+void _declspec(naked) __stdcall CRASH_40AC26_HOOK()
+{
+	_asm	mov eax, ecx;
+	_asm	mov ecx, [esp + 4];
+	_asm	cmp ecx, 1000h;
+	_asm	jl fail;
+	_asm	jmp sub_40AC26;
+	_asm	fail:;
+	_asm	retn 4;
+}
+
 void CCrashFixes::Initialize()
 {
 	// Hook texture select/generate function
@@ -94,6 +107,9 @@ void CCrashFixes::Initialize()
 
 	// Disables zone population calcs fixes crash with some vehicles
 	CPatcher::InstallRetnPatch(COffsets::IV_Hook__PatchEnableAndFixVehicleModels);
+
+	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x40AC20, (DWORD)CRASH_40AC26_HOOK);
+	sub_40AC26 = g_pCore->GetBase() + 0x40AC26;
 
 	//CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0xA6180C, g_pCore->GetBase() + 0xA619F7);
 }
