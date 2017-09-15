@@ -1270,14 +1270,32 @@ void CPlayerEntity::ResetVehicleEnterExit()
 
 void CPlayerEntity::ProcessVehicleEnterExit()
 {
-	if (!IsSpawned())
-		ResetVehicleEnterExit();
-
-	if (!IsGettingIntoAVehicle() && m_pVehicleEnterExit->bEntering)
-		ResetVehicleEnterExit();
-
-	if (!IsGettingOutOfAVehicle() && m_pVehicleEnterExit->bExiting)
-		ResetVehicleEnterExit();
+	if (IsSpawned())
+	{
+		if (InternalIsInVehicle())
+		{
+			if (m_pVehicleEnterExit->bEntering)
+			{
+				if (!IsGettingIntoAVehicle())
+				{
+					m_pVehicle = m_pVehicleEnterExit->pVehicle;
+					m_byteSeat = m_pVehicleEnterExit->byteSeat;
+					m_pVehicle->SetOccupant(m_byteSeat, this);
+					ResetVehicleEnterExit();
+				}
+			}
+		}
+		else
+		{
+			if (m_pVehicleEnterExit->bExiting)
+			{
+				if (!IsGettingOutOfAVehicle())
+				{
+					ResetVehicleEnterExit();
+				}
+			}
+		}
+	}
 }
 
 bool CPlayerEntity::IsGettingIntoAVehicle()
@@ -1743,7 +1761,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 	{
 		CNetworkPlayerSyncPacket PlayerPacket;
 		//Remove from vehicle if exit sync failed
-		if (IsInVehicle() && !HasVehicleEnterExit())
+		if (IsInVehicle() && !IsGettingOutOfAVehicle() && !HasVehicleEnterExit())
 		{
 			CLogFile::Print("Removing player from car, exit sync failed");
 			RemoveFromVehicle();
@@ -1764,7 +1782,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 
 		m_pPlayerWeapons->SetCurrentWeapon(PlayerPacket.weapon.weaponType);
 
-		if (!IsGettingIntoAVehicle() && !IsGettingOutOfAVehicle() && !HasVehicleEnterExit())
+		if (!IsInVehicle() && !IsGettingIntoAVehicle() && !IsGettingOutOfAVehicle() && !HasVehicleEnterExit())
 		{
 
 			Matrix matrix;
