@@ -1700,6 +1700,8 @@ void CPlayerEntity::Serialize(RakNet::BitStream * pBitStream)
 			}
 
 			m_pContextData->GetWeaponShotSource(WeaponPacket.vecShotSource);
+			m_pContextData->GetArmHeading(WeaponPacket.fArmHeading);
+			m_pContextData->GetArmUpDown(WeaponPacket.fArmUpDown);
 
 			WeaponPacket.weapon.iAmmo = m_pPlayerWeapons->GetAmmo(m_pPlayerWeapons->GetCurrentWeapon());
 			WeaponPacket.weapon.weaponType = m_pPlayerWeapons->GetCurrentWeapon();
@@ -1804,6 +1806,27 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 			
 			SetMoveSpeed(PlayerPacket.vecMoveSpeed);
 			SetTurnSpeed(PlayerPacket.vecTurnSpeed);
+
+			if (!m_ControlState.IsAiming() && !m_ControlState.IsFiring())
+			{
+				//Delete AimAt and ShotAt tasks
+
+				unsigned int uiPlayerIndex = GetScriptingHandle();
+
+				// Destroy shotat task
+				_asm  push 36;
+				_asm  push 0;
+				_asm  push uiPlayerIndex;
+				_asm  call COffsets::IV_Func__DeletePedTaskID;
+				_asm  add esp, 0Ch;
+
+				// Destroy aimat task
+				_asm  push 35;
+				_asm  push 0;
+				_asm  push uiPlayerIndex;
+				_asm  call COffsets::IV_Func__DeletePedTaskID;
+				_asm  add esp, 0Ch;
+			}
 
 			SetLastSyncPacket(PlayerPacket);
 		}
@@ -1950,13 +1973,17 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 				m_pPlayerWeapons->SetAmmo(AimSync.weapon.weaponType, AimSync.weapon.iAmmo);
 			}
 
+			m_pContextData->SetArmHeading(AimSync.fArmHeading);
+			m_pContextData->SetArmUpDown(AimSync.fArmUpDown);
+			m_pContextData->SetWeaponShotSource(AimSync.vecShotSource);
+
 			if (m_ControlState.IsAiming() && !m_ControlState.IsFiring())
 			{
 				m_pContextData->SetWeaponAimTarget(AimSync.vecAimShotAtCoordinates);
 
 				unsigned int st = 0;
 				EFLC::CScript::OpenSequenceTask(&st);
-				EFLC::CScript::TaskAimGunAtCoord(GetScriptingHandle(), AimSync.vecAimShotAtCoordinates.fX, AimSync.vecAimShotAtCoordinates.fY, AimSync.vecAimShotAtCoordinates.fZ, 2000);
+				EFLC::CScript::TaskAimGunAtCoord(0, AimSync.vecAimShotAtCoordinates.fX, AimSync.vecAimShotAtCoordinates.fY, AimSync.vecAimShotAtCoordinates.fZ, 2000);
 				EFLC::CScript::CloseSequenceTask(st);
 				if (!EFLC::CScript::IsCharInjured(GetScriptingHandle()))
 					EFLC::CScript::TaskPerformSequence(GetScriptingHandle(), st);
@@ -1964,12 +1991,11 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 			}
 			else if (m_ControlState.IsFiring())
 			{
-				m_pContextData->SetWeaponShotSource(AimSync.vecShotSource);
 				m_pContextData->SetWeaponShotTarget(AimSync.vecAimShotAtCoordinates);
 
 				unsigned int st = 0;
 				EFLC::CScript::OpenSequenceTask(&st);
-				EFLC::CScript::TaskShootAtCoord(0, AimSync.vecAimShotAtCoordinates.fX, AimSync.vecAimShotAtCoordinates.fY, AimSync.vecAimShotAtCoordinates.fZ, 2000, 5); // 3 - fake shot
+				EFLC::CScript::TaskShootAtCoord(0, AimSync.vecAimShotAtCoordinates.fX, AimSync.vecAimShotAtCoordinates.fY, AimSync.vecAimShotAtCoordinates.fZ, 300, 5); // 3 - fake shot
 				EFLC::CScript::CloseSequenceTask(st);
 				if (!EFLC::CScript::IsCharInjured(GetScriptingHandle()))
 					EFLC::CScript::TaskPerformSequence(GetScriptingHandle(), st);
