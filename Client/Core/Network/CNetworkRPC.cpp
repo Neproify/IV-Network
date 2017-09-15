@@ -706,20 +706,34 @@ void EnterVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	EntityId playerId;
 	pBitStream->Read(playerId);
 
+	EntityId vehicleId;
+	pBitStream->Read(vehicleId);
+
+	byte byteSeat;
+	pBitStream->Read(byteSeat);
+
 	if (!g_pCore->GetGame()->GetPlayerManager()->DoesExists(playerId))
 		return;
+
+#ifdef SYNC_TEST
+	CPlayerEntity * pTestPlayer = g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId + 1);
+	if (pTestPlayer)
+	{
+		if (pTestPlayer->IsInVehicle())
+			pTestPlayer->RemoveFromVehicle();
+
+		if (g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId + 1))
+		{
+			pTestPlayer->EnterVehicle(g_pCore->GetGame()->GetVehicleManager()->GetAt(vehicleId + 1), byteSeat);
+		}
+	}
+#endif
 
 	if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsLocalPlayer())
 		return;
 
-	EntityId vehicleId;
-	pBitStream->Read(vehicleId);
-
 	if (!g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId))
 		return;
-
-	byte byteSeat;
-	pBitStream->Read(byteSeat);
 
 	if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsInVehicle())
 		g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->RemoveFromVehicle();
@@ -734,20 +748,31 @@ void ExitVehicle(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	EntityId playerId;
 	pBitStream->Read(playerId);
 
+	EntityId vehicleId;
+	pBitStream->Read(vehicleId);
+
+	byte byteSeat;
+	pBitStream->Read(byteSeat);
+
 	if (!g_pCore->GetGame()->GetPlayerManager()->DoesExists(playerId))
 		return;
+
+#ifdef SYNC_TEST
+	CPlayerEntity * pTestPlayer = g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId + 1);
+	if (pTestPlayer)
+	{
+		if (g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId + 1))
+		{
+			pTestPlayer->ExitVehicle(eExitVehicleType::EXIT_VEHICLE_NORMAL);
+		}
+	}
+#endif
 
 	if (g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->IsLocalPlayer())
 		return;
 
-	EntityId vehicleId;
-	pBitStream->Read(vehicleId);
-
 	if (!g_pCore->GetGame()->GetVehicleManager()->DoesExists(vehicleId))
 		return;
-
-	byte byteSeat;
-	pBitStream->Read(byteSeat);
 
 	g_pCore->GetGame()->GetPlayerManager()->GetAt(playerId)->ExitVehicle(eExitVehicleType::EXIT_VEHICLE_NORMAL);
 }

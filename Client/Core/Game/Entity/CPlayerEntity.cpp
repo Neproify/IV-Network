@@ -269,13 +269,17 @@ void CPlayerEntity::Pulse()
 		if(!IsLocalPlayer())
 		{
 			// Are we not in a vehicle?
-			if(!IsInVehicle())
+			if(!IsInVehicle() && !HasVehicleEnterExit())
 			{
 				if (!IsJumping())
 				{
 					// Process interpolation
 					Interpolate();
 				}
+			}
+			if (HasVehicleEnterExit())
+			{
+				ProcessVehicleEnterExit();
 			}
 		}
 	}
@@ -1264,6 +1268,18 @@ void CPlayerEntity::ResetVehicleEnterExit()
 	ClearVehicleExitTask();
 }
 
+void CPlayerEntity::ProcessVehicleEnterExit()
+{
+	if (!IsSpawned())
+		ResetVehicleEnterExit();
+
+	if (!IsGettingIntoAVehicle() && m_pVehicleEnterExit->bEntering)
+		ResetVehicleEnterExit();
+
+	if (!IsGettingOutOfAVehicle() && m_pVehicleEnterExit->bExiting)
+		ResetVehicleEnterExit();
+}
+
 bool CPlayerEntity::IsGettingIntoAVehicle()
 {
 	// Are we spawned?
@@ -1706,9 +1722,10 @@ void CPlayerEntity::Serialize(RakNet::BitStream * pBitStream)
 		g_pCore->GetGame()->GetPad()->GetCurrentControlState(PassengerPacket.ControlState);
 		PassengerPacket.playerArmor = GetArmour();
 		PassengerPacket.playerHealth = GetHealth();
+		CLogFile::Printf("Armor: %f, Health: %f", GetArmour(), GetHealth());
 		GetPosition(PassengerPacket.vecPosition);
 		PassengerPacket.vehicleId = m_pVehicle->GetId();
-		//PassengerPacket.byteSeatId = m_byteSeat;
+		PassengerPacket.byteSeatId = m_byteSeat;
 		
 		pBitStream->Write(RPC_PACKAGE_TYPE_PLAYER_PASSENGER);
 		pBitStream->Write(PassengerPacket);
@@ -1725,8 +1742,13 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 	if (eType == RPC_PACKAGE_TYPE_PLAYER_ONFOOT)
 	{
 		CNetworkPlayerSyncPacket PlayerPacket;
-		if (IsInVehicle())
-			m_pVehicle = nullptr;
+		//Remove from vehicle if exit sync failed
+		if (IsInVehicle() && !HasVehicleEnterExit())
+		{
+			CLogFile::Print("Removing player from car, exit sync failed");
+			RemoveFromVehicle();
+			ResetVehicleEnterExit();
+		}
 
 		pBitStream->Read(PlayerPacket);
 
@@ -1742,8 +1764,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 
 		m_pPlayerWeapons->SetCurrentWeapon(PlayerPacket.weapon.weaponType);
 
-		if (!IsGettingIntoAVehicle()
-			&& !IsGettingOutOfAVehicle())
+		if (!IsGettingIntoAVehicle() && !IsGettingOutOfAVehicle() && !HasVehicleEnterExit())
 		{
 
 			Matrix matrix;
@@ -1790,7 +1811,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 
 		unsigned int interpolationTime = SharedUtility::GetTime() - m_ulLastSyncReceived;
 
-		if (IsInVehicle())
+		if (IsInVehicle() && !HasVehicleEnterExit())
 		{
 			if (m_pVehicle->GetId() == VehiclePacket.vehicleId)
 			{
@@ -1833,12 +1854,15 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 		}
 		else
 		{
-			ResetVehicleEnterExit();
-
-			// Put the player in the vehicle if vehicle enter/exit sync failed or not completed
-			if (g_pCore->GetGame()->GetVehicleManager()->GetAt(VehiclePacket.vehicleId))
+			if (!HasVehicleEnterExit())
 			{
-				PutInVehicle(g_pCore->GetGame()->GetVehicleManager()->GetAt(VehiclePacket.vehicleId), 0);
+				ResetVehicleEnterExit();
+
+				// Put the player in the vehicle if vehicle enter/exit sync failed or not completed
+				if (g_pCore->GetGame()->GetVehicleManager()->GetAt(VehiclePacket.vehicleId))
+				{
+					PutInVehicle(g_pCore->GetGame()->GetVehicleManager()->GetAt(VehiclePacket.vehicleId), 0);
+				}
 			}
 		}
 
@@ -1861,12 +1885,18 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 		CNetworkPlayerPassengerSyncPacket PassengerPacket;
 		pBitStream->Read(PassengerPacket);
 
+#ifdef SYNC_TEST
+		PassengerPacket.vehicleId += 1;
+#endif
+
 		SetPosition(PassengerPacket.vecPosition);
 		SetControlState(&PassengerPacket.ControlState);
 		SetArmour(PassengerPacket.playerArmor);
 		SetHealth(PassengerPacket.playerHealth);
 
-		if (!IsInVehicle() || !InternalIsInVehicle())
+		RemoveTargetPosition();
+
+		if (!IsInVehicle() && !HasVehicleEnterExit())
 		{
 			ResetVehicleEnterExit();
 

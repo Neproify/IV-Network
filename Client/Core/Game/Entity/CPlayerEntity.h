@@ -237,6 +237,7 @@ public:
 	void							ResetVehicleEnterExit();
 	void							ClearVehicleEntryTask();
 	void							ClearVehicleExitTask();
+	void							ProcessVehicleEnterExit();
 	
 	void							Interpolate();
 	void							ResetInterpolation();

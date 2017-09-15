@@ -606,13 +606,15 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream, ePackageType pTy
 		{
 			CNetworkPlayerPassengerSyncPacket PassengerPacket;
 
+			pBitStream->Read(PassengerPacket);
+
 			SetControlState(PassengerPacket.ControlState);
 			SetPosition(PassengerPacket.vecPosition);
 			SetArmour(PassengerPacket.playerArmor);
 			SetHealth(PassengerPacket.playerHealth);
 
 			m_vehicleId = PassengerPacket.vehicleId;
-			//m_vehicleSeatId = PassengerPacket.byteSeatId;
+			m_vehicleSeatId = PassengerPacket.byteSeatId;
 
 			m_eLastSyncPackageType = pType;
 			m_ulLastSyncReceived = SharedUtility::GetTime();
