@@ -103,18 +103,16 @@ bool CEvents::Remove(CString strName, CEventHandler* pEventHandler)
 bool CEvents::RemoveEventsCreatedByResource(CResource* pResource)
 {
 	IScriptVM * resourceVM = pResource->GetVM();
-	CString name;
-	for (auto pEvent : m_Events)
+	CString strName;
+	for (auto pEvent = m_Events.begin(); pEvent != m_Events.end(); pEvent++)
 	{
-		name = pEvent.first;
-		for (auto pEventHandler : pEvent.second)
+		for (auto pEventHandler : pEvent->second)
 		{
 			if (pEventHandler->GetVM() == resourceVM)
 			{
-				Remove(name, pEventHandler);
+				Remove(strName, pEventHandler);
 			}
 		}
-
 	}
 	return true;
 }
