@@ -309,11 +309,8 @@
     <ClCompile Include="Game\EFLC\TaskInfo\CTaskInfo.cpp" />
     <ClCompile Include="Game\EFLC\TaskInfo\CTaskInfoWithCloneTask.cpp" />
     <ClCompile Include="Game\EFLC\TaskInfo\CVehicleTaskInfo.cpp" />
-    <ClCompile Include="Game\Entity\C3DLabelEntity.cpp" />
-    <ClCompile Include="Game\Entity\CActorEntity.cpp" />
     <ClCompile Include="Game\Entity\CBlipEntity.cpp" />
     <ClCompile Include="Game\Entity\CCheckpointEntity.cpp" />
-    <ClCompile Include="Game\Entity\CFireEntity.cpp" />
     <ClCompile Include="Game\Entity\CNetworkEntity.cpp" />
     <ClCompile Include="Game\Entity\CObjectEntity.cpp" />
     <ClCompile Include="Game\Entity\CPickupEntity.cpp" />
@@ -609,13 +606,10 @@
     <ClInclude Include="Game\EFLC\TaskInfo\CTaskInfo.h" />
     <ClInclude Include="Game\EFLC\TaskInfo\CTaskInfoWithCloneTask.h" />
     <ClInclude Include="Game\EFLC\TaskInfo\CVehicleTaskInfo.h" />
-    <ClInclude Include="Game\Entity\C3DLabelEntity.h" />
-    <ClInclude Include="Game\Entity\CActorEntity.h" />
     <ClInclude Include="Game\Entity\CBlipEntity.h" />
     <ClInclude Include="Game\Entity\CCheckpointEntity.h" />
     <ClInclude Include="Game\Entity\CEntitiesManager.h" />
     <ClInclude Include="Game\Entity\CEntityManager.h" />
-    <ClInclude Include="Game\Entity\CFireEntity.h" />
     <ClInclude Include="Game\Entity\CNetworkEntity.h" />
     <ClInclude Include="Game\Entity\CObjectEntity.h" />
     <ClInclude Include="Game\Entity\CPickupEntity.h" />

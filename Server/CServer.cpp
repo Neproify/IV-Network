@@ -54,15 +54,9 @@ CServer::~CServer()
 
 	SAFE_DELETE(m_pVehicleManager);
 
-	SAFE_DELETE(m_pActorManager);
-
 	SAFE_DELETE(m_pObjectManager);
 
-	SAFE_DELETE(m_pFireManager);
-
 	SAFE_DELETE(m_pPickupManager);
-
-	SAFE_DELETE(m_p3DLabelManager);
 
 	SAFE_DELETE(m_pBlipManager);
 
@@ -82,11 +76,8 @@ bool CServer::Startup()
 	// Create all the managers
 	m_pPlayerManager = new CPlayerManager();
 	m_pVehicleManager = new CVehicleManager();
-	m_pActorManager = new CActorManager();
 	m_pObjectManager = new CObjectManager();
-	m_pFireManager = new CFireManager();
 	m_pPickupManager = new CPickupManager();
-	m_p3DLabelManager = new C3DLabelManager();
 	m_pBlipManager = new CBlipManager();
 	m_pCheckpointManager = new CCheckpointManager();
 
@@ -297,15 +288,9 @@ void CServer::Process()
 
 	m_pVehicleManager->Pulse();
 
-	m_pActorManager->Pulse();
-
 	m_pObjectManager->Pulse();
 
-	m_pFireManager->Pulse();
-
 	m_pPickupManager->Pulse();
-
-	m_p3DLabelManager->Pulse();
 
 	m_pBlipManager->Pulse();
 
@@ -369,15 +354,9 @@ void CServer::Shutdown()
 
 	m_pVehicleManager->Reset();
 
-	m_pActorManager->Reset();
-
 	m_pObjectManager->Reset();
 
-	m_pFireManager->Reset();
-
 	m_pPickupManager->Reset();
-
-	m_p3DLabelManager->Reset();
 
 	m_pBlipManager->Reset();
 

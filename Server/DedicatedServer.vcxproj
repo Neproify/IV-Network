@@ -205,11 +205,8 @@
     <ClCompile Include="CServer.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CTimerManager.cpp" />
-    <ClCompile Include="Entity\C3DLabelEntity.cpp" />
-    <ClCompile Include="Entity\CActorEntity.cpp" />
     <ClCompile Include="Entity\CBlipEntity.cpp" />
     <ClCompile Include="Entity\CCheckpointEntity.cpp" />
-    <ClCompile Include="Entity\CFireEntity.cpp" />
     <ClCompile Include="Entity\CNetworkEntity.cpp" />
     <ClCompile Include="Entity\CObjectEntity.cpp" />
     <ClCompile Include="Entity\CPickupEntity.cpp" />
@@ -278,12 +275,9 @@
     <ClInclude Include="CStreamer.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="CTimerManager.h" />
-    <ClInclude Include="Entity\C3DLabelEntity.h" />
-    <ClInclude Include="Entity\CActorEntity.h" />
     <ClInclude Include="Entity\CBlipEntity.h" />
     <ClInclude Include="Entity\CCheckpointEntity.h" />
     <ClInclude Include="Entity\CEntityManager.h" />
-    <ClInclude Include="Entity\CFireEntity.h" />
     <ClInclude Include="Entity\CNetworkEntity.h" />
     <ClInclude Include="Entity\CObjectEntity.h" />
     <ClInclude Include="Entity\CPickupEntity.h" />

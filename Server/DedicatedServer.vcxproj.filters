@@ -198,19 +198,10 @@
     <ClCompile Include="Scripting\Natives\CServerNatives.cpp">
       <Filter>Source Files\Scripting\Natives</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\C3DLabelEntity.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity\CActorEntity.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="Entity\CBlipEntity.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\CCheckpointEntity.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity\CFireEntity.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Entity\CNetworkEntity.cpp">
@@ -437,12 +428,6 @@
     <ClInclude Include="Entity\CNetworkEntity.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\C3DLabelEntity.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\CActorEntity.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Entity\CBlipEntity.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -450,9 +435,6 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\CEntityManager.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\CFireEntity.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entity\CObjectEntity.h">

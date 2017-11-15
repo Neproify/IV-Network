@@ -40,11 +40,8 @@
 
 #include <Game/Entity/CPlayerEntity.h>
 #include <Game/Entity/CVehicleEntity.h>
-#include <Game/Entity/CActorEntity.h>
 #include <Game/Entity/CObjectEntity.h>
-#include <Game/Entity/CFireEntity.h>
 #include <Game/Entity/CPickupEntity.h>
-#include <Game/Entity/C3DLabelEntity.h>
 #include <Game/Entity/CBlipEntity.h>
 #include <Game/Entity/CCheckpointEntity.h>
 
@@ -72,11 +69,8 @@
 
 typedef CEntityManager<CPlayerEntity, MAX_PLAYERS> CPlayerManager;
 typedef CEntityManager<CVehicleEntity, MAX_VEHICLES> CVehicleManager;
-typedef CEntityManager<CActorEntity, MAX_ACTORS> CActorManager;
 typedef CEntityManager<CObjectEntity, MAX_OBJECTS> CObjectManager;
-typedef CEntityManager<CFireEntity, MAX_FIRE> CFireManager;
 typedef CEntityManager<CPickupEntity, MAX_PICKUPS> CPickupManager;
-typedef CEntityManager<C3DLabelEntity, 0xFFFE> C3DLabelManager;
 typedef CEntityManager<CBlipEntity, MAX_BLIPS> CBlipManager;
 typedef CEntityManager<CCheckpointEntity, MAX_CHECKPOINTS> CCheckpointManager;
 
@@ -95,11 +89,8 @@ private:
 
 	CPlayerManager					* m_pPlayerManager = nullptr;
 	CVehicleManager					* m_pVehicleManager = nullptr;
-	CActorManager					* m_pActorManager = nullptr;
 	CObjectManager					* m_pObjectManager = nullptr;
-	CFireManager					* m_pFireManager = nullptr;
 	CPickupManager					* m_pPickupManager = nullptr;
-	C3DLabelManager					* m_p3DLabelManager = nullptr;
 	CBlipManager					* m_pBlipManager = nullptr;
 	CCheckpointManager				* m_pCheckpointManager = nullptr;
 	CTrafficLights					* m_pTrafficLights = nullptr;
@@ -127,11 +118,8 @@ public:
 	const decltype(m_pCamera)             GetCamera() { return m_pCamera; }
 	const decltype(m_pPlayerManager)      GetPlayerManager() { return m_pPlayerManager; }
 	const decltype(m_pVehicleManager)     GetVehicleManager() { return m_pVehicleManager; }
-	const decltype(m_pActorManager)       GetActorManager() { return m_pActorManager; }
 	const decltype(m_pObjectManager)      GetObjectManager() { return m_pObjectManager; }
-	const decltype(m_pFireManager)        GetFireManager() { return m_pFireManager; }
 	const decltype(m_pPickupManager)      GetPickupManager() { return m_pPickupManager; }
-	const decltype(m_p3DLabelManager)     Get3DLabelManager() { return m_p3DLabelManager; }
 	const decltype(m_pBlipManager)        GetBlipManager() { return m_pBlipManager; }
 	const decltype(m_pCheckpointManager)  GetCheckpointManager() { return m_pCheckpointManager; }
 	const decltype(m_pTrafficLights)      GetTrafficLights() { return m_pTrafficLights; }

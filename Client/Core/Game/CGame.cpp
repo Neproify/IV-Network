@@ -47,11 +47,8 @@ CGame::CGame() :
 	m_pCamera(nullptr),
 	m_pPlayerManager(nullptr),
 	m_pVehicleManager(nullptr),
-	m_pActorManager(nullptr),
 	m_pObjectManager(nullptr),
-	m_pFireManager(nullptr),
 	m_pPickupManager(nullptr),
-	m_p3DLabelManager(nullptr),
 	m_pBlipManager(nullptr),
 	m_pCheckpointManager(nullptr),
 	m_pTrafficLights(nullptr)
@@ -120,20 +117,11 @@ void CGame::Initialize()
 	if(!m_pVehicleManager)
 		m_pVehicleManager = new CVehicleManager;
 
-	if(!m_pActorManager)
-		m_pActorManager = new CActorManager;
-
 	if(!m_pObjectManager)
 		m_pObjectManager = new CObjectManager;
 
-	if(!m_pFireManager)
-		m_pFireManager = new CFireManager;
-
 	if(!m_pPickupManager)
 		m_pPickupManager = new CPickupManager;
-
-	if(!m_p3DLabelManager)
-		m_p3DLabelManager = new C3DLabelManager;
 
 	if(!m_pBlipManager)
 		m_pBlipManager = new CBlipManager;
@@ -164,20 +152,11 @@ void CGame::Reset()
 	if (m_pVehicleManager)
 		m_pVehicleManager->Reset();
 
-	if (m_pActorManager)
-		m_pActorManager->Reset();
-
 	if (m_pObjectManager)
 		m_pObjectManager->Reset();
 
-	if (m_pFireManager)
-		m_pFireManager->Reset();
-
 	if (m_pPickupManager)
 		m_pPickupManager->Reset();
-
-	if (m_p3DLabelManager)
-		m_p3DLabelManager->Reset();
 
 	if (m_pBlipManager)
 		m_pBlipManager->Reset();

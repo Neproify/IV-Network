@@ -46,11 +46,8 @@
 
 typedef CEntityManager<CPlayerEntity, MAX_PLAYERS> CPlayerManager;
 typedef CEntityManager<CVehicleEntity, MAX_VEHICLES> CVehicleManager;
-typedef CEntityManager<CActorEntity, MAX_ACTORS> CActorManager;
 typedef CEntityManager<CObjectEntity, MAX_OBJECTS> CObjectManager;
-typedef CEntityManager<CFireEntity, MAX_FIRE> CFireManager;
 typedef CEntityManager<CPickupEntity, MAX_PICKUPS> CPickupManager;
-typedef CEntityManager<C3DLabelEntity, MAX_3D_LABELS> C3DLabelManager;
 typedef CEntityManager<CBlipEntity, MAX_BLIPS> CBlipManager;
 typedef CEntityManager<CCheckpointEntity, MAX_CHECKPOINTS> CCheckpointManager;
 
@@ -63,11 +60,8 @@ private:
 
 	CPlayerManager				* m_pPlayerManager;
 	CVehicleManager				* m_pVehicleManager;
-	CActorManager				* m_pActorManager;
 	CObjectManager				* m_pObjectManager;
-	CFireManager				* m_pFireManager;
 	CPickupManager				* m_pPickupManager;
-	C3DLabelManager				* m_p3DLabelManager;
 	CBlipManager				* m_pBlipManager;
 	CCheckpointManager			* m_pCheckpointManager;
 
@@ -99,11 +93,8 @@ public:
 
 	CPlayerManager		*GetPlayerManager() { return m_pPlayerManager; }
 	CVehicleManager		*GetVehicleManager() { return m_pVehicleManager; }
-	CActorManager		*GetActorManager() { return m_pActorManager; }
 	CObjectManager		*GetObjectManager() { return m_pObjectManager; }
-	CFireManager		*GetFireManager() { return m_pFireManager; }
 	CPickupManager		*GetPickupManager() { return m_pPickupManager; }
-	C3DLabelManager		*Get3DLabelManager() { return m_p3DLabelManager; }
 	CBlipManager		*GetBlipManager() { return m_pBlipManager; }
 	CCheckpointManager	*GetCheckpointManager() { return m_pCheckpointManager; }
 
