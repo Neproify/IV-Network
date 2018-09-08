@@ -251,6 +251,17 @@ void CLocalPlayer::CheckVehicleEnterExit()
 				}
 			}
 		}
+
+		// unsynced vehicle exit, send info to server
+		if (!InternalIsInVehicle() && GetVehicle() != nullptr)
+		{
+			ExitVehicle(EXIT_VEHICLE_NORMAL);
+
+			RakNet::BitStream bitStream;
+			bitStream.Write(GetVehicle()->GetId());
+			bitStream.Write(GetSeat());
+			g_pCore->GetNetworkManager()->Call(GET_RPC_CODEX(RPC_EXIT_VEHICLE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, true);
+		}
 	}
 }
 

@@ -567,7 +567,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream, ePackageType pTy
 			{
 				pVehicle->SetQuaternion(VehiclePacket.matrix.quat);
 				pVehicle->SetPosition(VehiclePacket.matrix.vecPosition);
-				CLogFile::Printf("%f, %f, %f", VehiclePacket.matrix.vecPosition.fX, VehiclePacket.matrix.vecPosition.fY, VehiclePacket.matrix.vecPosition.fZ);
+				//CLogFile::Printf("%f, %f, %f", VehiclePacket.matrix.vecPosition.fX, VehiclePacket.matrix.vecPosition.fY, VehiclePacket.matrix.vecPosition.fZ);
 				pVehicle->SetMoveSpeed(VehiclePacket.vecMoveSpeed);
 				pVehicle->SetTurnSpeed(VehiclePacket.vecTurnSpeed);			
 				
