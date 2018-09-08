@@ -261,6 +261,8 @@ void CLocalPlayer::CheckVehicleEnterExit()
 			bitStream.Write(GetVehicle()->GetId());
 			bitStream.Write(GetSeat());
 			g_pCore->GetNetworkManager()->Call(GET_RPC_CODEX(RPC_EXIT_VEHICLE), &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, true);
+		
+			ResetVehicleEnterExit();
 		}
 	}
 }
