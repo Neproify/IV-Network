@@ -1,5 +1,5 @@
 /*
-** $Id: luac.c,v 1.75 2015/03/12 01:58:27 lhf Exp $
+** $Id: luac.c,v 1.76 2018/06/19 01:32:02 lhf Exp $
 ** Lua compiler (saves bytecodes to files; also lists bytecodes)
 ** See Copyright Notice in lua.h
 */
@@ -162,8 +162,51 @@ static int writer(lua_State* L, const void* p, size_t size, void* u)
  return (fwrite(p,size,1,(FILE*)u)!=1) && (size!=0);
 }
 
+static int pmain(lua_State* L)
+{
+ int argc=(int)lua_tointeger(L,1);
+ char** argv=(char**)lua_touserdata(L,2);
+ const Proto* f;
+ int i;
+ if (!lua_checkstack(L,argc)) fatal("too many input files");
+ for (i=0; i<argc; i++)
+ {
+  const char* filename=IS("-") ? NULL : argv[i];
+  if (luaL_loadfile(L,filename)!=LUA_OK) fatal(lua_tostring(L,-1));
+ }
+ f=combine(L,argc);
+ if (listing) luaU_print(f,listing>1);
+ if (dumping)
+ {
+  FILE* D= (output==NULL) ? stdout : fopen(output,"wb");
+  if (D==NULL) cannot("open");
+  lua_lock(L);
+  luaU_dump(L,f,writer,D,stripping);
+  lua_unlock(L);
+  if (ferror(D)) cannot("write");
+  if (fclose(D)) cannot("close");
+ }
+ return 0;
+}
+
+int main(int argc, char* argv[])
+{
+ lua_State* L;
+ int i=doargs(argc,argv);
+ argc-=i; argv+=i;
+ if (argc<=0) usage("no input files given");
+ L=luaL_newstate();
+ if (L==NULL) fatal("cannot create state: not enough memory");
+ lua_pushcfunction(L,&pmain);
+ lua_pushinteger(L,argc);
+ lua_pushlightuserdata(L,argv);
+ if (lua_pcall(L,2,0,0)!=LUA_OK) fatal(lua_tostring(L,-1));
+ lua_close(L);
+ return EXIT_SUCCESS;
+}
+
 /*
-** $Id: luac.c,v 1.75 2015/03/12 01:58:27 lhf Exp $
+** $Id: luac.c,v 1.76 2018/06/19 01:32:02 lhf Exp $
 ** print bytecodes
 ** See Copyright Notice in lua.h
 */
@@ -305,6 +348,7 @@ static void PrintCode(const Proto* f)
    case OP_ADD:
    case OP_SUB:
    case OP_MUL:
+   case OP_MOD:
    case OP_POW:
    case OP_DIV:
    case OP_IDIV:
