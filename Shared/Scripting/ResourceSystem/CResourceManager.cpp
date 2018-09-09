@@ -87,6 +87,8 @@ bool CResourceManager::Reload(CResource* pResource)
 		CLogFile::Printf("Loading of resource '%s' failed\n", pResource->GetName().Get());
 		return false;
 	}
+
+	pResource->Start(NULL, false, true);
 	return true;
 }
 
