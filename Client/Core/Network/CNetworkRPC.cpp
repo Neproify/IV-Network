@@ -98,26 +98,38 @@ void PlayerJoin(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)
 	EntityId playerId;
 	pBitStream->Read(playerId);
 
-	if (playerId == g_pCore->GetGame()->GetLocalPlayer()->GetId()) return;
+	CPlayerEntity * pEntity;
 
-	// Read the player name
-	RakNet::RakString _strName;
-	pBitStream->Read(_strName);
-	CString strPlayerName(_strName.C_String());
+	if (playerId != g_pCore->GetGame()->GetLocalPlayer()->GetId())
+	{
 
-	unsigned int uiColor;
-	pBitStream->Read(uiColor);
+		// Read the player name
+		RakNet::RakString _strName;
+		pBitStream->Read(_strName);
+		CString strPlayerName(_strName.C_String());
 
-	// Add the player
-	CPlayerEntity * pEntity = new CPlayerEntity;
-	pEntity->SetModel(0); // Set temporary to nico lol
-	pEntity->Create();
-	pEntity->SetNick(strPlayerName);
-	pEntity->SetId(playerId);
-	pEntity->SetColor(uiColor);
+		unsigned int uiColor;
+		pBitStream->Read(uiColor);
 
-	// Notify the playermanager that we're having a new player
-	g_pCore->GetGame()->GetPlayerManager()->Add(playerId, pEntity);
+		// Add the player
+		pEntity = new CPlayerEntity;
+		pEntity->SetModel(0); // Set temporary to nico lol
+		pEntity->Create();
+		pEntity->SetNick(strPlayerName);
+		pEntity->SetId(playerId);
+		pEntity->SetColor(uiColor);
+
+		// Notify the playermanager that we're having a new player
+		g_pCore->GetGame()->GetPlayerManager()->Add(playerId, pEntity);
+	}
+	else
+	{
+		pEntity = g_pCore->GetGame()->GetLocalPlayer();
+	}
+
+	CScriptPlayer * pScriptPlayer = new CScriptPlayer();
+	pScriptPlayer->SetEntity(pEntity);
+	pEntity->SetScriptPlayer(pScriptPlayer);
 }
 
 void PlayerLeave(RakNet::BitStream * pBitStream, RakNet::Packet * pPacket)

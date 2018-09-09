@@ -42,7 +42,7 @@ int GetLocalPlayer(int * VM)
 
 	pVM->ResetStackIndex();
 
-	pVM->PushInstance("CPlayerEntity", g_pCore->GetGame()->GetLocalPlayer());
+	pVM->PushInstance("CPlayerEntity", g_pCore->GetGame()->GetLocalPlayer()->GetScriptPlayer());
 	return 1;
 }
 
@@ -76,4 +76,30 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("getLocalPlayer", GetLocalPlayer);
 	pVM->RegisterFunction("sendMessage", SendMessage);
 	pVM->RegisterFunction("triggerServerEvent", TriggerServerEvent);
+
+	{ // ScriptPlayer
+		static CScriptClass<CScriptPlayer>* pScriptPlayer = &(new CScriptClass<CScriptPlayer>("CPlayerEntity"))->
+			//AddMethod("getPosition", &CScriptPlayer::GetPosition). // Synced
+			AddMethod("getRotation", &CScriptPlayer::GetRotation). // Synced
+			AddMethod("getMoveSpeed", &CScriptPlayer::GetMoveSpeed). // Synced
+			AddMethod("getTurnSpeed", &CScriptPlayer::GetTurnSpeed). // Synced
+			AddMethod("getArmour", &CScriptPlayer::GetArmour). // Synced
+			AddMethod("getHealth", &CScriptPlayer::GetHealth). // Synced
+			AddMethod("getHeading", &CScriptPlayer::GetHeading). // Synced
+			//AddMethod("getModel", &CScriptPlayer::GetModel). // Synced
+			//AddMethod("getDimension", &CScriptPlayer::GetDimension).
+			//AddMethod("getName", &CScriptPlayer::GetName). // Synced
+			AddMethod("getMoney", &CScriptPlayer::GetMoney). // Synced
+			AddMethod("getWantedLevel", &CScriptPlayer::GetWantedLevel). // Synced
+			AddMethod("getColor", &CScriptPlayer::GetColor). // Synced
+			//AddMethod("sendMessage", &CScriptPlayer::SendPlayerMessage). // Synced
+			AddMethod("getId", &CScriptPlayer::GetId). // Synced
+			//AddMethod("setHudElementVisible", &CScriptPlayer::SetHudElementVisible). // Synced		
+			//AddMethod("setClothes", &CScriptPlayer::SetClothes). // Synced	
+			AddMethod("getClothes", &CScriptPlayer::GetClothes). // Synced	
+			AddMethod("isOnFoot", &CScriptPlayer::IsOnFoot).
+			//AddMethod("getVehicle", &CScriptPlayer::GetVehicle).
+			AddMethod("getVehicleSeat", &CScriptPlayer::GetVehicleSeat);
+		(pScriptPlayer)->Register(pVM);
+	}
 }

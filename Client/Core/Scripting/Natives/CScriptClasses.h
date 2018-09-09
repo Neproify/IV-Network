@@ -11,6 +11,7 @@
 #define CScriptClasses_h
 
 #include <Scripting/IScriptVM.h>
+#include "../Shared/Scripting/CScriptClass.h"
 
 class CScriptClasses
 {

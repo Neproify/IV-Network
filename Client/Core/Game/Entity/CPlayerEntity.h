@@ -49,10 +49,12 @@ class CPlayerInfo;
 _GAME_END
 
 class CContextData;
+class CScriptPlayer;
 
 class CPlayerEntity : public CNetworkEntity 
 {
 private:
+	CScriptPlayer*	m_pScriptPlayer;
 	bool									m_bLocalPlayer;
 	bool									m_bNetworked;
 	bool									m_bSpawned;
@@ -156,6 +158,8 @@ private:
 	}
 
 public: // Handles "GET" functions
+	CScriptPlayer*  GetScriptPlayer() { return m_pScriptPlayer; }
+	void			SetScriptPlayer(CScriptPlayer* pScriptPlayer) { m_pScriptPlayer = pScriptPlayer; }
 
 	inline bool						IsLocalPlayer() { return m_bLocalPlayer; }
 	inline bool						IsSpawned() { return m_bSpawned; }
@@ -289,5 +293,58 @@ protected:
 	bool							InternalIsInVehicle();
 	
 };
+
+
+class CScriptPlayer : public CScriptEntity
+{
+public:
+	CScriptPlayer() { /*SetEntity(new CPlayerEntity);*/ };
+	~CScriptPlayer() { /*delete GetEntity();*/ };
+
+	inline CPlayerEntity* GetEntity() { return (CPlayerEntity*)CScriptEntity::GetEntity(); }
+
+	virtual const char* GetScriptClassName() { return "CPlayerEntity"; }
+
+	float GetArmour(void) { return GetEntity()->GetArmour(); }
+
+	DWORD GetColor(void) { return GetEntity()->GetColor(); }
+
+	float GetHeading() { return GetEntity()->GetHeading(); }
+
+	//CString GetName() { return GetEntity()->GetName(); }
+
+	//int GetModel() { return GetEntity()->GetModel(); }
+
+	int  GetClothes(int iPart) { return GetEntity()->GetClothes(iPart); }
+
+	int	GetMoney() { return GetEntity()->GetMoney(); }
+
+	//unsigned int GetDimension() { return GetEntity()->GetDimension(); }
+
+	int GetWantedLevel() { return GetEntity()->GetWantedLevel(); }
+
+	float		 GetHealth() { return GetEntity()->GetHealth(); }
+
+	//CVector3	GetPosition() { CVector3 vecPos; if (IsOnFoot()) GetEntity()->GetPosition(vecPos); else GetVehicle()->GetPosition(vecPos); return vecPos; }
+
+	CVector3	GetRotation() { CVector3 vecRot; GetEntity()->GetRotation(vecRot); return vecRot; }
+
+	CVector3	GetMoveSpeed() { CVector3 vecMoveSpeed; GetEntity()->GetMoveSpeed(vecMoveSpeed); return vecMoveSpeed; }
+
+	CVector3	GetTurnSpeed() { CVector3 vecTurnSpeed; GetEntity()->GetTurnSpeed(vecTurnSpeed); return vecTurnSpeed; }
+
+	//void		SendPlayerMessage(CString sMessage, DWORD dwColor, bool bAllowFormatting);
+
+	int			GetId() { return GetEntity()->GetId(); }
+
+	bool		IsOnFoot() { return GetVehicle() == nullptr ? true : false; }
+
+	CVehicleEntity* GetVehicle() { return GetEntity()->GetVehicle(); }
+
+	int 		GetVehicleSeat() { return GetEntity()->GetSeat(); }
+
+	//void 		SetHudElementVisible(int componentid, bool visible);
+};
+
 
 #endif // CPlayerEntity_h
