@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{B595E6DA-BAB2-43D5-B5FB-23D511693726}"
 EndProject
@@ -180,7 +180,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Network", "Network", "{56F1
 		Client\IVCore\CHttpClient.h = Client\IVCore\CHttpClient.h
 		Shared\Network\PacketIdentifiers.h = Shared\Network\PacketIdentifiers.h
 		Shared\Network\RPCIdentifiers.h = Shared\Network\RPCIdentifiers.h
-		Client\IVCore\Source.cpp = Client\IVCore\Source.cpp
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lua", "Lua", "{424EB0F4-53F8-4A1F-98EE-E1A1A94A8A04}"
@@ -548,5 +547,8 @@ Global
 		{1CD525F7-8627-43A2-AFAE-98A44C2351B4} = {D7EBB58A-E021-4EAE-9F03-A58440D8282C}
 		{0744A38C-A331-490A-B822-707744BC08B7} = {88789B31-3AF1-49EC-8DA3-44DF7AA1F5B1}
 		{56387735-7D4A-47AA-A885-09CCC5D5AA67} = {B595E6DA-BAB2-43D5-B5FB-23D511693726}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD568DAA-4875-48ED-899B-A0A1C9F036BF}
 	EndGlobalSection
 EndGlobal

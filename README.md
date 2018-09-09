@@ -24,7 +24,14 @@ We accept only pull request if you want to contribute
 
 ## Compile on Windows
 
-* You should use [Visual Studio 2015](http://www.microsoft.com/visualstudio/eng/downloads)
+* You should use [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/)
 * Open IVN.sln
 * Right click on "Solution 'IVN' (XY projects) in Solution Explorer
 * Build Solution
+
+## Compile on Ubuntu Linux
+
+* Install dependencies:
+```
+sudo apt-get install make gcc gcc-multilib g++ g++-multilib libreadline-dev
+```
