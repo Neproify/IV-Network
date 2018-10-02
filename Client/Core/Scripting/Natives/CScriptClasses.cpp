@@ -79,16 +79,16 @@ void CScriptClasses::Register(IScriptVM * pVM)
 
 	{ // ScriptPlayer
 		static CScriptClass<CScriptPlayer>* pScriptPlayer = &(new CScriptClass<CScriptPlayer>("CPlayerEntity"))->
-			//AddMethod("getPosition", &CScriptPlayer::GetPosition). // Synced
+			AddMethod("getPosition", &CScriptPlayer::GetPosition). // Synced
 			AddMethod("getRotation", &CScriptPlayer::GetRotation). // Synced
 			AddMethod("getMoveSpeed", &CScriptPlayer::GetMoveSpeed). // Synced
 			AddMethod("getTurnSpeed", &CScriptPlayer::GetTurnSpeed). // Synced
 			AddMethod("getArmour", &CScriptPlayer::GetArmour). // Synced
 			AddMethod("getHealth", &CScriptPlayer::GetHealth). // Synced
 			AddMethod("getHeading", &CScriptPlayer::GetHeading). // Synced
-			//AddMethod("getModel", &CScriptPlayer::GetModel). // Synced
+			AddMethod("getModel", &CScriptPlayer::GetModel). // Synced
 			//AddMethod("getDimension", &CScriptPlayer::GetDimension).
-			//AddMethod("getName", &CScriptPlayer::GetName). // Synced
+			AddMethod("getName", &CScriptPlayer::GetName). // Synced
 			AddMethod("getMoney", &CScriptPlayer::GetMoney). // Synced
 			AddMethod("getWantedLevel", &CScriptPlayer::GetWantedLevel). // Synced
 			AddMethod("getColor", &CScriptPlayer::GetColor). // Synced
@@ -98,8 +98,18 @@ void CScriptClasses::Register(IScriptVM * pVM)
 			//AddMethod("setClothes", &CScriptPlayer::SetClothes). // Synced	
 			AddMethod("getClothes", &CScriptPlayer::GetClothes). // Synced	
 			AddMethod("isOnFoot", &CScriptPlayer::IsOnFoot).
-			//AddMethod("getVehicle", &CScriptPlayer::GetVehicle).
+			AddMethod("getVehicle", &CScriptPlayer::GetVehicle).
 			AddMethod("getVehicleSeat", &CScriptPlayer::GetVehicleSeat);
 		(pScriptPlayer)->Register(pVM);
+	}
+
+	{ // ScriptVehicle
+		static CScriptClass<CScriptVehicle>* pScriptVehicle = &(new CScriptClass<CScriptVehicle>("CVehicleEntity"))->
+			AddMethod("getPosition", &CScriptVehicle::GetPosition).
+			AddMethod("getHealth", &CScriptVehicle::GetHealth).
+			AddMethod("getLocked", &CScriptVehicle::GetLocked).
+			AddMethod("getEngine", &CScriptVehicle::GetEngine).
+			AddMethod("getDirtLevel", &CScriptVehicle::GetDirtLevel);
+		(pScriptVehicle)->Register(pVM);
 	}
 }

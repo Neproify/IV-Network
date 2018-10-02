@@ -3,9 +3,12 @@
 #include "CLuaVM.h"
 #include "CSquirrelVM.h"
 
-
-#ifndef _CLIENT
+#ifdef _SERVER
 #include "../Server/Entity/CVehicleEntity.h"
+#endif
+
+#ifdef _CLIENT
+#include "../Client/Core/Game/Entity/CVehicleEntity.h"
 #endif
 
 template<>
@@ -164,7 +167,6 @@ void returnValue(IScriptVM* pVM, bool v)
 	pVM->Push(v);
 }
 
-#ifndef _CLIENT
 template<>
 void returnValue(IScriptVM* pVM, CVehicleEntity* v)
 {
@@ -177,7 +179,6 @@ void returnValue(IScriptVM* pVM, CVehicleEntity* v)
 		pVM->Push(false);
 	}
 }
-#endif
 
 template<class T>
 void returnValue(IScriptVM* pVM, T *v)

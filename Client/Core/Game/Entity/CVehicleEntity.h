@@ -37,13 +37,15 @@
 #include <Game/EFLC/CModelInfo.h>
 
 class CPlayerEntity;
+class CScriptVehicle;
 _GAME_BEGIN
 class CVehicle;
 _GAME_END
+
 class CVehicleEntity : public CNetworkEntity
 {
 private:
-
+	CScriptVehicle						*m_pScriptVehicle;
 	EFLC::CVehicle							*m_pVehicle;
 	EntityId							m_vehicleId;
 	EFLC::CModelInfo						*m_pModelInfo;
@@ -51,20 +53,20 @@ private:
 	CVector3							m_vecSpawnPosition;
 	CVector3							m_vecPosition;
 	CVector3							m_vecRotation;
-    CVector3							m_vecMoveSpeed;
-    CVector3							m_vecTurnSpeed;
+	CVector3							m_vecMoveSpeed;
+	CVector3							m_vecTurnSpeed;
 	float								m_fSpawnAngle;
 	float								m_uiHealth;
 	float								m_fPetrolTankHealth;
 	DWORD								m_dwColor[5];
 	bool								m_bIndicatorState[4];
 	float								m_fDoor[6];
-    bool								m_bSirenState;
+	bool								m_bSirenState;
 	unsigned char						m_ucVariation;
 	bool								m_bComponents[9];
 	bool								m_bEngineStatus;
-    bool								m_bTaxiLights;
-    bool								m_bLights;
+	bool								m_bTaxiLights;
+	bool								m_bLights;
 	float								m_fDirtLevel;
 	DWORD								m_dwDoorLockState;
 
@@ -113,111 +115,111 @@ public:
 	unsigned							GetScriptingHandle();
 
 	bool								IsMoving();
-    void								StopMoving();
+	void								StopMoving();
 
-    void								SetModel(DWORD dwModelHash);
+	void								SetModel(DWORD dwModelHash);
 
 	void								SetColors(DWORD dwColor1, DWORD dwColor2, DWORD dwColor3, DWORD dwColor4, DWORD dwColor5);
 	void								GetColors(DWORD &dwColor1, DWORD &dwColor2, DWORD &dwColor3, DWORD &dwColor4, DWORD &dwColor5);
 
-    void								SetPosition(const CVector3& vecPosition, bool bDontCancelTasks = false, bool bResetInterpolation = true);
-    void								GetPosition(CVector3& vecPosition);
+	void								SetPosition(const CVector3& vecPosition, bool bDontCancelTasks = false, bool bResetInterpolation = true);
+	void								GetPosition(CVector3& vecPosition);
 	CVector3							GetPosition();
 
 
 	CNetworkPlayerVehicleSyncPacket		GetLastSyncPacket() { return m_lastVehicleSyncPacket; }
 	void								SetLastSyncPacket(const CNetworkPlayerVehicleSyncPacket& Packet) { m_lastVehicleSyncPacket = Packet; }
 
-    void								SetRotation(const CVector3& vecRotation, bool bResetInterpolation = true);
-    void								GetRotation(CVector3& vecRotation);
+	void								SetRotation(const CVector3& vecRotation, bool bResetInterpolation = true);
+	void								GetRotation(CVector3& vecRotation);
 
-    void								SetHealth(float uiHealth);
-    float								GetHealth();
+	void								SetHealth(float uiHealth);
+	float								GetHealth();
 
-    void								SetPetrolTankHealth(float fHealth);
-    float								GetPetrolTankHealth();
+	void								SetPetrolTankHealth(float fHealth);
+	float								GetPetrolTankHealth();
 
-    void								SetMoveSpeed(const CVector3& vecMoveSpeed);
-    void								GetMoveSpeed(CVector3& vecMoveSpeed);
+	void								SetMoveSpeed(const CVector3& vecMoveSpeed);
+	void								GetMoveSpeed(CVector3& vecMoveSpeed);
 
-    void								SetQuaternion(float * quat);
-    void								GetQuaternion(float * quat);
+	void								SetQuaternion(float * quat);
+	void								GetQuaternion(float * quat);
 
-    void								SetTurnSpeed(const CVector3& vecTurnSpeed);
-    void								GetTurnSpeed(CVector3& vecTurnSpeed);
+	void								SetTurnSpeed(const CVector3& vecTurnSpeed);
+	void								GetTurnSpeed(CVector3& vecTurnSpeed);
 
-    void								SetSirenState(bool bSirenState);
-    bool								GetSirenState();
+	void								SetSirenState(bool bSirenState);
+	bool								GetSirenState();
 
-    void								SetDirtLevel(float fDirtLevel);
-    float								GetDirtLevel();
-    
+	void								SetDirtLevel(float fDirtLevel);
+	float								GetDirtLevel();
+
 	BYTE								GetMaxPassengers();
 
-    void								SetDoorLockState(DWORD dwDoorLockState);
-    DWORD								GetDoorLockState();
+	void								SetDoorLockState(DWORD dwDoorLockState);
+	DWORD								GetDoorLockState();
 
-    void								SoundHorn(int iDuration);
+	void								SoundHorn(int iDuration);
 
-    void								Interpolate();
-    void								ResetInterpolation();
+	void								Interpolate();
+	void								ResetInterpolation();
 
 	void								Pulse();
 
-    void								UpdateInterior(bool bHasDriver = false);
+	void								UpdateInterior(bool bHasDriver = false);
 
-    void								UpdateTargetPosition();
-    void								UpdateTargetRotation();
+	void								UpdateTargetPosition();
+	void								UpdateTargetRotation();
 
-    void								SetTargetPosition(const CVector3& vecPosition, unsigned long ulDelay);
-    void								SetTargetRotation(const CVector3& vecRotation, unsigned long ulDelay);
-    void								RemoveTargetPosition();
-    void								RemoveTargetRotation();
-        
-    bool								HasTargetPosition() { return (m_interp.pos.ulFinishTime != 0); }
-    bool								HasTargetRotation() { return (m_interp.rot.ulFinishTime != 0); }
+	void								SetTargetPosition(const CVector3& vecPosition, unsigned long ulDelay);
+	void								SetTargetRotation(const CVector3& vecRotation, unsigned long ulDelay);
+	void								RemoveTargetPosition();
+	void								RemoveTargetRotation();
 
-    void								SetInterior(unsigned int uiInterior);
-    unsigned							GetInterior();
+	bool								HasTargetPosition() { return (m_interp.pos.ulFinishTime != 0); }
+	bool								HasTargetRotation() { return (m_interp.rot.ulFinishTime != 0); }
 
-    void								SetIndicatorState(bool bFrontLeft, bool bFrontRight, bool bBackLeft, bool bBackRight);
-    bool								GetIndicatorState(unsigned char ucSlot);
+	void								SetInterior(unsigned int uiInterior);
+	unsigned							GetInterior();
 
-    void								SetComponentState(unsigned char ucSlot, bool bState);
-    bool								GetComponentState(unsigned char ucSlot);
+	void								SetIndicatorState(bool bFrontLeft, bool bFrontRight, bool bBackLeft, bool bBackRight);
+	bool								GetIndicatorState(unsigned char ucSlot);
 
-    void								SetVariation(unsigned char ucVariation);
-    unsigned char						GetVariation();
+	void								SetComponentState(unsigned char ucSlot, bool bState);
+	bool								GetComponentState(unsigned char ucSlot);
 
-    bool								IsOnScreen();
+	void								SetVariation(unsigned char ucVariation);
+	unsigned char						GetVariation();
 
-    void								SetSteeringAngle(float fSteeringAngle);
-    float								GetSteeringAngle();
+	bool								IsOnScreen();
 
-    void								SetEngineState(bool bState);
-    bool								GetEngineState();
+	void								SetSteeringAngle(float fSteeringAngle);
+	float								GetSteeringAngle();
 
-    void								SetTaxiLightsState(bool bState);
-    bool								GetTaxiLightsState();
+	void								SetEngineState(bool bState);
+	bool								GetEngineState();
 
-    void								SetCarDoorAngle(int iDoor, bool bClose, float fAngle);
-    float								GetCarDoorAngle(int iDoor);
+	void								SetTaxiLightsState(bool bState);
+	bool								GetTaxiLightsState();
 
-    void								SetLightsState(bool bLights);
-    bool								GetLightsState();
+	void								SetCarDoorAngle(int iDoor, bool bClose, float fAngle);
+	float								GetCarDoorAngle(int iDoor);
 
-    bool								GetWindowState(int iWindow);
-    void								SetWindowState(int iWindow, bool bBroken);
+	void								SetLightsState(bool bLights);
+	bool								GetLightsState();
 
-    void								SetDeformation(CVector3 vecPos, CVector3 vecDeformation);
-    CVector3							GetDeformation(CVector3 vecPos);
+	bool								GetWindowState(int iWindow);
+	void								SetWindowState(int iWindow, bool bBroken);
 
-    void								SetDamageable(bool bToggle);
+	void								SetDeformation(CVector3 vecPos, CVector3 vecDeformation);
+	CVector3							GetDeformation(CVector3 vecPos);
 
-    void								SetVehicleGPSState(bool bState);
-    bool								GetVehicleGPSState();
+	void								SetDamageable(bool bToggle);
 
-    void								Fix();
+	void								SetVehicleGPSState(bool bState);
+	bool								GetVehicleGPSState();
+
+	void								Fix();
 
 	void								SetOccupant(BYTE byteSeatId, CPlayerEntity * pOccupant);
 	CPlayerEntity						*GetOccupant(BYTE byteSeatId);
@@ -230,4 +232,25 @@ public:
 	virtual EFLC::CModelInfo				*GetModelInfo() { return m_pModelInfo; }
 };
 
-#endif // CVehicleEntity_h
+class CScriptVehicle : public CScriptEntity
+{
+public:
+	CScriptVehicle() { };
+	~CScriptVehicle() { };
+
+	CVehicleEntity *		GetEntity() { return (CVehicleEntity*)CScriptEntity::GetEntity(); }
+
+	const char *			GetScriptClassName() { return "CVehicleEntity"; }
+
+	CVector3				GetPosition() { CVector3 vecPos; GetEntity()->GetPosition(vecPos); return vecPos; };
+
+	float					GetHealth() { return GetEntity()->GetHealth(); };
+
+	int						GetLocked() { return GetEntity()->GetDoorLockState(); };
+
+	bool					GetEngine() { return GetEntity()->GetEngineState(); };
+
+	int						GetDirtLevel() { return GetEntity()->GetDirtLevel(); };
+};
+
+#endif

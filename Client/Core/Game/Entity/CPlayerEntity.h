@@ -215,12 +215,13 @@ public:
 	void							SetHealth(float fHealth);
 	void							SetArmour(float fArmour);
 	void							SetModel(int iModelId);
+	int								GetModel() { return m_pModelInfo->GetIndex(); }
 	void							SetWantedLevel(int iWantedLevel);
 	void							SetMoveSpeed(const CVector3& vecMoveSpeed);
 	void							SetTurnSpeed(const CVector3& vecTurnSpeed);
 
 	void							SetNick(const CString &strNick);
-	CString							GetNick() { return m_strNick; }
+	CString							GetNick() { return m_strNick; } // Shouldn't it be GetName?
 	void							SetColor(unsigned uiColor);
 
 	unsigned						GetScriptingHandle();
@@ -311,9 +312,9 @@ public:
 
 	float GetHeading() { return GetEntity()->GetHeading(); }
 
-	//CString GetName() { return GetEntity()->GetName(); }
+	CString GetName() { return GetEntity()->GetNick(); }
 
-	//int GetModel() { return GetEntity()->GetModel(); }
+	int GetModel() { return GetEntity()->GetModel(); }
 
 	int  GetClothes(int iPart) { return GetEntity()->GetClothes(iPart); }
 
@@ -325,7 +326,7 @@ public:
 
 	float		 GetHealth() { return GetEntity()->GetHealth(); }
 
-	//CVector3	GetPosition() { CVector3 vecPos; if (IsOnFoot()) GetEntity()->GetPosition(vecPos); else GetVehicle()->GetPosition(vecPos); return vecPos; }
+	CVector3	GetPosition() { CVector3 vecPos; GetEntity()->GetPosition(vecPos); return vecPos; }
 
 	CVector3	GetRotation() { CVector3 vecRot; GetEntity()->GetRotation(vecRot); return vecRot; }
 
@@ -339,7 +340,7 @@ public:
 
 	bool		IsOnFoot() { return GetVehicle() == nullptr ? true : false; }
 
-	CVehicleEntity* GetVehicle() { return GetEntity()->GetVehicle(); }
+	CVehicleEntity* GetVehicle() { if (GetEntity()->GetVehicle() != nullptr) { return GetEntity()->GetVehicle(); } return NULL; }
 
 	int 		GetVehicleSeat() { return GetEntity()->GetSeat(); }
 
