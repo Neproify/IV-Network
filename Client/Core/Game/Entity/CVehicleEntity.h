@@ -226,6 +226,7 @@ public:
 
 	void								SetDriver(CPlayerEntity * pDriver) { m_pDriver = pDriver; }
 	void								SetPassenger(CPlayerEntity * pPassenger, BYTE byteSeat) { m_pPassengers[byteSeat] = pPassenger; }
+	CScriptVehicle * GetScriptVehicle() { return m_pScriptVehicle; }
 	virtual CPlayerEntity				*GetDriver() { return m_pDriver; }
 
 	virtual EFLC::CVehicle					*GetGameVehicle() { return m_pVehicle; }
