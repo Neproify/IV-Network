@@ -1,6 +1,8 @@
 #include "CTimer.h"
 #include <CServer.h>
 
+extern CServer * g_pServer;
+
 CTimer::CTimer(stScriptFunction function, int interval, int reapeatings)
 {
 	m_callback = function;
@@ -39,4 +41,12 @@ bool CTimer::Pulse()
 	}
 
 	return true;
+}
+
+void CScriptTimer::Stop()
+{
+	GetTimer()->Stop();
+	g_pServer->GetInstance()->GetTimerManager()->remove(GetTimer());
+	delete GetTimer();
+	delete this;
 }

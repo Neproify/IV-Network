@@ -22,7 +22,7 @@ public:
 	~CTimer();
 
 	void Start() { m_bRunning = true; };
-	void Stop() { m_bRunning = false; /* TODO: remove timer from manager and free its memory*/ }
+	void Stop() { m_bRunning = false; }
 
 
 	void Pause() { m_bPaused = true; }
@@ -50,7 +50,7 @@ public:
 	void	SetTimer(CTimer* pTimer) { m_pTimer = pTimer; }
 
 	void Start() { GetTimer()->Start(); };
-	void Stop() { GetTimer()->Stop(); /* TODO: remove timer from manager and free its memory*/ }
+	void Stop();
 
 	void Pause() { GetTimer()->Pause(); }
 	void Resume() { GetTimer()->Resume(); }
