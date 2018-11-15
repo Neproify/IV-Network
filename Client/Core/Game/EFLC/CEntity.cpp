@@ -92,8 +92,6 @@ void CEntity::SetPosition(const CVector3& vecPosition)
 	}
 }
 
-unsigned long lastLoaded = 0;
-
 void CEntity::GetPosition(CVector3& vecPosition)
 {
 	if(m_pEntity)

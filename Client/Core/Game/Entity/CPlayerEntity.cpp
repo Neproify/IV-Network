@@ -321,86 +321,7 @@ struct SetupPedData
 
 bool CPlayerEntity::Create()
 {
-#if 0
-	// Is this the localplayer or are we alread spawned?
-	if (IsLocalPlayer() && IsSpawned())
-		return false;
 
-	m_pModelInfo->AddReference(true);
-
-	m_bytePlayerNumber = (BYTE)g_pCore->GetGame()->GetPools()->FindFreePlayerInfoIndex();
-
-	// Invalid player number?
-	if (m_bytePlayerNumber == INVALID_PLAYER_PED)
-		return false;
-
-	// Create the player info instance
-	m_pPlayerInfo = new EFLC::CPlayerInfo(m_bytePlayerNumber);
-
-	// Create our context data
-	m_pContextData = CContextDataManager::CreateContextData(m_pPlayerInfo);
-
-	// Set the game player info pointer
-	g_pCore->GetGame()->GetPools()->SetPlayerInfoAtIndex(m_bytePlayerNumber, m_pPlayerInfo->GetPlayerInfo());
-
-	WORD wPlayerData = MAKEWORD(m_bytePlayerNumber, 1);
-
-	CVector3 vecPos;
-	g_pCore->GetGame()->GetLocalPlayer()->GetPosition(vecPos);
-
-	SetupPedData spd;
-	memset(&spd, 0, sizeof(SetupPedData));
-	spd.field_0 = dword_D4B0BC;
-	spd.field_8 = 0;
-	spd.field_10 = 0;
-	spd.field_14 = dword_D4B0BC;
-	spd.field_20 = 0;
-	spd.field_24 = 0;
-	spd.field_28 = dword_D4B0BC;
-	spd.fX = vecPos.fX;
-	spd.fY = vecPos.fY;
-	spd.fZ = vecPos.fZ;
-
-	EFLC::IPlayerPed * pPlayerPed = (EFLC::IPlayerPed*)g_pPedFactory->CreatePlayerPed(&wPlayerData, m_pModelInfo->GetIndex(), m_bytePlayerNumber, (Matrix34*)&spd, false);
-
-	// Ensure the ped was allocated
-	if (!pPlayerPed)
-		return false;
-
-	sub_846CC0(m_pPlayerInfo->GetPlayerInfo(), pPlayerPed);
-
-	EFLC::ITask * pCTaskSimpleNetworkClone = CTaskSimpleNetworkClone__CTaskSimpleNetworkClone();
-	if (pCTaskSimpleNetworkClone)
-		CPedTaskManager__AssignPriorityTask(&pPlayerPed->m_pPedIntelligence->m_pedTaskManager, pCTaskSimpleNetworkClone, 4, false);
-
-	void* pNetObjPlayer = (void*)pPlayerPed->CreateNetworkObject(sub_4FF7C0(&dword_188CD50), 0, 0, 0, 32);
-	sub_4FD0E0(&dword_188CD50, pNetObjPlayer);
-
-	pPlayerPed->field_41 = 2;
-
-	m_pPlayerPed = new EFLC::CPlayerPed(pPlayerPed);
-
-	m_pPlayerInfo->SetPlayerPed(pPlayerPed);
-	m_pPlayerPed->SetPlayerPed(pPlayerPed);
-
-	m_pContextData->SetPlayerPed(m_pPlayerPed);
-
-	m_pPlayerPed->AddToWorld();
-
-	// Create the player blip
-	EFLC::CScript::AddBlipForChar(GetScriptingHandle(), &m_uiBlip);
-	EFLC::CScript::ChangeBlipNameFromAscii(m_uiBlip, m_strNick.Get());
-
-	m_pPlayerWeapons = new CPlayerWeapons(m_pPlayerPed->GetPedWeapons());
-
-	EFLC::CNativeInvoke::Invoke<unsigned int>(EFLC::CScript::NATIVE_SET_PLAYER_CONTROL_FOR_NETWORK, m_bytePlayerNumber, false, false);
-
-	// Mark as spawned
-	m_bSpawned = true;
-
-	return true;
-
-#else
 	// Is this the localplayer or are we alread spawned?
 	if (IsLocalPlayer() && IsSpawned())
 		return false;
@@ -489,8 +410,6 @@ bool CPlayerEntity::Create()
 
 	// Mark as spawned
 	m_bSpawned = true;
-
-#endif
 
 	return true;
 }
@@ -1788,9 +1707,6 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 		{
 
 			Matrix matrix;
-#ifdef SYNC_TEST
-			PlayerPacket.matrix.vecPosition.fX += 2.0f;
-#endif
 			SetHeading(PlayerPacket.fHeading);
 			GetPlayerPed()->GetMatrix(matrix);
 			matrix.vecForward = PlayerPacket.matrix.vecForward;
@@ -1799,7 +1715,6 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 			m_pPlayerPed->RemoveFromWorld();
 			GetPlayerPed()->SetMatrix(matrix);
 			m_pPlayerPed->AddToWorld();
-			//GetPlayerPed()->GetPed()->UpdatePhysicsMatrix(true);
 			
 			SetTargetPosition(PlayerPacket.matrix.vecPosition, interpolationTime);
 			
@@ -1846,10 +1761,6 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 		CNetworkPlayerVehicleSyncPacket VehiclePacket;
 		pBitStream->Read(VehiclePacket);
 
-#ifdef SYNC_TEST
-		VehiclePacket.vehicleId += 1;
-#endif
-
 		unsigned int interpolationTime = SharedUtility::GetTime() - m_ulLastSyncReceived;
 
 		if (IsInVehicle() && !HasVehicleEnterExit())
@@ -1859,19 +1770,7 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 				Matrix matrix;
 
 				EFLC::CScript::SetCarHeading(m_pVehicle->GetScriptingHandle(), VehiclePacket.fHeading);
-#ifdef SYNC_TEST
-				VehiclePacket.matrix.vecPosition.fX += 5.0f;
-#endif
 				SetControlState(&VehiclePacket.ControlState);
-
-				//m_pVehicle->GetGameVehicle()->GetMatrix(matrix);
-				//matrix.vecForward = VehiclePacket.matrix.vecForward;
-				//matrix.vecRight = VehiclePacket.matrix.vecRight;
-				//matrix.vecUp = VehiclePacket.matrix.vecUp;
-				//m_pVehicle->RemoveFromWorld();
-				//m_pVehicle->GetGameVehicle()->SetMatrix(matrix);
-				//m_pVehicle->AddToWorld();
-				//m_pVehicle->GetGameVehicle()->GetVehicle()->UpdatePhysicsMatrix(true);
 
 
 				m_pVehicle->SetTargetPosition(VehiclePacket.matrix.vecPosition, interpolationTime);
@@ -1925,10 +1824,6 @@ void CPlayerEntity::Deserialize(RakNet::BitStream * pBitStream)
 
 		CNetworkPlayerPassengerSyncPacket PassengerPacket;
 		pBitStream->Read(PassengerPacket);
-
-#ifdef SYNC_TEST
-		PassengerPacket.vehicleId += 1;
-#endif
 
 		SetPosition(PassengerPacket.vecPosition);
 		SetControlState(&PassengerPacket.ControlState);
@@ -2367,53 +2262,5 @@ CString GetPedTasks(EFLC::CPed* pPed)
 CString CPlayerEntity::GetDebugText()
 {
 	CString strDebug = "";
-
-#ifdef TASKINFO_TEST
-	{
-		EFLC::IPed* pIPed = m_pPlayerPed->GetPed();
-
-		EFLC::IPedMoveBlendOnFoot *pPedMoveBlendOnFoot = pIPed->m_pPedMoveBlendOnFoot; // (IPedMoveBlendOnFoot*)((char*)pIPed + 0xA90);
-		if (!pPedMoveBlendOnFoot)
-			return "";
-		strDebug += (CString("m_pNetworkObject: %s [0x%x]", pIPed->m_pNetworkObject ? "Created" : "Not created", pIPed->m_pNetworkObject));
-		strDebug += "\n";
-		strDebug += (CString("MoveBlend(v(%f, %f), vDest(%f, %f), AnimGroup: %d", pPedMoveBlendOnFoot->fX, pPedMoveBlendOnFoot->fY, pPedMoveBlendOnFoot->destX, pPedMoveBlendOnFoot->destY, pPedMoveBlendOnFoot->m_dwAnimGroup));
-		strDebug += "\n";
-		strDebug += (CString("Flags(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)", pPedMoveBlendOnFoot->m_dwFlags & 1, pPedMoveBlendOnFoot->m_dwFlags & 2, pPedMoveBlendOnFoot->m_dwFlags & 4, pPedMoveBlendOnFoot->m_dwFlags & 8, pPedMoveBlendOnFoot->m_dwFlags & 0x10, pPedMoveBlendOnFoot->m_dwFlags & 0x20, pPedMoveBlendOnFoot->m_dwFlags & 0x40, pPedMoveBlendOnFoot->m_dwFlags & 0x80, pPedMoveBlendOnFoot->m_dwFlags & 0x100, pPedMoveBlendOnFoot->m_dwFlags & 0x200, pPedMoveBlendOnFoot->m_dwFlags & 0x400, pPedMoveBlendOnFoot->m_dwFlags & 0x800, pPedMoveBlendOnFoot->m_dwFlags & 0x1000, pPedMoveBlendOnFoot->m_dwFlags & 0x2000));
-		strDebug += "\n";
-		strDebug += (CString("MoveBlend(14:%d, 18:%f, 1C:%d, 20:%d)", pPedMoveBlendOnFoot->field_14, pPedMoveBlendOnFoot->field_18, pPedMoveBlendOnFoot->field_1C, pPedMoveBlendOnFoot->field_20));
-		strDebug += "\n";
-		strDebug += (CString("MoveBlend(pPed:0x%x, 28:%f, 2C:%f, 30:%d, 34:%d, 38:%d, 40:%d)", pPedMoveBlendOnFoot->m_pPed, pPedMoveBlendOnFoot->field_28, pPedMoveBlendOnFoot->field_2C, pPedMoveBlendOnFoot->field_30, pPedMoveBlendOnFoot->field_34, pPedMoveBlendOnFoot->field_38, pPedMoveBlendOnFoot->field_40));
-		strDebug += "\n";
-		strDebug += (CString("MoveBlend(44:%d,48:%f,4C:%d,50:%d)", pPedMoveBlendOnFoot->field_44, pPedMoveBlendOnFoot->field_48, pPedMoveBlendOnFoot->field_4C, pPedMoveBlendOnFoot->m_dwFlags));
-		strDebug += "\n";
-		if (pIPed->m_pPedIntelligence)
-		{
-			if (pIPed->m_pPedIntelligence->m_pTaskInfo)
-			{
-				strDebug += (CString("TaskInfo [%s]", EFLC::GetTaskName(pIPed->m_pPedIntelligence->m_pTaskInfo->m_dwTaskId)));
-				strDebug += "\n";
-				strDebug += (CString("%s", MakeTaskInfoDebugString(pIPed->m_pPedIntelligence->m_pTaskInfo).Get()));
-				strDebug += "\n";
-				EFLC::ITaskInfo * pTaskInfo = pIPed->m_pPedIntelligence->m_pTaskInfo->subTaskInfo;
-				while (pTaskInfo)
-				{
-					strDebug += (CString("subTaskInfo [%s]", EFLC::GetTaskName(pTaskInfo->m_dwTaskId)));
-					strDebug += "\n";
-					strDebug += (CString("%s", MakeTaskInfoDebugString(pTaskInfo).Get()));
-					strDebug += "\n";
-					pTaskInfo = pTaskInfo->subTaskInfo;
-				}
-			}
-		}
-		
-		strDebug += "\n";
-		strDebug += "\n";
-		strDebug += "\n";
-
-		strDebug += GetPedTasks(m_pPlayerPed);
-	}
-#endif
-
 	return strDebug;
 }

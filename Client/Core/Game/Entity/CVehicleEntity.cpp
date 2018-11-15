@@ -153,58 +153,6 @@ bool CVehicleEntity::Create()
 	CLogFile::Printf("Created vehicle! (Id: %d, Handle: %X)", m_vehicleId, g_pCore->GetGame()->GetPools()->GetVehiclePool()->HandleOf(pVehicle));
 
 	return true;
-
-	/*EFLC::IVehicle * pVehicle = pIVehicleFactory->Create(m_pModelInfo->GetIndex(), 1, 0, 0);
-	if (pVehicle)
-	{
-		pVehicle->Function76(0);
-		pVehicle->m_byteFlags1 |= 4u;
-		pVehicle->m_dwFlags1 |= 8u; // set fixed wait for collision/
-
-		CWorld__AddEntity(pVehicle, false);
-		CVehicleModelInfo__AddReference(m_pModelInfo->GetModelInfo());
-		// we dont want to turn on the engine
-		// CVehicle__TurnEngineOn(pVehicle, true);
-		pVehicle->m_byteFlags10 |= 8u;
-
-		// This maybe cause pool overflow if much vehicles are created and destroyed [NEED TEST]
-		// If this cause overflow try to delete the create physics before call or disable the call in VehicleFactory::Create
-		// Using this above *(WORD*) (g_pCore->GetBase() + 0x4B48D5) = 0x9090; before call to vehiclefactory [TESTED => crash]
-		// Can someone confirm if this cause pool overflow or not
-		if (*(DWORD*) pVehicle != COffsets::VAR_CBoat__VFTable) // Otherwise client crash if boat is on ground (not in water)
-		{
-			pVehicle->CreatePhysics();
-			pVehicle->ProcessInput();
-		}
-
-		m_pModelInfo->RemoveReference();
-
-		m_pVehicle = new EFLC::CVehicle(pVehicle);
-
-		//set the vehicle's color
-		SetColors(m_dwColor[0], m_dwColor[1], m_dwColor[2], m_dwColor[3], m_dwColor[4]);
-
-		//fix: no more random components
-		for (int i = 0; i < 9; ++i)
-			SetComponentState(i, false);
-
-		// Mark as spawned
-		m_bSpawned = true;
-
-		// Reset the vehicle
-		Reset();
-
-		SetPosition(m_vecSpawnPosition);
-
-		CLogFile::Printf("Created vehicle! (Id: %d, Handle: %X)", m_vehicleId, g_pCore->GetGame()->GetPools()->GetVehiclePool()->HandleOf(pVehicle));
-		return true;
-	}
-	else
-	{
-		CLogFile::Printf("Created vehicle failed!");
-		return false;
-	}*/
-
 }
 
 bool CVehicleEntity::Destroy()
@@ -435,12 +383,6 @@ void CVehicleEntity::SetPosition(const CVector3& vecPosition, bool bDontCancelTa
 			// Set the position in the matrix
 			m_pVehicle->SetPosition(vecPosition);
 			m_pVehicle->AddToWorld();
-
-			//m_pVehicle->RemoveFromWorld();
-			//Vector4 coords(vecPosition.fX, vecPosition.fY, vecPosition.fZ, 0);
-			//m_pVehicle->GetVehicle()->SetCoordinates(&coords, 1, 0);
-			//m_pVehicle->GetVehicle()->UpdatePhysicsMatrix(true);
-			//m_pVehicle->AddToWorld();
 		}
 
 		m_vecPosition = vecPosition;
@@ -470,17 +412,7 @@ void CVehicleEntity::SetPosition(const CVector3& vecPosition, bool bDontCancelTa
 			}
 		}
 
-		//__debugbreak();
 		sub_9FFFC0(m_pVehicle->GetVehicle(), 1);
-		//
-
-		//m_pVehicle->RemoveFromWorld();
-		//m_pVehicle->GetVehicle()->Function31(&coords, 0, 1);
-		//m_pVehicle->AddToWorld();
-		//m_pVehicle->RemoveFromWorld();
-		//EFLC::CScript::SetCarCoordinatesNoOffset(GetScriptingHandle(), vecPosition.fX, vecPosition.fY, vecPosition.fZ);
-		//EFLC::CScript::SetCarCoordinates(GetScriptingHandle(), vecPosition.fX, vecPosition.fY, vecPosition.fZ);
-		//m_pVehicle->AddToWorld();
 	}
 
 	m_vecPosition = vecPosition;

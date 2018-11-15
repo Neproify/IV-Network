@@ -343,24 +343,6 @@ int TriggerClientEvent(int * VM)
 	return 1;
 }
 
-class CScriptSQLite
-{
-public:
-	CScriptSQLite();
-	~CScriptSQLite();
-
-	bool Open(CString strFileName);
-	void Query(CString strQuery, CString callback);
-	void Close();
-};
-
-class CScriptMysql
-{
-public:
-	CScriptMysql();
-	~CScriptMysql();
-};
-
 void CScriptClasses::Register(IScriptVM * pVM)
 {
 	pVM->RegisterFunction("createVehicle", CreateVehicle);
@@ -373,22 +355,6 @@ void CScriptClasses::Register(IScriptVM * pVM)
 	pVM->RegisterFunction("createPickup", CreatePickup);
 	pVM->RegisterFunction("createTimer", CreateTimer);
 	pVM->RegisterFunction("triggerClientEvent", TriggerClientEvent);
-
-#if 0
-	(new CScriptClass<CScriptSQLite>("CSQLite"))->
-		AddMethod("open", &CScriptSQLite::Open).
-		AddMethod("query", &CScriptSQLite::Query).
-		AddMethod("close", &CScriptSQLite::Close).
-		Register(pVM);
-#endif // 0
-
-#if 0
-	(new CScriptClass<CScriptMySQL>("CMySQL"))->
-		AddMethod("open", &CScriptMySQL::Open).
-		AddMethod("query", &CScriptMySQL::Query).
-		AddMethod("close", &CScriptMySQL::Close).
-		Register(pVM);
-#endif
 
 	{ // ScriptPlayer
 		static CScriptClass<CScriptPlayer>* pScriptPlayer = &(new CScriptClass<CScriptPlayer>("CPlayerEntity"))->
