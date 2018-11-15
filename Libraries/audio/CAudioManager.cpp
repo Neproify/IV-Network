@@ -113,15 +113,3 @@ void CAudioManager::Process()
 	for(auto pAudio : m_audioList)
 		pAudio->Process();
 }
-
-// TODO(!!): Move it to a shared file!!
-
-
-CString CAudioManager::GetYoutubeStreamURL(CString link)
-{
-	CString idBuffer;
-	if (SharedUtility::GetHTTPHeaderAndData("kingofmetin.com", CString("/yt.php?url=%s", link.Get()).Get(), "", NULL, &idBuffer))
-		return idBuffer;
-
-	return CString("");
-}
