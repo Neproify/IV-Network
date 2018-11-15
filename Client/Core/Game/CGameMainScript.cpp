@@ -22,9 +22,6 @@ namespace EFLC
 
 	}
 
-#define createNetworkPools ((bool(__cdecl *)(bool unk))(((g_pCore->GetBase() + 0x4DF3A0))))
-#define deleteNetworkPools ((int(__cdecl *)())(((g_pCore->GetBase() + 0x4DDF90))))
-
 	//TASK INFO TEST - END
 
 	bool reloaded = false;
@@ -33,22 +30,7 @@ namespace EFLC
 	{
 		unsigned int pid = 0;
 
-
-#ifdef TASKINFO_TEST
-		if (!reloaded)
-		{
-			reloaded = true;
-
-			EFLC::CNativeInvoke::Invoke<unsigned int>(EFLC::CScript::NATIVE_SHUTDOWN_AND_LAUNCH_SINGLE_PLAYER_GAME);
-		}
-#endif
-
-
 		EFLC::CScript::CreatePlayer(0, 756.774f, -214.403f, 4.8223f, &pid);
-
-#ifdef TASKINFO_TEST
-		createNetworkPools(true);
-#endif
 
 		//disable police
 		EFLC::CScript::SetMaxWantedLevel(0);
@@ -57,21 +39,7 @@ namespace EFLC
 		g_pCore->OnGameLoad();
 
 		while (m_Context.State != ThreadStateKilled)
-		{
-
-#ifdef TASKINFO_TEST
-			RakNet::BitStream bitStream;
-			bitStream.Reset();
-			if (g_pCore->GetGame()->GetLocalPlayer())
-			{
-				g_pCore->GetGame()->GetLocalPlayer()->SerializeTaskInfo(&bitStream);
-
-				if (g_pCore->GetGame()->GetPlayerManager())
-				if (g_pCore->GetGame()->GetPlayerManager()->GetAt(1))
-					g_pCore->GetGame()->GetPlayerManager()->GetAt(1)->DeserializeTaskInfo(&bitStream);
-			}
-#endif		
-
+		{	
 			g_pCore->OnGameUpdate();
 			SwitchToFiber(pMainFiber);
 		}

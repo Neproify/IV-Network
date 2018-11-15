@@ -42,13 +42,6 @@ CPools::CPools() :
 	m_pCamPool(nullptr),
 	m_pPedMoveBlendPool(nullptr)
 {
-	// Modify checkpoint rendering to use our custom array
-	/*
-	VAR_RenderCheckpoints_FirstCP                   = (uiBase +  0x855966);
-	VAR_RenderCheckpoints_LastCP                    = (uiBase +  0x856705);
-	*/
-	//*(DWORD *)(COffsets::VAR_RenderCheckpoints_FirstCP) = (DWORD)m_checkpoints + 0x18;
-	//*(DWORD *)(COffsets::VAR_RenderCheckpoints_LastCP) = (DWORD)m_checkpoints + 0x18 + CHECKPOINT_ARRAY_SIZE * sizeof(IVCheckpoint);
 }
 
 CPools::~CPools()
