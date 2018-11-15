@@ -457,20 +457,15 @@ void _declspec(naked) _hook_9E656F()
 
 void __cdecl renderMenus() //render Main and pause menu
 {
-	//g_pCore->GetGraphics()->GetChat()->Print("sub_4774A0()");
-	//*(DWORD*) (g_pCore->GetBase() + 0x104E130) = 0; // 1 = blink, but i wagt hide it.
-	//*(BYTE*) (g_pCore->GetBase() + 0x104E1D8) = 1;
 }
 
 void __cdecl sub_47F080()
 {
 	g_pCore->OnGameUpdate();
-	//g_pCore->GetGraphics()->GetChat()->Print("sub_47F080()");
 }
 
 void __cdecl sub_47BA60()
 {
-	//g_pCore->GetGraphics()->GetChat()->Print("sub_47BA60()");
 }
 #include <Game/CGameMainScript.h>
 
@@ -478,29 +473,13 @@ void __cdecl runStartupScript()
 {
 	unsigned int pid = 0;
 
-
-#ifdef TASKINFO_TEST
-	if (!reloaded)
-	{
-		reloaded = true;
-
-		EFLC::CNativeInvoke::Invoke<unsigned int>(EFLC::CScript::NATIVE_SHUTDOWN_AND_LAUNCH_SINGLE_PLAYER_GAME);
-	}
-#endif
-
-
 	EFLC::CScript::CreatePlayer(0, 756.774f, -214.403f, 4.8223f, &pid);
-
-#ifdef TASKINFO_TEST
-	createNetworkPools(true);
-#endif
 
 	//disable police
 	EFLC::CScript::SetMaxWantedLevel(0);
 	EFLC::CScript::SetWantedMultiplier(0.0f);
 
 	g_pCore->OnGameLoad();
-	//EFLC::AddScriptToThreadCollection(new EFLC::CGameMainScript());
 }
 
 enum eRAGETHREAD_States
@@ -626,54 +605,4 @@ void CHooks::Intialize()
 	g_pRageScriptThread = new sRAGETHREAD;
 	memset(g_pRageScriptThread, NULL, sizeof(sRAGETHREAD));
 	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x82E7E0, (DWORD) GetRunningScriptThread, 5);
-
-#if 0
-	// Disable wanted circles on the minimap(we have no cops which are following you atm ^^)
-	*(BYTE *) (g_pCore->GetBase() + 0x83C216) = 0xEB;
-	*(BYTE *) (g_pCore->GetBase() + 0x83BFE0) = 0xC3;
-
-	//CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x47BFED, (DWORD) renderMenus);
-
-	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x47F080, (DWORD) sub_47F080);
-
-	//CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x47BA60, (DWORD) sub_47BA60);
-	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x834093, (DWORD)runStartupScript);
-	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x834098, g_pCore->GetBase() + 0x8340F4);
-	
-	CPatcher::InstallJmpPatch(COffsets::IV_Hook__IncreasePoolSizes, CPatcher::GetClassMemberAddress(&EFLC::IPoolOwns::IVPoolHook));
-
-	//Replace loading text
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x7E2D0E, 2);
-	*(BYTE*) (g_pCore->GetBase() + 0x7E2D10) = 0xEB;
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x7E2D24, 8);
-	*(BYTE*) (g_pCore->GetBase() + 0x7E2D31) = 0xEB;
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x7E2D77, 2);
-	*(BYTE*) (g_pCore->GetBase() + 0x7E2D79) = 0xEB;
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x7E2D9A, 11);
-	*(BYTE*) (g_pCore->GetBase() + 0x7E2DA5) = 0xEB;
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x7E2DF2, 5);
-	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x7E2DF7, (DWORD) GetLoadingText);
-	*(BYTE*) (g_pCore->GetBase() + 0x7E2E0B) = 4;
-
-
-	CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x492D9B, 5); //do not load scrollbars.dat
-
-	char* text = "Welcome to IV:Network. Have fun!"; //scrollbars text
-
-	for (int i = 0; i < 8; ++i) //set scrollbars text
-	{
-		memcpy((char*)((g_pCore->GetBase() + 0x11B4508) + (1300 * i)), text, strlen(text)); //max len: 1300
-		((char*)((g_pCore->GetBase() + 0x11B4508) + (1300 * i)))[strlen(text)] = '\0';
-	}
-
-
-	*(DWORD*)(g_pCore->GetBase() + 0x8DC8FD) = 0xFF38F5D8; //Set scrollbars's color to blue
-#endif
-
-#ifdef TASKINFO_TEST
-	CPatcher::InstallCallPatch(g_pCore->GetBase() + 0x9E656F, (DWORD)_hook_9E656F);
-	CPatcher::InstallJmpPatch(g_pCore->GetBase() + 0x9E6480, (DWORD)_hook_9E6480);
-#endif
-	//CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x5138C4, 10);
-	//CPatcher::InstallNopPatch(g_pCore->GetBase() + 0x5138F7, 6);
 }

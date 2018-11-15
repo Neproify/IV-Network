@@ -51,7 +51,6 @@ public:
 	inline bool			IsMuted() { return m_bMuted; }
 	void				UnmuteAll();
 	void				Process();
-	CString				GetYoutubeStreamURL(CString link);
 };
 
 #endif // CAUDIOMANAGER_H

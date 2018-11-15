@@ -177,9 +177,6 @@ void CGame::Reset()
 	EFLC::CHud::SetRadarVisible(true);
 	EFLC::CHud::SetAreaNamesEnabled(true);
 	EFLC::CHud::SetPlayerNamesVisible(true);
-	// Update our environment settings and set default timemanagement data
-	//g_pCore->GetTimeManagementInstance()->SetTime(7,0);
-	//g_pCore->GetTimeManagementInstance()->SetMinuteDuration(60000); // 60 seconds, default
 }
 
 void CGame::UnprotectMemory()
@@ -245,27 +242,4 @@ void CGame::Process()
 	// LocalPlayer should be in playermanager! Remove this?
 	if (m_pLocalPlayer)
 		m_pLocalPlayer->Pulse();
-
-	/*unsigned char ucHour = 0, ucMinute = 0; // deleted by jmpback from func
-	int uGameHour = 0, uGameMinute = 0; // deleted by jmpback from func
-
-	// Grab the latest time from our time interface
-	g_pCore->GetTimeManagementInstance()->GetTime(&ucHour, &ucMinute);
-
-	// Check if our time has changed
-	CGameFunction::GetTime(&uGameHour, &uGameMinute);
-
-	// Check if the game time is not the same as the given CTime
-	if((uGameHour-ucHour < -1 || ucHour-uGameHour < -1)|| (uGameMinute-ucMinute < -10 || ucMinute-uGameHour < -10)) {
-		// Force game to update the time to the latest given data
-		CGameFunction::SetTimeOfDay(ucHour, ucMinute);
-	}
-	else if(uGameHour == ucHour || uGameMinute == ucHour) {
-		// Update time to latest
-		CGameFunction::SetTimeOfDay(uGameHour, uGameMinute);
-	}
-	else {
-		// Let the game render the time by itself(so it's not so buggy when updating the time)
-		;
-	}*/
 }

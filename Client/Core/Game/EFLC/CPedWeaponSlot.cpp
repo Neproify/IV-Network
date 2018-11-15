@@ -58,26 +58,6 @@ void CPedWeaponSlot::Remove()
 {
 	if(m_pPedWeaponSlot)
 	{
-		if(m_pPedWeaponSlot->m_byteWeaponModelLoaded)
-		{
-			CWeaponInfo * pWeaponInfo = g_pCore->GetGame()->GetWeaponInfo(m_pPedWeaponSlot->m_type);
-
-			if(pWeaponInfo)
-			{
-#if 0
-				int iModelIndex = CGame::GetStreaming()->GetModelIndexFromHash(pWeaponInfo->GetWeaponInfo()->m_dwModelHash);
-
-				if(iModelIndex != -1)
-				{
-					CModelInfo * pModelInfo = g_pCore->GetGame()->GetModelInfo(iModelIndex);
-
-					if(pModelInfo)
-						pModelInfo->GetModelInfo()->dwReferenceCount--;
-				}
-#endif
-			}
-		}
-
 		m_pPedWeaponSlot->m_byteWeaponModelLoaded = 0;
 		m_pPedWeaponSlot->m_type = WEAPON_TYPE_UNARMED;
 		SetAmmo(0);

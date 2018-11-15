@@ -256,25 +256,7 @@ EFLC::IPad* thisisathiscall::GetPadFromPlayerPed(EFLC::IPed* pPed)
 
 			// Do we have a valid context data?
 			if (pContextData) {
-#if 0 // Disabled maybe not needed
-				for (int i = 0; i < INPUT_COUNT; i++)
-				{
-					IVPadData * pPadData = &pContextData->GetPad()->GetPad()->m_padData[i];
 
-					if (pPadData->m_pHistory)
-					{
-						pPadData->m_byteHistoryIndex++;
-
-						if (pPadData->m_byteHistoryIndex >= MAX_HISTORY_ITEMS)
-							pPadData->m_byteHistoryIndex = 0;
-
-						pPadData->m_pHistory->m_historyItems[pPadData->m_byteHistoryIndex].m_byteValue = pPadData->m_byteLastValue;
-						pPadData->m_pHistory->m_historyItems[pPadData->m_byteHistoryIndex].m_dwLastUpdate = CGameFunction::GetTimeOfDay();
-					}
-				}
-#endif
-
-				//CLogFile::Printf("Return remote pad");
 				// return our sync pad
 				return pContextData->GetPad()->GetPad();
 			}

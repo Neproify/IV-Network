@@ -347,15 +347,7 @@ void CLocalPlayer::Pulse()
 
 			// Send package to network
 			g_pCore->GetNetworkManager()->Call(GET_RPC_CODEX(RPC_SYNC_PACKAGE), &bitStream, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, true);
-/*
-#ifdef TASKINFO_TEST
-			bitStream.Reset();
-			SerializeTaskInfo(&bitStream);
-
-			if (g_pCore->GetGame()->GetPlayerManager())
-			if (g_pCore->GetGame()->GetPlayerManager()->GetAt(1))
-				g_pCore->GetGame()->GetPlayerManager()->GetAt(1)->DeserializeTaskInfo(&bitStream);
-#endif		*/		
+	
 		}
 	}
 }

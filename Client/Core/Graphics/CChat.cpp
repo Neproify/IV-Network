@@ -31,26 +31,6 @@ CChat::~CChat()
 	delete [] m_szTypeing;
 }
 
-/*void removeColorCodes(char* text)
-{
-char* tmptext = new char[CHAT_MAX_CHAT_LENGTH];
-
-for (int i = 0, i2 = 0; i < CHAT_MAX_CHAT_LENGTH; ++i)
-{
-if (text[i] != '#')
-{
-tmptext[i2] = text[i];
-++i2;
-}
-else
-i += 6;
-}
-
-strcpy_s(text, CHAT_MAX_CHAT_LENGTH, tmptext);
-
-delete[] tmptext;
-}*/
-
 void CChat::Render()
 {
 	if (!m_bVisible)
@@ -217,10 +197,6 @@ void CChat::HandleUserInput(unsigned int uMsg, WPARAM dwChar)
 		{
 			m_bTypeing = false;
 			g_pCore->GetGame()->GetLocalPlayer()->SetPlayerControlAdvanced(true, true);
-
-#ifndef TASKINFO_TEST
-			//EFLC::CScript::SetPlayerControlForTextChat(g_pCore->GetGame()->GetLocalPlayer()->GetScriptingHandle(), false);
-#endif
 
 			if (m_szTypeing.GetLength() > 0)
 			{
